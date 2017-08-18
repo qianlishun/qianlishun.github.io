@@ -42,33 +42,43 @@
 2. 检查数据源方法, numberOfRowsInSection是否设置了.
 
 ##TableView (scrollView,collectionView)
-1. 设置table view的行数时出错  
-```objectivec [ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200
+1. 设置table view的行数时出错.~~~~{ruby}
+[ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200
  *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '-[ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200'
-*** First throw call stack:```
+*** First throw call stack:
+~~~~
 
-2. 控件连线设置的名或者自定义的属性名与系统的关键字重名,比如imageView  
-` /Users/qianlishun/Desktop/test/GoodsCell.m:15:41: Auto property synthesis will not synthesize property 'imageView' because it is 'readwrite' but it will be synthesized 'readonly' via another property`
-   
-3. `contentSize: {320, 712.705078125}>) failed to obtain a cell from its dataSource (<ViewController: 0x7fb992e1ff00>)'`
+2. 控件连线设置的名或者自定义的属性名与系统的关键字重名,比如imageView~~~~{ruby}
+/Users/qianlishun/Desktop/test/GoodsCell.m:15:41: Auto property synthesis will not synthesize property 'imageView' because it is 'readwrite' but it will be synthesized 'readonly' via another property
+~~~~
+
+
+
+3.~~~~{ruby}
+contentSize: {320, 712.705078125}>) failed to obtain a cell from its dataSource (<ViewController: 0x7fb992e1ff00>)'
+~~~~
 创建一个cell ,先看缓存池有没有,然后看storyboard,再看代码
 后者会覆盖前者  
-` static NSString *ID = @"message_cell";
+
+~~~~{ruby}
+static NSString *ID = @"message_cell";
  MessageCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
 //    if (cell == nil) {                  // 调用了initWithStyle方法,再去重写它以满足需要
 //        cell = [[MessageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
-//    }`  
+//    }~~~~
 报错解决:    
   ① 在viewDidload里注册一个cell  
   ② 在storyboard里建一个,然后标识  
   ③ 如上注释的 判断,在创建
 
-
-4.  `failed to obtain a cell from its dataSource
- Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'UITableView (<UITableView: 0x7fd1130f1e00; frame = (0 0; 414 736); clipsToBounds = YES; autoresize = W+H; gestureRecognizers = <NSArray: 0x7fd11266a3f0>; layer = <CALayer: 0x7fd11480dfe0>; contentOffset: {0, -64}; contentSize: {414, 44}>) failed to obtain a cell from its dataSource (<_UIFilteredDataSource:`
- _原因_ : **没有注册cell**   
-_解决_ :
-` [self.tableView registerClass:[UITableViewCell class]forCellReuseIdentifier:ID];`
+4.
+ ~~~~{ruby}
+failed to obtain a cell from its dataSource
+ Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'UITableView (<UITableView: 0x7fd1130f1e00; frame = (0 0; 414 736); clipsToBounds = YES; autoresize = W+H; gestureRecognizers = <NSArray: 0x7fd11266a3f0>; layer = <CALayer: 0x7fd11480dfe0>; contentOffset: {0, -64}; contentSize: {414, 44}>) failed to obtain a cell from its dataSource (<_UIFilteredDataSource:~~~~
+原因: **没有注册cell**     
+解决_ :
+~~~~{ruby}
+[self.tableView registerClass:[UITableViewCell class]forCellReuseIdentifier:ID];~~~~
  
 
 5. cell增加数据时单行刷新的bug  
@@ -186,7 +196,6 @@ xxxx.o 结尾  报错提示
 同一个类被引入两次, 或者 文件名重复
 一般在多人协作时出现,大家都引入或创建了某一个类.
 还有就是使用第三方库时, 我们命名的某个类名和第三方库文件名重复.
-
 <!-- markdown end -->
 </div>
 <div class="entry" id="main">
@@ -221,32 +230,35 @@ xxxx.o 结尾  报错提示
 <h2 id="tableviewscrollviewcollectionview">TableView (scrollView,collectionView)</h2>
 
 <ol>
-<li><p>设置table view的行数时出错 <br>
-<code>objectivec [ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200
-&nbsp;*** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '-[ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200'
-*** First throw call stack:</code></p></li>
-<li><p>控件连线设置的名或者自定义的属性名与系统的关键字重名,比如imageView <br>
-<code>&nbsp;/Users/qianlishun/Desktop/test/GoodsCell.m:15:41: Auto property synthesis will not synthesize property 'imageView' because it is 'readwrite' but it will be synthesized 'readonly' via another property</code>
-&nbsp; &nbsp;</p></li>
-<li><p><code>contentSize: {320, 712.705078125}&gt;) failed to obtain a cell from its dataSource (&lt;ViewController: 0x7fb992e1ff00&gt;)'</code>
-创建一个cell ,先看缓存池有没有,然后看storyboard,再看代码
-后者会覆盖前者 <br>
-<code>static&nbsp;NSString&nbsp;*ID = @"message_cell";
-&nbsp;MessageCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-//&nbsp;&nbsp;&nbsp; if (cell == nil) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 调用了initWithStyle方法,再去重写它以满足需要
-//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cell = [[MessageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
-//&nbsp;&nbsp;&nbsp; }</code> <br>
-报错解决: &nbsp; <br>
-① 在viewDidload里注册一个cell <br>
-② 在storyboard里建一个,然后标识 <br>
-③ 如上注释的 判断,在创建</p></li>
-<li><p><code>failed to obtain a cell from its dataSource
-&nbsp;Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'UITableView (&lt;UITableView: 0x7fd1130f1e00; frame = (0 0; 414 736); clipsToBounds = YES; autoresize = W+H; gestureRecognizers = &lt;NSArray: 0x7fd11266a3f0&gt;; layer = &lt;CALayer: 0x7fd11480dfe0&gt;; contentOffset: {0, -64}; contentSize: {414, 44}&gt;) failed to obtain a cell from its dataSource (&lt;_UIFilteredDataSource:</code>
-<em>原因</em> : <strong>没有注册cell</strong> <br>
-<em>解决</em>&nbsp;:
-<code>[self.tableView registerClass:[UITableViewCell class]forCellReuseIdentifier:ID];</code>
-&nbsp;</p></li>
-<li><p>cell增加数据时单行刷新的bug <br>
+<li>设置table view的行数时出错.<pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token constant">ViewController</span> tableView<span class="token symbol">:numberOfRowsInSection</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">:</span> unrecognized selector sent to instance <span class="token number">0x7fb362e13200</span>
+ <span class="token operator">*</span> <span class="token constant">Terminating</span> app due to uncaught exception <span class="token string">'NSInvalidArgumentException'</span><span class="token punctuation">,</span> reason<span class="token punctuation">:</span> <span class="token string">'-[ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200'</span>
+<span class="token operator">*</span> <span class="token constant">First</span> <span class="token keyword">throw</span> call stack<span class="token punctuation">:</span>
+</code></pre></li>
+<li>控件连线设置的名或者自定义的属性名与系统的关键字重名,比如imageView<pre class=" language-ruby"><code class=" language-ruby"><span class="token operator">/</span><span class="token constant">Users</span><span class="token operator">/</span>qianlishun<span class="token operator">/</span><span class="token constant">Desktop</span><span class="token operator">/</span>test<span class="token operator">/</span><span class="token constant">GoodsCell</span><span class="token punctuation">.</span>m<span class="token punctuation">:</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">41</span><span class="token punctuation">:</span> <span class="token constant">Auto</span> property synthesis will <span class="token keyword">not</span> synthesize property <span class="token string">'imageView'</span> because it is <span class="token string">'readwrite'</span> but it will be synthesized <span class="token string">'readonly'</span> via another property
+</code></pre></li>
+</ol>
+
+<p>3.</p><pre class=" language-ruby"><code class=" language-ruby">contentSize<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token number">320</span><span class="token punctuation">,</span> <span class="token number">712.705078125</span><span class="token punctuation">}</span><span class="token operator">&gt;</span><span class="token punctuation">)</span> failed to obtain a cell from its dataSource <span class="token punctuation">(</span><span class="token operator">&lt;</span><span class="token constant">ViewController</span><span class="token punctuation">:</span> <span class="token number">0x7fb992e1ff00</span><span class="token operator">&gt;</span><span class="token punctuation">)</span>'
+</code></pre>创建一个cell ,先看缓存池有没有,然后看storyboard,再看代码
+后者会覆盖前者  <p></p>
+
+<p></p><pre class=" language-ruby"><code class=" language-ruby">static <span class="token constant">NSString</span> <span class="token operator">*</span><span class="token constant">ID</span> <span class="token operator">=</span> @<span class="token string">"message_cell"</span><span class="token punctuation">;</span>
+ <span class="token constant">MessageCell</span> <span class="token operator">*</span>cell <span class="token operator">=</span> <span class="token punctuation">[</span>tableView dequeueReusableCellWithIdentifier<span class="token symbol">:ID</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token operator">/</span><span class="token operator">/</span>    <span class="token keyword">if</span> <span class="token punctuation">(</span>cell <span class="token operator">==</span> <span class="token keyword">nil</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>                  <span class="token operator">/</span><span class="token operator">/</span> 调用了initWithStyle方法<span class="token punctuation">,</span>再去重写它以满足需要
+<span class="token operator">/</span><span class="token operator">/</span>        cell <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token constant">MessageCell</span> alloc<span class="token punctuation">]</span>initWithStyle<span class="token symbol">:UITableViewCellStyleDefault</span> reuseIdentifier<span class="token symbol">:ID</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token operator">/</span><span class="token operator">/</span>    <span class="token punctuation">}</span></code></pre>报错解决: &nbsp; <br>
+  ① 在viewDidload里注册一个cell <br>
+  ② 在storyboard里建一个,然后标识 <br>
+  ③ 如上注释的 判断,在创建<p></p>
+
+<p>4.
+ </p><pre class=" language-ruby"><code class=" language-ruby">failed to obtain a cell from its dataSource
+ <span class="token constant">Terminating</span> app due to uncaught exception <span class="token string">'NSInternalInconsistencyException'</span><span class="token punctuation">,</span> reason<span class="token punctuation">:</span> '<span class="token constant">UITableView</span> <span class="token punctuation">(</span><span class="token operator">&lt;</span><span class="token constant">UITableView</span><span class="token punctuation">:</span> <span class="token number">0x7fd1130f1e00</span><span class="token punctuation">;</span> frame <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token number">414</span> <span class="token number">736</span><span class="token punctuation">)</span><span class="token punctuation">;</span> clipsToBounds <span class="token operator">=</span> <span class="token constant">YES</span><span class="token punctuation">;</span> autoresize <span class="token operator">=</span> <span class="token constant">W</span><span class="token operator">+</span><span class="token constant">H</span><span class="token punctuation">;</span> gestureRecognizers <span class="token operator">=</span> <span class="token operator">&lt;</span><span class="token constant">NSArray</span><span class="token punctuation">:</span> <span class="token number">0x7fd11266a3f0</span><span class="token operator">&gt;</span><span class="token punctuation">;</span> layer <span class="token operator">=</span> <span class="token operator">&lt;</span><span class="token constant">CALayer</span><span class="token punctuation">:</span> <span class="token number">0x7fd11480dfe0</span><span class="token operator">&gt;</span><span class="token punctuation">;</span> contentOffset<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">64</span><span class="token punctuation">}</span><span class="token punctuation">;</span> contentSize<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token number">414</span><span class="token punctuation">,</span> <span class="token number">44</span><span class="token punctuation">}</span><span class="token operator">&gt;</span><span class="token punctuation">)</span> failed to obtain a cell from its dataSource <span class="token punctuation">(</span><span class="token operator">&lt;</span><span class="token constant">UIFilteredDataSource</span><span class="token punctuation">:</span></code></pre><em>原因: <strong>没有注册cell</strong> <br>
+解决</em>&nbsp;:
+<pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>tableView registerClass<span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token constant">UITableViewCell</span> <span class="token keyword">class</span><span class="token punctuation">]</span>forCellReuseIdentifier<span class="token symbol">:ID</span><span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>&nbsp;<p></p>
+
+<ol>
+<li>cell增加数据时单行刷新的bug <br>
 插入数据后, 如果只刷新最后一行cell时 , 就会产生最后一行 cell 的图片闪烁
 原因一般有两个 <br>
 ① <br>
@@ -260,7 +272,7 @@ cell里面的内容超出了cell的行高,即超出了他父视图 <br>
 <em>解决</em>:去重新设置 cell 的内容,以防止超出. <br>
 或者剪切超出父视图边界的内容: <br>
 在数据源方法cellForRowAtIndexPath:中
-cell.clipsToBounds = YES;</p></li>
+cell.clipsToBounds = YES;</li>
 </ol>
 
 <h3 id="uialertcontroller">UIAlertController</h3>

@@ -47,12 +47,12 @@
  *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '-[ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200'
 *** First throw call stack:```
 
-2. 控件连线设置的名或者自定义的属性名与系统的关键字重名,比如imageView
+2. 控件连线设置的名或者自定义的属性名与系统的关键字重名,比如imageView  
 ` /Users/qianlishun/Desktop/test/GoodsCell.m:15:41: Auto property synthesis will not synthesize property 'imageView' because it is 'readwrite' but it will be synthesized 'readonly' via another property`
    
 3. `contentSize: {320, 712.705078125}>) failed to obtain a cell from its dataSource (<ViewController: 0x7fb992e1ff00>)'`
 创建一个cell ,先看缓存池有没有,然后看storyboard,再看代码
-后者会覆盖前者
+后者会覆盖前者  
 ` static NSString *ID = @"message_cell";
  MessageCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
 //    if (cell == nil) {                  // 调用了initWithStyle方法,再去重写它以满足需要
@@ -225,12 +225,12 @@ xxxx.o 结尾  报错提示
 <code>objectivec [ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200
 &nbsp;*** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '-[ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200'
 *** First throw call stack:</code></p></li>
-<li><p>控件连线设置的名或者自定义的属性名与系统的关键字重名,比如imageView
+<li><p>控件连线设置的名或者自定义的属性名与系统的关键字重名,比如imageView <br>
 <code>&nbsp;/Users/qianlishun/Desktop/test/GoodsCell.m:15:41: Auto property synthesis will not synthesize property 'imageView' because it is 'readwrite' but it will be synthesized 'readonly' via another property</code>
 &nbsp; &nbsp;</p></li>
 <li><p><code>contentSize: {320, 712.705078125}&gt;) failed to obtain a cell from its dataSource (&lt;ViewController: 0x7fb992e1ff00&gt;)'</code>
 创建一个cell ,先看缓存池有没有,然后看storyboard,再看代码
-后者会覆盖前者
+后者会覆盖前者 <br>
 <code>static&nbsp;NSString&nbsp;*ID = @"message_cell";
 &nbsp;MessageCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
 //&nbsp;&nbsp;&nbsp; if (cell == nil) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 调用了initWithStyle方法,再去重写它以满足需要

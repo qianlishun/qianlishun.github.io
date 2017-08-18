@@ -66,24 +66,19 @@ failed to obtain a cell from its dataSource
 (<ViewController: 0x7fb992e1ff00>)'
 ~~~~
 创建一个cell ,先看缓存池有没有,然后看storyboard,再看代码
-后者会覆盖前者  
-
-~~~~{ruby}
+后者会覆盖前者  ~~~~{ruby}
 static NSString *ID = @"message_cell";
 MessageCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
 //    if (cell == nil) {
 // 调用了initWithStyle方法,再去重写它以满足需要
 //        cell = [[MessageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
-//    }
-~~~~
-
+//    }~~~~
 报错解决:      
  ① 在viewDidload里注册一个cell    
  ② 在storyboard里建一个,然后标识  
  ③ 如上注释的 判断,在创建
 
-4.
- ~~~~{ruby}
+4. cell~~~~{ruby}
 failed to obtain a cell from its dataSource
 Terminating app due to uncaught exception
 'NSInternalInconsistencyException', reason: 'UITableView (<UITableView: 0x7fd1130f1e00; frame = (0 0; 414 736);
@@ -275,24 +270,16 @@ because it is <span class="token string">'readwrite'</span> but it will be synth
 failed to obtain a cell from its dataSource 
 <span class="token punctuation">(</span><span class="token operator">&lt;</span><span class="token constant">ViewController</span><span class="token punctuation">:</span> <span class="token number">0x7fb992e1ff00</span><span class="token operator">&gt;</span><span class="token punctuation">)</span>'
 </code></pre>创建一个cell ,先看缓存池有没有,然后看storyboard,再看代码
-后者会覆盖前者  <p></p></li>
-</ol>
-
-<pre class=" language-ruby"><code class=" language-ruby">static <span class="token constant">NSString</span> <span class="token operator">*</span><span class="token constant">ID</span> <span class="token operator">=</span> @<span class="token string">"message_cell"</span><span class="token punctuation">;</span>
+后者会覆盖前者  <pre class=" language-ruby"><code class=" language-ruby">static <span class="token constant">NSString</span> <span class="token operator">*</span><span class="token constant">ID</span> <span class="token operator">=</span> @<span class="token string">"message_cell"</span><span class="token punctuation">;</span>
 <span class="token constant">MessageCell</span> <span class="token operator">*</span>cell <span class="token operator">=</span> <span class="token punctuation">[</span>tableView dequeueReusableCellWithIdentifier<span class="token symbol">:ID</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token operator">/</span><span class="token operator">/</span>    <span class="token keyword">if</span> <span class="token punctuation">(</span>cell <span class="token operator">==</span> <span class="token keyword">nil</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 <span class="token operator">/</span><span class="token operator">/</span> 调用了initWithStyle方法<span class="token punctuation">,</span>再去重写它以满足需要
 <span class="token operator">/</span><span class="token operator">/</span>        cell <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token constant">MessageCell</span> alloc<span class="token punctuation">]</span>initWithStyle<span class="token symbol">:UITableViewCellStyleDefault</span> reuseIdentifier<span class="token symbol">:ID</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-<span class="token operator">/</span><span class="token operator">/</span>    <span class="token punctuation">}</span>
-</code></pre>
-
-<p>报错解决: <br>
- ① 在viewDidload里注册一个cell <br>
- ② 在storyboard里建一个,然后标识 <br>
- ③ 如上注释的 判断,在创建</p>
-
-<p>4.
- </p><pre class=" language-ruby"><code class=" language-ruby">failed to obtain a cell from its dataSource
+<span class="token operator">/</span><span class="token operator">/</span>    <span class="token punctuation">}</span></code></pre>报错解决: <br>
+① 在viewDidload里注册一个cell <br>
+② 在storyboard里建一个,然后标识 <br>
+③ 如上注释的 判断,在创建<p></p></li>
+<li><p>cell</p><pre class=" language-ruby"><code class=" language-ruby">failed to obtain a cell from its dataSource
 <span class="token constant">Terminating</span> app due to uncaught exception
 <span class="token string">'NSInternalInconsistencyException'</span><span class="token punctuation">,</span> reason<span class="token punctuation">:</span> '<span class="token constant">UITableView</span> <span class="token punctuation">(</span><span class="token operator">&lt;</span><span class="token constant">UITableView</span><span class="token punctuation">:</span> <span class="token number">0x7fd1130f1e00</span><span class="token punctuation">;</span> frame <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token number">414</span> <span class="token number">736</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 clipsToBounds <span class="token operator">=</span> <span class="token constant">YES</span><span class="token punctuation">;</span> autoresize <span class="token operator">=</span> <span class="token constant">W</span><span class="token operator">+</span><span class="token constant">H</span><span class="token punctuation">;</span> gestureRecognizers <span class="token operator">=</span>
@@ -300,10 +287,11 @@ clipsToBounds <span class="token operator">=</span> <span class="token constant"
 contentSize<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token number">414</span><span class="token punctuation">,</span> <span class="token number">44</span><span class="token punctuation">}</span><span class="token operator">&gt;</span><span class="token punctuation">)</span> failed to obtain a cell from its dataSource <span class="token punctuation">(</span><span class="token operator">&lt;</span><span class="token constant">UIFilteredDataSource</span><span class="token punctuation">:</span>
 </code></pre><em>原因</em>: <strong>没有注册cell</strong> <br>
 <em>解决</em>:<pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>tableView registerClass<span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token constant">UITableViewCell</span> <span class="token keyword">class</span><span class="token punctuation">]</span>forCellReuseIdentifier<span class="token symbol">:ID</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-</code></pre> <br>
-5. cell增加数据时单行刷新的bug <br>
+</code></pre>  <p></p></li>
+<li>cell增加数据时单行刷新的bug <br>
 插入数据后, 如果只刷新最后一行cell时 , 就会产生最后一行 cell 的图片闪烁,原因一般有个. <br>
-①<p></p>
+①</li>
+</ol>
 
 <pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>tableView insertRowsAtIndexPaths<span class="token punctuation">:</span>@<span class="token punctuation">[</span>path<span class="token punctuation">]</span> withRowAnimation<span class="token symbol">:UITableViewRowAnimationFade</span><span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
 

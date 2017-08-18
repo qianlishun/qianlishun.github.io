@@ -76,7 +76,7 @@ _解决_ :
 原因一般有两个  
 ①  
 `[self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationFade];`
-这是单行刷新时的一个动画问题 
+这是单行刷新时的一个动画问题   
 解决: 关闭视图的动画
 `[self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationFade];
 [UIView setAnimationsEnable:NO];`  
@@ -251,7 +251,7 @@ xxxx.o 结尾  报错提示
 原因一般有两个 <br>
 ① <br>
 <code>[self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationFade];</code>
-这是单行刷新时的一个动画问题&nbsp;
+这是单行刷新时的一个动画问题&nbsp; <br>
 解决: 关闭视图的动画
 <code>[self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationFade];
 [UIView setAnimationsEnable:NO];</code> <br>

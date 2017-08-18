@@ -1,0 +1,438 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>Simple</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+## 常识性错误
+### ① 报错中大量错误信息结尾.o后缀的,一般是引用头文件 import了 .m 文件
+### ② 控件不显示可能的原因.
+1. frame属性，是否为0，位置不对.
+2. hidden = YES.
+3. 是否添加到了父控件中 (set方法的重写中是否设置了子控件,检查set方法是否被调用)  
+4. Alpha <= 0.01（当一个控件的透明度大于0.01的时候, 是可以监听事件的, 否则(<=0.01), 是无法监听事件的）
+5. 被其他控件挡住了。 
+6. 检查父控件的上面这5种情况。
+###③ UICollectionView 一跑就崩.
+    记得给UICollectionView绑定FlowLayout啊少年.
+###④ UITableView的代理方法为什么不走...
+1. 看你的 UITableView 的父控制器是不是UITableViewController,    
+如果不是,那就要去遵守协议,实现代理
+2. 检查数据源方法, numberOfRowsInSection是否设置了.
+
+##TableView (scrollView,collectionView)
+1. 设置table view的行数时出错
+```[ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200
+ *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '-[ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200'
+*** First throw call stack:```
+
+2. 控件连线设置的名或者自定义的属性名与系统的关键字重名,比如imageView
+` /Users/qianlishun/Desktop/test/GoodsCell.m:15:41: Auto property synthesis will not synthesize property 'imageView' because it is 'readwrite' but it will be synthesized 'readonly' via another property`
+   
+3. `contentSize: {320, 712.705078125}>) failed to obtain a cell from its dataSource (<ViewController: 0x7fb992e1ff00>)'`
+创建一个cell ,先看缓存池有没有,然后看storyboard,再看代码
+后者会覆盖前者
+` static NSString *ID = @"message_cell";
+ MessageCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+//    if (cell == nil) {                  // 调用了initWithStyle方法,再去重写它以满足需要
+//        cell = [[MessageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
+//    }`  
+报错解决:    
+  ① 在viewDidload里注册一个cell  
+  ② 在storyboard里建一个,然后标识  
+  ③ 如上注释的 判断,在创建
+
+
+4.  `failed to obtain a cell from its dataSource
+ Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'UITableView (<UITableView: 0x7fd1130f1e00; frame = (0 0; 414 736); clipsToBounds = YES; autoresize = W+H; gestureRecognizers = <NSArray: 0x7fd11266a3f0>; layer = <CALayer: 0x7fd11480dfe0>; contentOffset: {0, -64}; contentSize: {414, 44}>) failed to obtain a cell from its dataSource (<_UIFilteredDataSource:`
+ _原因_ : **没有注册cell**   
+_解决_ :
+` [self.tableView registerClass:[UITableViewCell class]forCellReuseIdentifier:ID];`
+ 
+
+5. cell增加数据时单行刷新的bug  
+插入数据后, 如果只刷新最后一行cell时 , 就会产生最后一行 cell 的图片闪烁
+原因一般有两个  
+①  
+`[self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationFade];`
+这是单行刷新时的一个动画问题 
+解决: 关闭视图的动画
+`[self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationFade];
+[UIView setAnimationsEnable:NO];`  
+②
+cell里面的内容超出了cell的行高,即超出了他父视图  
+_解决_:去重新设置 cell 的内容,以防止超出.  
+或者剪切超出父视图边界的内容:  
+在数据源方法cellForRowAtIndexPath:中
+cell.clipsToBounds = YES;
+
+
+###UIAlertController
+1. // 创建一个确定按钮”一定要注意不能在提醒控制器的按钮的点击方法内部用到提醒控制器自己”,不能把下面这句话放在block内部”不然会死循环,导致警告控制器不能销毁"   
+`UITextField *textField = alertC.textFields.firstObject;
+     UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) { 
+        hero.name = textField.text; 
+        [self.tableView reloadData]; 
+ //        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+ //        [alertC dismissViewControllerAnimated:NO completion:nil];
+     }];`
+
+
+###UIImage  & UIImageView 
+
+1. Invalid asset name supplied:
+ 原因 : [UIImage imageNamed:@“”] imageNamed 为空
+
+
+###静态库
+
+1. Undefined symbols for architecture x86_64 / i386 /arm64 / armv7s / armv7 :  
+_原因_: 静态库的架构不对 真机/模拟器,没有架构.  
+_解决方法_: 检查第三方类库的架构版本,真机/模拟器.
+
+2. Undefined symbols for architecture i386:  
+_原因_: 真机和模拟器也是区分多种架构的.
+
+3. _dns_free_resource_record", referenced from: -[XMPPSRVResolver processRecord:length:] in libEaseMobClientSDKLite.a(XMPPSRVResolver.o)  
+_这样的错误，是由于缺少库_：  
+添加libresolv.dylib库，就可以了
+
+###其他 (SDK 等)
+
+1. [NSPlaceholderString initWithString:]: nil argument-  某参数参数为空！
+`Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '*** -[NSPlaceholderString initWithString:]: nil argument'`  
+今天使用 短信验证第三方框架SMS_SDK时,报该错误, 最后发现是因为某参数为空,  
+出该错的话,就回去检查参数问题,  
+我的原因就是SMSSDKUI.bundle 没有添加进项目.
+
+2. `Terminating app due to uncaught exception 'NSUnknownKeyException', reason: '[<FlagView 0x7fc523531a90> setValue:forUndefinedKey:]: this class is not key value coding-compliant for the key imgViewicon.'`
+　　_原因_:  imgVIewIcon这个控件没有绑定给 视图 中的控件 (即没有连线,这个类找不到key)
+ 
+3. `CUICatalog: Invalid asset name supplied: (null)`  
+有文件没有加载, 比如      
+`self.imgViewPicture.image = [UIImage imageNamed:weichat.picture];`  
+但 “weichat.picture" 为空(nil)
+
+
+4. Code signing is required for product type 'Application' in SDK 'iOS 10.0'  
+该错误 是因为旧项目使用的是旧 SDK, 而更新 Xcode 后可能删除了以前版本的 SDK, 导致项目无法兼容iOS10 .
+解决方法是下载旧版 Xcode...
+
+
+###AFNetworking 3.1
+
+1. 拿 swift 举例  
+与3.0相比较 GET POST方法多了个参数 progress ,加上即可.  
+另外, 注意  成功闭包 result 为可选项,  失败闭包 task 为可选项.
+
+`// MARK: - 请求数据
+func request(method: RequestMethod, URLString: String, parameters:[String: AnyObject]?, finished: RequestCallBack) {
+    // 定义请求成功的闭包
+    let successCallBack = { (dataTask: NSURLSessionDataTask, result: AnyObject?)-> Void in
+        finished(result:result, error:nil)
+    }
+    // 定义请求失败的闭包
+    let failureCallBack = { (dataTask: NSURLSessionDataTask?, error: NSError)-> Void in
+        print(error)
+        finished(result: nil, error: error)
+    }
+    if method == .GET{
+        GET(URLString, parameters: parameters, progress: nil, success: successCallBack, failure: failureCallBack)
+    }else{
+        POST(URLString, parameters: parameters, progress:nil, success: successCallBack, failure: failureCallBack)
+    }}`
+
+
+###Instruments  
+1. 使用Xcode 调试工具 Instruments 时, 发现无法定位代码.  
+_解决_:
+项目设置: debug,选择下面那个
+
+
+
+
+###Duplicate Symbol链接错误
+
+1. duplicate symbol是一种常见的链接错误，不像编译错误那样可以直接定位到问题的所在。
+表现为 : 大量的 以  /Users/xxx/Library/Developer/Xcode/DerivedData/linkTest- 路径开头 , 
+xxxx.o 结尾  报错提示
+
+ _基本有以下几种情况:_    
+①.
+头文件引用成". m"  . 
+注: 在 Xcode8 import 时写. m 是会直接报错的.  
+②.
+同一个类被引入两次, 或者 文件名重复
+一般在多人协作时出现,大家都引入或创建了某一个类.
+还有就是使用第三方库时, 我们命名的某个类名和第三方库文件名重复.
+
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+<h2 id="">常识性错误</h2>
+
+<h3 id="oimportm">①&nbsp;报错中大量错误信息结尾.o后缀的,一般是引用头文件 import了 .m 文件</h3>
+
+<h3 id="">② 控件不显示可能的原因.</h3>
+
+<ol>
+<li>frame属性，是否为0，位置不对.</li>
+<li>hidden = YES.</li>
+<li>是否添加到了父控件中 (set方法的重写中是否设置了子控件,检查set方法是否被调用) &nbsp;</li>
+<li>Alpha &lt;= 0.01（当一个控件的透明度大于0.01的时候, 是可以监听事件的, 否则(&lt;=0.01), 是无法监听事件的）</li>
+<li>被其他控件挡住了。&nbsp;</li>
+<li>检查父控件的上面这5种情况。</li>
+</ol>
+
+<h3 id="uicollectionview">③ UICollectionView 一跑就崩.</h3>
+
+<p>&nbsp; &nbsp; 记得给UICollectionView绑定FlowLayout啊少年.</p>
+
+<h3 id="uitableview">④ UITableView的代理方法为什么不走...</h3>
+
+<ol>
+<li>看你的 UITableView 的父控制器是不是UITableViewController, <br>
+如果不是,那就要去遵守协议,实现代理</li>
+<li>检查数据源方法, numberOfRowsInSection是否设置了.</li>
+</ol>
+
+<h2 id="tableviewscrollviewcollectionview">TableView (scrollView,collectionView)</h2>
+
+<ol>
+<li><p>设置table view的行数时出错
+<code>[ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200
+&nbsp;*** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '-[ViewController tableView:numberOfRowsInSection:]: unrecognized selector sent to instance 0x7fb362e13200'
+*** First throw call stack:</code></p></li>
+<li><p>控件连线设置的名或者自定义的属性名与系统的关键字重名,比如imageView
+<code>&nbsp;/Users/qianlishun/Desktop/test/GoodsCell.m:15:41: Auto property synthesis will not synthesize property 'imageView' because it is 'readwrite' but it will be synthesized 'readonly' via another property</code>
+&nbsp; &nbsp;</p></li>
+<li><p><code>contentSize: {320, 712.705078125}&gt;) failed to obtain a cell from its dataSource (&lt;ViewController: 0x7fb992e1ff00&gt;)'</code>
+创建一个cell ,先看缓存池有没有,然后看storyboard,再看代码
+后者会覆盖前者
+<code>static&nbsp;NSString&nbsp;*ID = @"message_cell";
+&nbsp;MessageCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+//&nbsp;&nbsp;&nbsp; if (cell == nil) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 调用了initWithStyle方法,再去重写它以满足需要
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cell = [[MessageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
+//&nbsp;&nbsp;&nbsp; }</code> <br>
+报错解决: &nbsp; <br>
+① 在viewDidload里注册一个cell <br>
+② 在storyboard里建一个,然后标识 <br>
+③ 如上注释的 判断,在创建</p></li>
+<li><p><code>failed to obtain a cell from its dataSource
+&nbsp;Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'UITableView (&lt;UITableView: 0x7fd1130f1e00; frame = (0 0; 414 736); clipsToBounds = YES; autoresize = W+H; gestureRecognizers = &lt;NSArray: 0x7fd11266a3f0&gt;; layer = &lt;CALayer: 0x7fd11480dfe0&gt;; contentOffset: {0, -64}; contentSize: {414, 44}&gt;) failed to obtain a cell from its dataSource (&lt;_UIFilteredDataSource:</code>
+<em>原因</em> : <strong>没有注册cell</strong> <br>
+<em>解决</em>&nbsp;:
+<code>[self.tableView registerClass:[UITableViewCell class]forCellReuseIdentifier:ID];</code>
+&nbsp;</p></li>
+<li><p>cell增加数据时单行刷新的bug <br>
+插入数据后, 如果只刷新最后一行cell时 , 就会产生最后一行 cell 的图片闪烁
+原因一般有两个 <br>
+① <br>
+<code>[self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationFade];</code>
+这是单行刷新时的一个动画问题&nbsp;
+解决: 关闭视图的动画
+<code>[self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationFade];
+[UIView setAnimationsEnable:NO];</code> <br>
+②
+cell里面的内容超出了cell的行高,即超出了他父视图 <br>
+<em>解决</em>:去重新设置 cell 的内容,以防止超出. <br>
+或者剪切超出父视图边界的内容: <br>
+在数据源方法cellForRowAtIndexPath:中
+cell.clipsToBounds = YES;</p></li>
+</ol>
+
+<h3 id="uialertcontroller">UIAlertController</h3>
+
+<ol>
+<li>// 创建一个确定按钮”一定要注意不能在提醒控制器的按钮的点击方法内部用到提醒控制器自己”,不能把下面这句话放在block内部”不然会死循环,导致警告控制器不能销毁"&nbsp; <br>
+<code>UITextField *textField = alertC.textFields.firstObject;
+&nbsp; &nbsp; UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {&nbsp;
+&nbsp; &nbsp; &nbsp;  &nbsp;hero.name = textField.text;&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp;[self.tableView reloadData];&nbsp;
+// &nbsp; &nbsp; &nbsp; &nbsp;[self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+// &nbsp; &nbsp; &nbsp; &nbsp;[alertC dismissViewControllerAnimated:NO completion:nil];
+&nbsp; &nbsp; &nbsp;}];</code></li>
+</ol>
+
+<h3 id="uiimageuiimageview">UIImage &nbsp;&amp; UIImageView&nbsp;</h3>
+
+<ol>
+<li>Invalid asset name supplied:
+&nbsp;原因 : [UIImage imageNamed:@“”] imageNamed 为空</li>
+</ol>
+
+<h3 id="">静态库</h3>
+
+<ol>
+<li><p>Undefined symbols for architecture x86<em>64 / i386 /arm64 / armv7s / armv7 : <br>
+_原因</em>: 静态库的架构不对 真机/模拟器,没有架构. <br>
+<em>解决方法</em>: 检查第三方类库的架构版本,真机/模拟器.</p></li>
+<li><p>Undefined symbols for architecture i386: <br>
+<em>原因</em>: 真机和模拟器也是区分多种架构的.</p></li>
+<li><p><em>dns</em>free<em>resource</em>record", referenced from: -[XMPPSRVResolver processRecord:length:] in libEaseMobClientSDKLite.a(XMPPSRVResolver.o) <br>
+<em>这样的错误，是由于缺少库</em>： <br>
+添加libresolv.dylib库，就可以了</p></li>
+</ol>
+
+<h3 id="sdk">其他 (SDK 等)</h3>
+
+<ol>
+<li><p>[NSPlaceholderString&nbsp;initWithString:]:&nbsp;nil&nbsp;argument- &nbsp;某参数参数为空！
+<code>Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '*** -[NSPlaceholderString initWithString:]: nil argument'</code> <br>
+今天使用 短信验证第三方框架SMS_SDK时,报该错误, 最后发现是因为某参数为空, <br>
+出该错的话,就回去检查参数问题, <br>
+我的原因就是SMSSDKUI.bundle 没有添加进项目.</p></li>
+<li><p><code>Terminating app due to uncaught exception 'NSUnknownKeyException', reason: '[&lt;FlagView 0x7fc523531a90&gt; setValue:forUndefinedKey:]:&nbsp;this class is not key value&nbsp;coding-compliant for the key imgViewicon.'</code>
+　　<em>原因</em>:&nbsp; imgVIewIcon这个控件没有绑定给&nbsp;视图 中的控件 (即没有连线,这个类找不到key)
+&nbsp;</p></li>
+<li><p><code>CUICatalog: Invalid asset name supplied: (null)</code> <br>
+有文件没有加载, 比如&nbsp; &nbsp;&nbsp;&nbsp; 
+<code>self.imgViewPicture.image = [UIImage imageNamed:weichat.picture];</code> <br>
+但&nbsp;“weichat.picture" 为空(nil)</p></li>
+<li><p>Code signing is required for product type 'Application' in SDK 'iOS 10.0' <br>
+该错误 是因为旧项目使用的是旧 SDK, 而更新 Xcode 后可能删除了以前版本的 SDK, 导致项目无法兼容iOS10 .
+解决方法是下载旧版 Xcode...</p></li>
+</ol>
+
+<h3 id="afnetworking31">AFNetworking 3.1</h3>
+
+<ol>
+<li>拿 swift 举例 <br>
+与3.0相比较 GET POST方法多了个参数 progress ,加上即可. <br>
+另外, 注意 &nbsp;成功闭包 result 为可选项, &nbsp;失败闭包 task 为可选项.</li>
+</ol>
+
+<p><code>// MARK: - 请求数据
+func request(method: RequestMethod, URLString: String, parameters:[String: AnyObject]?, finished: RequestCallBack) {
+ &nbsp; &nbsp;// 定义请求成功的闭包
+ &nbsp; &nbsp;let successCallBack = { (dataTask: NSURLSessionDataTask, result: AnyObject?)-&gt; Void in
+ &nbsp; &nbsp; &nbsp; &nbsp;finished(result:result, error:nil)
+ &nbsp; &nbsp;}
+ &nbsp; &nbsp;// 定义请求失败的闭包
+ &nbsp; &nbsp;let failureCallBack = { (dataTask: NSURLSessionDataTask?, error: NSError)-&gt; Void in
+ &nbsp; &nbsp; &nbsp; &nbsp;print(error)
+ &nbsp; &nbsp; &nbsp; &nbsp;finished(result: nil, error: error)
+ &nbsp; &nbsp;}
+ &nbsp; &nbsp;if method == .GET{
+ &nbsp; &nbsp; &nbsp; &nbsp;GET(URLString, parameters: parameters, progress: nil, success: successCallBack, failure: failureCallBack)
+ &nbsp; &nbsp;}else{
+ &nbsp; &nbsp; &nbsp; &nbsp;POST(URLString, parameters: parameters, progress:nil, success: successCallBack, failure: failureCallBack)
+ &nbsp; &nbsp;}}</code></p>
+
+<h3 id="instruments">Instruments</h3>
+
+<ol>
+<li>使用Xcode 调试工具 Instruments 时, 发现无法定位代码. <br>
+<em>解决</em>:
+项目设置:&nbsp;debug,选择下面那个</li>
+</ol>
+
+<h3 id="duplicatesymbol">Duplicate Symbol链接错误</h3>
+
+<ol>
+<li><p>duplicate symbol是一种常见的链接错误，不像编译错误那样可以直接定位到问题的所在。
+表现为 : 大量的 以&nbsp;&nbsp;/Users/xxx/Library/Developer/Xcode/DerivedData/linkTest- 路径开头 ,&nbsp;
+xxxx.o 结尾&nbsp;&nbsp;报错提示</p>
+
+<p><em>基本有以下几种情况:</em> <br>
+①.
+头文件引用成". m" &nbsp;.&nbsp;
+注: 在 Xcode8 import 时写. m 是会直接报错的. <br>
+②.
+同一个类被引入两次, 或者 文件名重复
+一般在多人协作时出现,大家都引入或创建了某一个类.
+还有就是使用第三方库时, 我们命名的某个类名和第三方库文件名重复.</p></li>
+</ol>
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2014 by isnowfy, Designed by isnowfy</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "bugs.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+</body>
+</html>

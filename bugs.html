@@ -93,13 +93,11 @@ _解决_:~~~~{ruby}
   
 5. cell增加数据时单行刷新的bug  
 插入数据后, 如果只刷新最后一行cell时 , 就会产生最后一行 cell 的图片闪烁,原因一般有个.  
-①
-~~~~{ruby}
+①~~~~{ruby}
 [self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationFade];~~~~
 
 这是单行刷新时的一个动画问题.  
-解决: 关闭视图的动画  
-~~~~{ruby}
+解决: 关闭视图的动画  ~~~~{ruby}
 [self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationFade];
 [UIView setAnimationsEnable:NO];~~~~
 
@@ -290,23 +288,17 @@ contentSize<span class="token punctuation">:</span> <span class="token punctuati
 </code></pre>  <p></p></li>
 <li>cell增加数据时单行刷新的bug <br>
 插入数据后, 如果只刷新最后一行cell时 , 就会产生最后一行 cell 的图片闪烁,原因一般有个. <br>
-①</li>
-</ol>
-
-<pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>tableView insertRowsAtIndexPaths<span class="token punctuation">:</span>@<span class="token punctuation">[</span>path<span class="token punctuation">]</span> withRowAnimation<span class="token symbol">:UITableViewRowAnimationFade</span><span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
-
-<p>这是单行刷新时的一个动画问题. <br>
-解决: 关闭视图的动画  </p>
-
-<pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>tableView insertRowsAtIndexPaths<span class="token punctuation">:</span>@<span class="token punctuation">[</span>path<span class="token punctuation">]</span> withRowAnimation<span class="token symbol">:UITableViewRowAnimationFade</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+①<pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>tableView insertRowsAtIndexPaths<span class="token punctuation">:</span>@<span class="token punctuation">[</span>path<span class="token punctuation">]</span> withRowAnimation<span class="token symbol">:UITableViewRowAnimationFade</span><span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
+这是单行刷新时的一个动画问题. <br>
+解决: 关闭视图的动画  <pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>tableView insertRowsAtIndexPaths<span class="token punctuation">:</span>@<span class="token punctuation">[</span>path<span class="token punctuation">]</span> withRowAnimation<span class="token symbol">:UITableViewRowAnimationFade</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token punctuation">[</span><span class="token constant">UIView</span> setAnimationsEnable<span class="token symbol">:NO</span><span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
-
-<p>②
+②
 cell里面的内容超出了cell的行高,即超出了他父视图. <br>
 <em>解决</em>:去重新设置 cell 的内容,以防止超出. <br>
 或者剪切超出父视图边界的内容: <br>
 在数据源方法cellForRowAtIndexPath:中
-cell.clipsToBounds = YES;</p>
+cell.clipsToBounds = YES;</li>
+</ol>
 
 <h3 id="uialertcontroller">UIAlertController</h3>
 

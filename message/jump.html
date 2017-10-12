@@ -1,17 +1,23 @@
 <html>     
     <head>     
-        <meta name="viewport" content="width=device-width" />     
+        <meta name="viewport" content="width=device-width" />    
+        <title id="demo">???</title>        
     </head>     
+    <body>
+    </body>
+
         <script type="text/javascript">  
             window.onload=function(){  
                 // 通过iframe的方式试图打开APP，如果能正常打开，会直接切换到APP，并自动阻止a标签的默认行为  
                 // 否则延迟两秒打开 url 
                 if(isWeiXin()){ 
+                    document.getElementById("demo").innerHTML="weixin";
                     var ifr = document.createElement('iframe');
                     ifr.src = 'smartvus://';
                     ifr.style.display = 'none';
                     document.body.appendChild(ifr);
                 } else{
+                    document.getElementById("demo").innerHTML="safari";
                     window.location.href = "smartvus://";
                 }
                 window.setTimeout(function(){

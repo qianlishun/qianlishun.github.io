@@ -8,7 +8,7 @@
                 // 否则延迟两秒打开 url 
                 if(isWeiXin()){ 
                     var ifr = document.createElement('iframe');
-                    ifr.src = '自定义 URL scheme';
+                    ifr.src = 'smartvus://';
                     ifr.style.display = 'none';
                     document.body.appendChild(ifr);
                 } else{
@@ -16,7 +16,7 @@
                 }
                 window.setTimeout(function(){
                                  window.location.href = "http://192.168.1.105/jump.php?ssid=sv-1%20cmbgca001?pwd=wmpbgca001";//打开app下载地址，有app同事提供
-                             },2000)
+                             },3000)
             }; 
             function isWeiXin(){ 
                     var ua = window.navigator.userAgent.toLowerCase(); 

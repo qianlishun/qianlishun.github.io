@@ -2,20 +2,14 @@
     <head>     
         <meta name="viewport" content="width=device-width" />     
     </head>     
-          
-          
-        <a href="http://192.168.1.105/jump.php?ssid=sv-1%20cmbgca001?pwd=wmpbgca001" id="openApp">smartvus</a>  
         <script type="text/javascript">  
-            document.getElementById('openApp').onclick = function(e){  
+            window.onload=function(){  
                 // 通过iframe的方式试图打开APP，如果能正常打开，会直接切换到APP，并自动阻止a标签的默认行为  
                 // 否则打开a标签的href链接  
-                var ifr = document.createElement('iframe');  
-                ifr.src = 'smartvus://';  
-                ifr.style.display = 'none';  
-                document.body.appendChild(ifr);  
-                window.setTimeout(function(){  
-                                  document.body.removeChild(ifr);  
-                                  },3000)  
-            };  
+                window.location.href = "smartvus://";
+                window.setTimeout(function(){
+                                 window.location.href = "http://192.168.1.105/jump.php?ssid=sv-1%20cmbgca001?pwd=wmpbgca001";//打开app下载地址，有app同事提供
+                             },2000)
+            }; 
             </script>    
 </html>  

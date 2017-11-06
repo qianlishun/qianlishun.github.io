@@ -5,33 +5,59 @@
     <body>
             <p id="demo">???</p>        
             
-    </body>
+    </body onload="checkOS()">
 
         <script type="text/javascript">  
-            window.onload=function(){  
-                // 通过iframe的方式试图打开APP，如果能正常打开，会直接切换到APP，并自动阻止a标签的默认行为  
-                // 否则延迟两秒打开 url 
-                if(isWeiXin()){ 
-                    document.getElementById("demo").innerHTML="weixin";
-                    var ifr = document.createElement('iframe');
-                    ifr.src = 'smartvus://';
-                    ifr.style.display = 'none';
-                    document.body.appendChild(ifr);
-                } else{
-                    document.getElementById("demo").innerHTML="safari";
-                    window.location.href = "smartvus://";
-                }
-                window.setTimeout(function(){
-                                 window.location.href = "http://192.168.1.105/jump.php?ssid=sv-1%20cmbgca001?pwd=wmpbgca001";//打开app下载地址，有app同事提供
-                             },3000)
-            }; 
-            function isWeiXin(){ 
-                    var ua = window.navigator.userAgent.toLowerCase(); 
-                    if(ua.match(/MicroMessenger/i) == 'micromessenger'){ 
-                        return true; 
-                    }else{ 
-                        return false; 
-                    }
-             }
+//             window.onload=function(){  
+//                 // 通过iframe的方式试图打开APP，如果能正常打开，会直接切换到APP，并自动阻止a标签的默认行为  
+//                 // 否则延迟两秒打开 url 
+//                 if(isWeiXin()){ 
+//                     document.getElementById("demo").innerHTML="weixin";
+//                     var ifr = document.createElement('iframe');
+//                     ifr.src = 'smartvus://';
+//                     ifr.style.display = 'none';
+//                     document.body.appendChild(ifr);
+//                 } else{
+//                     document.getElementById("demo").innerHTML="safari";
+//                     window.location.href = "smartvus://";
+//                 }
+//                 window.setTimeout(function(){
+//                                  window.location.href = "http://192.168.1.105/jump.php?ssid=sv-1%20cmbgca001?pwd=wmpbgca001";//打开app下载地址，有app同事提供
+//                              },3000)
+//             }; 
+//             function isWeiXin(){ 
+//                     var ua = window.navigator.userAgent.toLowerCase(); 
+//                     if(ua.match(/MicroMessenger/i) == 'micromessenger'){ 
+//                         return true; 
+//                     }else{ 
+//                         return false; 
+//                     }
+//              }
+            function checkOS(){
+			//正则,忽略大小写
+			var pattern_phone = new RegExp("iphone","i");
+			var pattern_android = new RegExp("android","i");
+			var pattern_ipad = new RegExp("ipad","i");
+			var userAgent = navigator.userAgent.toLowerCase();
+			var isAndroid = pattern_android.test(userAgent);
+			var isIphone = pattern_phone.test(userAgent);
+			var isIpad = pattern_ipad.test(userAgent);
+			var phoneType="phoneType";
+			if(isAndroid){ 
+				// var zh_cnIndex = userAgent.indexOf("-");
+				// var spaceIndex = userAgent.indexOf("build",zh_cnIndex+4);
+				// var fullResult = userAgent.substring(zh_cnIndex,spaceIndex);
+				// phoneType=fullResult.split(";")[1];
+				phoneType = "Android";
+			}else if(isIphone){ 
+				phoneType = "iPhone";
+			}else if(isIpad){
+				phoneType = "iPad";
+			}else{
+				phoneType = "unknow";
+			}
+			alert('Device Type: '+ phoneType);
+			return phoneType;
+		}
          </script>    
 </html>  

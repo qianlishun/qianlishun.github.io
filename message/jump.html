@@ -44,11 +44,13 @@
 			var isIpad = pattern_ipad.test(userAgent);
 			var phoneType="phoneType";
 			if(isAndroid){ 
-				// var zh_cnIndex = userAgent.indexOf("-");
-				// var spaceIndex = userAgent.indexOf("build",zh_cnIndex+4);
-				// var fullResult = userAgent.substring(zh_cnIndex,spaceIndex);
-				// phoneType=fullResult.split(";")[1];
-				phoneType = "Android";
+				if((context.getResources().getConfiguration().screenLayout 
+				& Configuration.SCREENLAYOUT_SIZE_MASK) 
+				>= Configuration.SCREENLAYOUT_SIZE_LARGE){
+					phoneType = "Android Pad";
+				}else{
+					phoneType = "Android Phone";
+				}
 			}else if(isIphone){ 
 				phoneType = "iPhone";
 			}else if(isIpad){

@@ -38,6 +38,8 @@
 			var pattern_phone = new RegExp("iphone","i");
 			var pattern_android = new RegExp("android","i");
 			var pattern_ipad = new RegExp("ipad","i");
+		    	var pattern_mobile = new RegExp("mobile","i");
+
 			var userAgent = navigator.userAgent.toLowerCase();
 			var isAndroid = pattern_android.test(userAgent);
 			var isIphone = pattern_phone.test(userAgent);

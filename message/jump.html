@@ -42,14 +42,13 @@
 			var isAndroid = pattern_android.test(userAgent);
 			var isIphone = pattern_phone.test(userAgent);
 			var isIpad = pattern_ipad.test(userAgent);
+			var isMobile = pattern_mobile.test(userAgent);
 			var phoneType="phoneType";
 			if(isAndroid){ 
-				if((context.getResources().getConfiguration().screenLayout 
-				& Configuration.SCREENLAYOUT_SIZE_MASK) 
-				>= Configuration.SCREENLAYOUT_SIZE_LARGE){
-					phoneType = "Android Pad";
-				}else{
+				if(isMobile){
 					phoneType = "Android Phone";
+				}else{
+					phoneType = "Android Pad";
 				}
 			}else if(isIphone){ 
 				phoneType = "iPhone";

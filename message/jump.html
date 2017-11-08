@@ -108,23 +108,20 @@
 // 			}
 // 		    });
 
-		    window.location.href = "www.baidu.com";
+		    window.location.href = "https://itunes.apple.com/cn/app/无线b超-iphone/id1089842655?mt=8%20sss";
+	
+		    setTimeout(is_weixn,"3000");
 
-		    
-		    // 是微信内部webView
-		    if (is_weixn()) {
-			alert("请点击右上角按钮, 点击使用浏览器打开");
-		    }
-
-		   // 是微信浏览器
+		      // 是微信浏览器
 			function is_weixn(){
-				var ua = navigator.userAgent.toLowerCase();
-				if(ua.match(/MicroMessenger/i)=="micromessenger") {
-				    return true;
-				} else {
-				    return false;
-				}
+			var ua = navigator.userAgent.toLowerCase();
+			if(ua.match(/MicroMessenger/i)=="micromessenger") {
+			    alert("请点击右上角按钮, 点击使用浏览器打开");            
+			    return true;
+			} else {
+			    return false;
 			}
+		    }
 	}
          </script>    
 </html>  

@@ -34,34 +34,93 @@
 //                     }
 //              }
             function checkOS(){
-			//正则,忽略大小写
-			var pattern_phone = new RegExp("iphone","i");
-			var pattern_android = new RegExp("android","i");
-			var pattern_ipad = new RegExp("ipad","i");
-		    	var pattern_mobile = new RegExp("mobile","i");
+		//正则,忽略大小写
+	    var pattern_phone = new RegExp("iphone","i");
+	    var pattern_android = new RegExp("android","i");
+	    var pattern_ipad = new RegExp("ipad","i");
+	    var pattern_mobile = new RegExp("mobile","i");
+	    var userAgent = navigator.userAgent.toLowerCase();
+	    var isAndroid = pattern_android.test(userAgent);
+	    var isIphone = pattern_phone.test(userAgent);
+	    var isIpad = pattern_ipad.test(userAgent);
+	    var isMobile = pattern_mobile.test(userAgent);
+	    var phoneType="phoneType";
 
-			var userAgent = navigator.userAgent.toLowerCase();
-			var isAndroid = pattern_android.test(userAgent);
-			var isIphone = pattern_phone.test(userAgent);
-			var isIpad = pattern_ipad.test(userAgent);
-			var isMobile = pattern_mobile.test(userAgent);
-			var phoneType="phoneType";
-			if(isAndroid){ 
-				if(isMobile){
-					phoneType = "Android Phone";
-				}else{
-					phoneType = "Android Pad";
-				}
-			}else if(isIphone){ 
-				phoneType = "iPhone";
-			}else if(isIpad){
-				phoneType = "iPad";
-			}else{
-				phoneType = "unknow";
-			}
-		        document.getElementById("demo").innerHTML= phoneType;
-		    	alert('Device Type: '+ phoneType);
-			return phoneType;
+	    var os;
+	    var platform;
+	    if(isAndroid){ 
+		os = 'Android';
+		if(isMobile){
+		    phoneType = "Android Phone";
+		    platform = 'phone'
+		}else{
+		    phoneType = "Android Pad";
+		    platform = 'pad'
 		}
+	    }else if(isIphone){ 
+		os = 'iOS'
+		platform = 'phone'
+		phoneType = "iPhone";
+	    }else if(isIpad){
+		os = 'iOS'
+		platform = 'pad'
+		phoneType = "iPad";
+	    }else{
+		os = 'unknow';
+		phoneType = "unknow";
+	    }
+	    var str = "pc";
+	    if(isMobile){
+		str = "mobile"
+	    }
+
+	    var currentUrl = window.location.href;
+	    var probe = "probe";
+	    c_start=currentUrl.indexOf(probe+"=")
+	    if(c_start!=-1){
+		c_start = c_start + probe.length+1;
+		c_end = currentUrl.indexOf(";",c_start)
+		if(c_end==-1) c_end = currentUrl.length
+		probe = unescape(currentUrl.substring(c_start,c_end))
+	    }
+
+	    $.ajax({
+		url:'https://www.smartvus.com/package/package.php',
+		method:'get',
+		data:{
+		    os:os,
+		    platform:platform,
+		    probe:probe
+		},
+		dataType:'json',
+		success: function(msg){
+		   // var j = JSON.decode(msg);
+		var j = msg;
+		    if(!j) return false;
+		    if(j.url){
+			window.location.href = j.url;
+			document.getElementById("url").innerHTML = j.url;
+		    }
+		},
+		error:function(msg){
+		  document.getElementById("url").innerHTML = msg;
+		}
+	    });
+
+	    // 是微信内部webView
+	    if (is_weixn()) {
+		alert("请点击右上角按钮, 点击使用浏览器打开");
+	    }
+
+	   // 是微信浏览器
+		function is_weixn(){
+			var ua = navigator.userAgent.toLowerCase();
+			if(ua.match(/MicroMessenger/i)=="micromessenger") {
+			    return true;
+			} else {
+			    return false;
+			}
+	   	}
+	}
          </script>    
 </html>  

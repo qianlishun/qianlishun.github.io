@@ -109,7 +109,7 @@
 // 		    });
 
 		window.location.href = "https://itunes.apple.com/cn/app/无线b超-iphone/id1089842655?mt=8%20sss";
-		var cssText = "#weixin-tip{position: fixed; left:0; top:0; background: rgba(0,0,0,0.8); filter:alpha(opacity=80); width: 80%; height:80%; z-index: 100;} #weixin-tip p{text-align: center; margin-top: 10%; padding:0 5%;}";
+		var cssText = "#weixin-tip{position: fixed; left:0; top:0; background: rgba(0,0,0,0.8); filter:alpha(opacity=80); width: 100%; height:100%; z-index: 100;} #weixin-tip p{text-align: center; margin-top: 10%; padding:0 5%;}";
     
 		    setTimeout(is_weixn,"3000");
 		      // 是微信浏览器
@@ -127,6 +127,7 @@
 		    var winHeight = typeof window.innerHeight != 'undefined' ? window.innerHeight : document.documentElement.clientHeight;
 		    function loadHtml(){
 			var div = document.createElement('div');
+			div.style = 'width:80%';
 			div.id = 'weixin-tip';
 			div.innerHTML = '<p><img src="live_weixin.png" alt="微信打开"/></p>';
 			document.body.appendChild(div);

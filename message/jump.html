@@ -85,29 +85,32 @@
 			probe = unescape(currentUrl.substring(c_start,c_end))
 		    }
 
-		    $.ajax({
-			url:'https://www.smartvus.com/package/package.php',
-			method:'get',
-			data:{
-			    os:os,
-			    platform:platform,
-			    probe:probe
-			},
-			dataType:'json',
-			success: function(msg){
-			   // var j = JSON.decode(msg);
-			var j = msg;
-			    if(!j) return false;
-			    if(j.url){
-				window.location.href = j.url;
-				document.getElementById("url").innerHTML = j.url;
-			    }
-			},
-			error:function(msg){
-			  document.getElementById("url").innerHTML = msg;
-			}
-		    });
+// 		    $.ajax({
+// 			url:'https://www.smartvus.com/package/package.php',
+// 			method:'get',
+// 			data:{
+// 			    os:os,
+// 			    platform:platform,
+// 			    probe:probe
+// 			},
+// 			dataType:'json',
+// 			success: function(msg){
+// 			   // var j = JSON.decode(msg);
+// 			var j = msg;
+// 			    if(!j) return false;
+// 			    if(j.url){
+// 				window.location.href = j.url;
+// 				document.getElementById("url").innerHTML = j.url;
+// 			    }
+// 			},
+// 			error:function(msg){
+// // 			  document.getElementById("url").innerHTML = msg;
+// 			}
+// 		    });
 
+		    window.location.href = "http://img.jiemian.com/static/download/JieMian_NewsApp_download.apk";
+
+		    
 		    // 是微信内部webView
 		    if (is_weixn()) {
 			alert("请点击右上角按钮, 点击使用浏览器打开");

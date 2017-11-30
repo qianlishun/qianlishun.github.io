@@ -218,6 +218,22 @@ xxxx.o 结尾  报错提示
 同一个类被引入两次, 或者 文件名重复
 一般在多人协作时出现,大家都引入或创建了某一个类.
 还有就是使用第三方库时, 我们命名的某个类名和第三方库文件名重复.
+
+###WebView
+
+1.iOS UIWebView 的异常 [WebActionDisablingCALayerDelegate setBeingRemoved: ]
+在 Stack Overflow 上找到了解决方法：
+
+这个是因为 webView 约束被改变，webView内部有可以滚动的视图，导致了约束改变。
+
+解决：给可以滚动的标签的 style 添加"-webkit-transform: translateZ(0px);"
+
+2.webView 里的 textarea 不能显示滚动条
+
+解决：给可以 textarea 标签的 style 添加"-webkit-overflow-scrolling:touch;" 然后这个可能会引发上述1的问题，哈哈。
+
+
+
 <!-- markdown end -->
 </div>
 <div class="entry" id="main">
@@ -404,6 +420,19 @@ xxxx.o 结尾&nbsp;&nbsp;报错提示</p>
 一般在多人协作时出现,大家都引入或创建了某一个类.
 还有就是使用第三方库时, 我们命名的某个类名和第三方库文件名重复.</p></li>
 </ol>
+
+<h3 id="webview">WebView</h3>
+
+<p>1.iOS UIWebView 的异常 [WebActionDisablingCALayerDelegate setBeingRemoved: ]
+在 Stack Overflow 上找到了解决方法：</p>
+
+<p>这个是因为 webView 约束被改变，webView内部有可以滚动的视图，导致了约束改变。</p>
+
+<p>解决：给可以滚动的标签的 style 添加"-webkit-transform: translateZ(0px);"</p>
+
+<p>2.webView 里的 textarea 不能显示滚动条</p>
+
+<p>解决：给可以 textarea 标签的 style 添加"-webkit-overflow-scrolling:touch;" 然后这个可能会引发上述1的问题，哈哈。</p>
 <!-- content end -->
 </div>
 <br>

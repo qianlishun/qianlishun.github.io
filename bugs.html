@@ -108,6 +108,12 @@ _解决_:去重新设置 cell 的内容,以防止超出.
 在数据源方法cellForRowAtIndexPath:中
 cell.clipsToBounds = YES;
 
+6. cell 显示有缩进，左侧空白
+
+tableview 的属性 判断是否需要根据内容留有空白，设置为 NO。
+~~~~{ruby}
+tableView.cellLayoutMarginsFollowReadableWidth = NO~~~~
+
 
 ###UIAlertController
 1. // 创建一个确定按钮”一定要注意不能在提醒控制器的按钮的点击方法内部用到提醒控制器自己”,不能把下面这句话放在block内部”不然会死循环,导致警告控制器不能销毁"  
@@ -233,7 +239,6 @@ xxxx.o 结尾  报错提示
 解决：给可以 textarea 标签的 style 添加"-webkit-overflow-scrolling:touch;" 然后这个可能会引发上述1的问题，哈哈。
 
 
-
 <!-- markdown end -->
 </div>
 <div class="entry" id="main">
@@ -302,9 +307,9 @@ contentSize<span class="token punctuation">:</span> <span class="token punctuati
 </code></pre><em>原因</em>: <strong>没有注册cell</strong> <br>
 <em>解决</em>:<pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>tableView registerClass<span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token constant">UITableViewCell</span> <span class="token keyword">class</span><span class="token punctuation">]</span>forCellReuseIdentifier<span class="token symbol">:ID</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 </code></pre>  <p></p></li>
-<li>cell增加数据时单行刷新的bug <br>
+<li><p>cell增加数据时单行刷新的bug <br>
 插入数据后, 如果只刷新最后一行cell时 , 就会产生最后一行 cell 的图片闪烁,原因一般有个. <br>
-①<pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>tableView insertRowsAtIndexPaths<span class="token punctuation">:</span>@<span class="token punctuation">[</span>path<span class="token punctuation">]</span> withRowAnimation<span class="token symbol">:UITableViewRowAnimationFade</span><span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
+①</p><pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>tableView insertRowsAtIndexPaths<span class="token punctuation">:</span>@<span class="token punctuation">[</span>path<span class="token punctuation">]</span> withRowAnimation<span class="token symbol">:UITableViewRowAnimationFade</span><span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
 这是单行刷新时的一个动画问题. <br>
 解决: 关闭视图的动画  <pre class=" language-ruby"><code class=" language-ruby"><span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>tableView insertRowsAtIndexPaths<span class="token punctuation">:</span>@<span class="token punctuation">[</span>path<span class="token punctuation">]</span> withRowAnimation<span class="token symbol">:UITableViewRowAnimationFade</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token punctuation">[</span><span class="token constant">UIView</span> setAnimationsEnable<span class="token symbol">:NO</span><span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
@@ -313,8 +318,13 @@ cell里面的内容超出了cell的行高,即超出了他父视图. <br>
 <em>解决</em>:去重新设置 cell 的内容,以防止超出. <br>
 或者剪切超出父视图边界的内容: <br>
 在数据源方法cellForRowAtIndexPath:中
-cell.clipsToBounds = YES;</li>
+cell.clipsToBounds = YES;<p></p></li>
+<li><p>cell 显示有缩进，左侧空白</p></li>
 </ol>
+
+<p>tableview 的属性 判断是否需要根据内容留有空白，设置为 NO。</p>
+
+<pre class=" language-ruby"><code class=" language-ruby">tableView<span class="token punctuation">.</span>cellLayoutMarginsFollowReadableWidth <span class="token operator">=</span> <span class="token constant">NO</span></code></pre>
 
 <h3 id="uialertcontroller">UIAlertController</h3>
 

@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>Simple</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+runtime 中有这么一个方法 `class_getInstanceMethod`，
+可以将 `SEL` 转换为 `Method`，
+
+然后再使用`method_getTypeEncoding`得到该方法的描述，
+
+最后利用 `[NSString stringWithUTF8String:str]`转换为字符串观察。
+
+
+e.g 
+
+~~~~{ruby}
+- (void)testMethod1{
+}
+
+- (id)testMethod2:(NSString *)str{
+    return  nil;
+}
+
+- (int)testMethod3:(void(^)(void))block{
+    return  0;
+}
+
+- (NSString*)testMethod4:(NSString *)str1 float:(float)f{
+    return nil;
+}
+~~~~
+
+定义以上四个测试方法，然后使用开头介绍的方法打印输出描述
+
+~~~~{ruby}
+
+    Method method = class_getInstanceMethod([self class], @selector(testMethod));
+    
+    const char *type = (char*)method_getTypeEncoding(method);
+    
+    NSLog(@"%@",[NSString stringWithUTF8String: type]);
+    
+~~~~
+
+
+我这里控制台依次输出为
+
+
+~~~~{ruby}
+ v16@0:8
+ @24@0:8@16
+ i24@0:8@?16
+ @28@0:8@16f24
+~~~~
+
+经过实验可以得出（这些也只能靠猜测了，没有找到官方文档说明）
+
+`v `为 `void` , `@`为 `NSString` , 
+
+`i` 为 `int` , `f`为`float`
+
+`?` 为 `block` ( void(^)(void)  )
+
+`开头带v16 v32表示无返回值，其他带什么表示返回值为什么类型；`
+
+`:8` 是 `SEL`标示 
+
+`@28` 返回值为 `NSString `, `@16 `代表参数为 `NSString`，
+
+ 
+
+不过目的已经达到了，含有 `?`  的就代表含有 block 参数。
+
+
+
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+<p>runtime 中有这么一个方法 <code>class_getInstanceMethod</code>，
+可以将 <code>SEL</code> 转换为 <code>Method</code>，</p>
+
+<p>然后再使用<code>method_getTypeEncoding</code>得到该方法的描述，</p>
+
+<p>最后利用 <code>[NSString stringWithUTF8String:str]</code>转换为字符串观察。</p>
+
+<p>e.g </p>
+
+<pre class=" language-ruby"><code class=" language-ruby"><span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>testMethod1<span class="token punctuation">{</span>
+<span class="token punctuation">}</span>
+
+<span class="token operator">-</span> <span class="token punctuation">(</span>id<span class="token punctuation">)</span>testMethod2<span class="token punctuation">:</span><span class="token punctuation">(</span><span class="token constant">NSString</span> <span class="token operator">*</span><span class="token punctuation">)</span>str<span class="token punctuation">{</span>
+    <span class="token keyword">return</span>  <span class="token keyword">nil</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token operator">-</span> <span class="token punctuation">(</span>int<span class="token punctuation">)</span>testMethod3<span class="token punctuation">:</span><span class="token punctuation">(</span><span class="token function">void<span class="token punctuation">(</span></span><span class="token operator">^</span><span class="token punctuation">)</span><span class="token punctuation">(</span>void<span class="token punctuation">)</span><span class="token punctuation">)</span>block<span class="token punctuation">{</span>
+    <span class="token keyword">return</span>  <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token operator">-</span> <span class="token punctuation">(</span><span class="token constant">NSString</span><span class="token operator">*</span><span class="token punctuation">)</span>testMethod4<span class="token punctuation">:</span><span class="token punctuation">(</span><span class="token constant">NSString</span> <span class="token operator">*</span><span class="token punctuation">)</span>str1 float<span class="token punctuation">:</span><span class="token punctuation">(</span>float<span class="token punctuation">)</span>f<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">nil</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+
+<p>定义以上四个测试方法，然后使用开头介绍的方法打印输出描述</p>
+
+<pre class=" language-ruby"><code class=" language-ruby">
+    <span class="token builtin">Method</span> method <span class="token operator">=</span> <span class="token function">class_getInstanceMethod<span class="token punctuation">(</span></span><span class="token punctuation">[</span><span class="token keyword">self</span> <span class="token keyword">class</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token variable">@selector</span><span class="token punctuation">(</span>testMethod<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    const char <span class="token operator">*</span>type <span class="token operator">=</span> <span class="token punctuation">(</span>char<span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">method_getTypeEncoding<span class="token punctuation">(</span></span>method<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">NSLog<span class="token punctuation">(</span></span>@<span class="token string">"%@"</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token constant">NSString</span> stringWithUTF8String<span class="token punctuation">:</span> type<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+</code></pre>
+
+<p>我这里控制台依次输出为</p>
+
+<pre class=" language-ruby"><code class=" language-ruby"> v16@<span class="token number">0</span><span class="token punctuation">:</span><span class="token number">8</span>
+ @<span class="token number">24</span>@<span class="token number">0</span><span class="token punctuation">:</span><span class="token number">8</span>@<span class="token number">16</span>
+ i24@<span class="token number">0</span><span class="token punctuation">:</span><span class="token number">8</span>@<span class="token operator">?</span><span class="token number">16</span>
+ @<span class="token number">28</span>@<span class="token number">0</span><span class="token punctuation">:</span><span class="token number">8</span>@16f24
+</code></pre>
+
+<p>经过实验可以得出（这些也只能靠猜测了，没有找到官方文档说明）</p>
+
+<p><code>v</code>为 <code>void</code> , <code>@</code>为 <code>NSString</code> , </p>
+
+<p><code>i</code> 为 <code>int</code> , <code>f</code>为<code>float</code></p>
+
+<p><code>?</code> 为 <code>block</code> ( void(^)(void)  )</p>
+
+<p><code>开头带v16 v32表示无返回值，其他带什么表示返回值为什么类型；</code></p>
+
+<p><code>:8</code> 是 <code>SEL</code>标示 </p>
+
+<p><code>@28</code> 返回值为 <code>NSString</code>, <code>@16</code>代表参数为 <code>NSString</code>，</p>
+
+<p>不过目的已经达到了，含有 <code>?</code>  的就代表含有 block 参数。</p>
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2014 by isnowfy, Designed by isnowfy</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "runtime_method.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+</body>
+</html>

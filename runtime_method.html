@@ -25,13 +25,9 @@
 	</div>
 <div id="md" style="display: none;">
 <!-- markdown -->
-runtime 中有这么一个方法 `class_getInstanceMethod`，
-可以将 `SEL` 转换为 `Method`，
+runtime 中有一个方法`method_getTypeEncoding`能得到该方法的描述，
 
-然后再使用`method_getTypeEncoding`得到该方法的描述，
-
-最后利用 `[NSString stringWithUTF8String:str]`转换为字符串观察。
-
+我们可以将得到的描述转换为字符串打印输出观察。
 
 e.g 
 
@@ -53,7 +49,8 @@ e.g
 ~~~~
 
 定义以上四个测试方法，然后使用开头介绍的方法打印输出描述
-
+先使用 `class_getInstanceMethod`，将 `SEL` 转换为 `Method`，
+再去得到 method describing ，接着转NSString 打印输出。
 ~~~~{ruby}
 
     Method method = class_getInstanceMethod([self class], @selector(testMethod));
@@ -93,18 +90,13 @@ e.g
 
 不过目的已经达到了，含有 `?`  的就代表含有 block 参数。
 
-
-
 <!-- markdown end -->
 </div>
 <div class="entry" id="main">
 <!-- content -->
-<p>runtime 中有这么一个方法 <code>class_getInstanceMethod</code>，
-可以将 <code>SEL</code> 转换为 <code>Method</code>，</p>
+<p>runtime 中有一个方法<code>method_getTypeEncoding</code>能得到该方法的描述，</p>
 
-<p>然后再使用<code>method_getTypeEncoding</code>得到该方法的描述，</p>
-
-<p>最后利用 <code>[NSString stringWithUTF8String:str]</code>转换为字符串观察。</p>
+<p>我们可以将得到的描述转换为字符串打印输出观察。</p>
 
 <p>e.g </p>
 
@@ -124,7 +116,9 @@ e.g
 <span class="token punctuation">}</span>
 </code></pre>
 
-<p>定义以上四个测试方法，然后使用开头介绍的方法打印输出描述</p>
+<p>定义以上四个测试方法，然后使用开头介绍的方法打印输出描述
+先使用 <code>class_getInstanceMethod</code>，将 <code>SEL</code> 转换为 <code>Method</code>，
+再去得到 method describing ，接着转NSString 打印输出。</p>
 
 <pre class=" language-ruby"><code class=" language-ruby">
     <span class="token builtin">Method</span> method <span class="token operator">=</span> <span class="token function">class_getInstanceMethod<span class="token punctuation">(</span></span><span class="token punctuation">[</span><span class="token keyword">self</span> <span class="token keyword">class</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token variable">@selector</span><span class="token punctuation">(</span>testMethod<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

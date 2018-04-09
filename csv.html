@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>Simple</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+
+做数据导出为 csv 格式的表格文件，遇到的问题。
+
+1.
+CSV 文件 Windows 下 Excel 打开 ，中文乱码。
+
+保存的文件，用 Numbers 打开 没有任何问题，Mac 上直接预览也没问题，到了 Windows 下用Excel，中文各种显示乱码。
+
+后来找到解决方法，是 BOM 头的问题，
+BOM:字节顺序标记(ByteOrderMark)。
+Excel 打开时不知道文件是什么编码，我在拼接生成 CSV 文件时没有添加 BOM 去标识，所以有中文的时候，打开就乱码了。
+
+我保存文件为 utf8格式，所以在文件头拼接 BOM 头：0xEF 0xBB 0xBF。
+这里我用 FILE 去拼接，正确拼接格式为：
+~~~~{ruby}
+    FILE *fp;
+    char szBOM[4]={(char)0xEF,(char)0xBB,(char)0xBF,0};
+    fprintf(fp,"%s", szBOM);
+    fclose(fp);~~~~
+拼接三个字符，0为结束标识。
+
+这样保存的文件 Windows 下打开就不会乱码了，不过 BOM 头有些语言环境下是不去做处理的，会把它当成文件内容去处理，比如 PHP。
+
+2.
+ 逗号分隔符的问题
+
+某西班牙客户说打开 CSV 是格式是乱掉的，排查了原因得出是分隔符的问题。
+
+CSV 又称逗号分隔符文件，它的换列就是用逗号处理的，
+但是有些国家语言环境下，逗号是一个特殊字符，所以它们使用了其他符号代替：分号。
+
+经过一系列实验，得出亚洲大部分国家以及美国是用逗号分隔的，下面的国家使用分号分隔：
+~~~~{ruby}
+es , pt , de , el , da , ru , nl , it , fr
+~~~~
+当然上面的列举不全，具体问题具体分析吧。
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2014 by isnowfy, Designed by isnowfy</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "csv.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+</body>
+</html>

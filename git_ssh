@@ -28,12 +28,207 @@
 2018-06-21 下午发现 bitbucket 被墙了
 push 提示
 
+~~~~{ruby}
+LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to bitbucket.org:443
+~~~~
+
+打开网站提示：无法与服务器“https://bitbucket.org”建立安全连接
+，然后挂代理能上，被墙了!
+
+判断是 HTTPS 挂掉了，SSH 试试能不能用。
+
+于是打开终端，配置 SSH
+
+
+##1.查看是否创建了 SSH key
+
+如果已经配置好了那就跳过该步骤，直接去复制 SSH key。
+~~~~{ruby}
+$ cd ~/.ssh
+$ ls
+~~~~
+
+
+##2.生成秘钥
+
+~~~~{ruby}
+$ ssh-keygen -t rsa -C "xxx@xxx.xx"
+~~~~
+
+-t ：秘钥类型，默认 rsa
+-C 设置注释文字（这里我填我的 bitbucket 注册邮箱）
+
+回车之后会让你输保存位置，不输直接回车的话，就会使用默认，生成 id_rsa 和 id_rsa.pub
+
+接着让输入两次访问该 key 的密码，省事的话直接就回车跳过不设置，
+设置的话push/pull 的时候需要输入密码。
+
+然后就会出现，代表创建成功。
+~~~~{ruby}
+Your identification has been saved in /Users/xxx/.ssh/id_rsa.
+Your public key has been saved in /Users/xxx/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:xxxxxxxxxx xxx@xx.xx
+The key's randomart image is:
++---[RSA 2048]----+
+|     o*.o  ..E.  |
+|     . B  .      |
+|      * o+       |
+|     o +*B.      |
+|  o +   S=+      |
+| . = . = =       |
+|  . o . +oo .    |
+| o.o     o.  o . |
+|o.o o.  o. .. o  |
++----[SHA256]-----+
+~~~~
+
+##3.查看/复制秘钥
+~~~~{ruby}
+$ cat ~/.ssh/id_rsa.pub
+~~~~
+
+接着终端就会出现 以 “ssh-rsa” 开头，邮箱结尾的字符串，就是秘钥。
+
+复制它。
+
+##4.添加 SSH key 到git 托管网站
+
+登录 git 托管网站的账号，
+
+到账户 setting 界面找到 SSH key 管理界面，
+
+添加上面复制好的秘钥，保存。
+
+
+##5.测试 SSH key 配置是否成功
+~~~~{ruby}
+$ ssh -T git@bitbucket.org
+~~~~
+
+我这里出现，代表成功。
+~~~~{ruby}
+logged in as xxxx.
+
+You can use git or hg to connect to Bitbucket. Shell access is disabled.
+~~~~
+
+##6.切换 git 仓库的协议 
+打开仓库目录下的.git/config
+
+将   
+url = https://xxx@bitbucket.org/xxx/xxx.git
+
+更改为
+
+url =  git@bitbucket.org:xxx/xxx.git
+
+
+保存后，再次执行 git push，OK，可以使用了。
+
+就是不知道哪天 SSH 也会被封杀。
+
 <!-- markdown end -->
 </div>
 <div class="entry" id="main">
 <!-- content -->
 <p>2018-06-21 下午发现 bitbucket 被墙了
 push 提示</p>
+
+<pre class=" language-ruby"><code class=" language-ruby"><span class="token constant">LibreSSL</span> <span class="token constant">SSL_connect</span><span class="token punctuation">:</span> <span class="token constant">SSL_ERROR_SYSCALL</span> <span class="token keyword">in</span> connection to bitbucket<span class="token punctuation">.</span>org<span class="token punctuation">:</span><span class="token number">443</span>
+</code></pre>
+
+<p>打开网站提示：无法与服务器“https://bitbucket.org”建立安全连接
+，然后挂代理能上，被墙了!</p>
+
+<p>判断是 HTTPS 挂掉了，SSH 试试能不能用。</p>
+
+<p>于是打开终端，配置 SSH</p>
+
+<h2 id="1sshkey">1.查看是否创建了 SSH key</h2>
+
+<p>如果已经配置好了那就跳过该步骤，直接去复制 SSH key。</p>
+
+<pre class=" language-ruby"><code class=" language-ruby">$ cd <span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>ssh
+$ ls
+</code></pre>
+
+<h2 id="2">2.生成秘钥</h2>
+
+<pre class=" language-ruby"><code class=" language-ruby">$ ssh<span class="token operator">-</span>keygen <span class="token operator">-</span>t rsa <span class="token operator">-</span><span class="token constant">C</span> <span class="token string">"xxx@xxx.xx"</span>
+</code></pre>
+
+<p>-t ：秘钥类型，默认 rsa
+-C 设置注释文字（这里我填我的 bitbucket 注册邮箱）</p>
+
+<p>回车之后会让你输保存位置，不输直接回车的话，就会使用默认，生成 id<em>rsa 和 id</em>rsa.pub</p>
+
+<p>接着让输入两次访问该 key 的密码，省事的话直接就回车跳过不设置，
+设置的话push/pull 的时候需要输入密码。</p>
+
+<p>然后就会出现，代表创建成功。</p>
+
+<pre class=" language-ruby"><code class=" language-ruby"><span class="token constant">Your</span> identification has been saved <span class="token keyword">in</span> <span class="token operator">/</span><span class="token constant">Users</span><span class="token regex">/xxx/</span><span class="token punctuation">.</span>ssh<span class="token operator">/</span>id_rsa<span class="token punctuation">.</span>
+<span class="token constant">Your</span> public key has been saved <span class="token keyword">in</span> <span class="token operator">/</span><span class="token constant">Users</span><span class="token regex">/xxx/</span><span class="token punctuation">.</span>ssh<span class="token operator">/</span>id_rsa<span class="token punctuation">.</span>pub<span class="token punctuation">.</span>
+<span class="token constant">The</span> key fingerprint is<span class="token punctuation">:</span>
+<span class="token constant">SHA256</span><span class="token symbol">:xxxxxxxxxx</span> xxx<span class="token variable">@xx</span><span class="token punctuation">.</span>xx
+<span class="token constant">The</span> key's randomart image is<span class="token punctuation">:</span>
+<span class="token operator">+-</span><span class="token operator">--</span><span class="token punctuation">[</span><span class="token constant">RSA</span> <span class="token number">2048</span><span class="token punctuation">]</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span>     o<span class="token operator">*</span><span class="token punctuation">.</span>o  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token constant">E</span><span class="token punctuation">.</span>  <span class="token operator">|</span>
+<span class="token operator">|</span>     <span class="token punctuation">.</span> <span class="token constant">B</span>  <span class="token punctuation">.</span>      <span class="token operator">|</span>
+<span class="token operator">|</span>      <span class="token operator">*</span> o<span class="token operator">+</span>       <span class="token operator">|</span>
+<span class="token operator">|</span>     o <span class="token operator">+</span><span class="token operator">*</span><span class="token constant">B</span><span class="token punctuation">.</span>      <span class="token operator">|</span>
+<span class="token operator">|</span>  o <span class="token operator">+</span>   <span class="token constant">S</span><span class="token operator">=</span><span class="token operator">+</span>      <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token punctuation">.</span> <span class="token operator">=</span> <span class="token punctuation">.</span> <span class="token operator">=</span> <span class="token operator">=</span>       <span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token punctuation">.</span> o <span class="token punctuation">.</span> <span class="token operator">+</span>oo <span class="token punctuation">.</span>    <span class="token operator">|</span>
+<span class="token operator">|</span> o<span class="token punctuation">.</span>o     o<span class="token punctuation">.</span>  o <span class="token punctuation">.</span> <span class="token operator">|</span>
+<span class="token operator">|</span>o<span class="token punctuation">.</span>o o<span class="token punctuation">.</span>  o<span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span> o  <span class="token operator">|</span>
+<span class="token operator">+-</span><span class="token operator">--</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token constant">SHA256</span><span class="token punctuation">]</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-+</span>
+</code></pre>
+
+<h2 id="3">3.查看/复制秘钥</h2>
+
+<pre class=" language-ruby"><code class=" language-ruby">$ cat <span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>ssh<span class="token operator">/</span>id_rsa<span class="token punctuation">.</span>pub
+</code></pre>
+
+<p>接着终端就会出现 以 “ssh-rsa” 开头，邮箱结尾的字符串，就是秘钥。</p>
+
+<p>复制它。</p>
+
+<h2 id="4sshkeygit">4.添加 SSH key 到git 托管网站</h2>
+
+<p>登录 git 托管网站的账号，</p>
+
+<p>到账户 setting 界面找到 SSH key 管理界面，</p>
+
+<p>添加上面复制好的秘钥，保存。</p>
+
+<h2 id="5sshkey">5.测试 SSH key 配置是否成功</h2>
+
+<pre class=" language-ruby"><code class=" language-ruby">$ ssh <span class="token operator">-</span><span class="token constant">T</span> git<span class="token variable">@bitbucket</span><span class="token punctuation">.</span>org
+</code></pre>
+
+<p>我这里出现，代表成功。</p>
+
+<pre class=" language-ruby"><code class=" language-ruby">logged <span class="token keyword">in</span> as xxxx<span class="token punctuation">.</span>
+
+<span class="token constant">You</span> can use git <span class="token keyword">or</span> hg to connect to <span class="token constant">Bitbucket</span><span class="token punctuation">.</span> <span class="token constant">Shell</span> access is disabled<span class="token punctuation">.</span>
+</code></pre>
+
+<h2 id="6git">6.切换 git 仓库的协议</h2>
+
+<p>打开仓库目录下的.git/config</p>
+
+<p>将 <br>
+url = https://xxx@bitbucket.org/xxx/xxx.git</p>
+
+<p>更改为</p>
+
+<p>url =  git@bitbucket.org:xxx/xxx.git</p>
+
+<p>保存后，再次执行 git push，OK，可以使用了。</p>
+
+<p>就是不知道哪天 SSH 也会被封杀。</p>
 <!-- content end -->
 </div>
 <br>

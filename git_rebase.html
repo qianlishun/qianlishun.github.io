@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>Simple</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+终端项目目录下
+~~~~{ruby}
+git log
+~~~~
+log 如下
+~~~~{ruby}
+commit d4a0a00dade1f51b186ecb9927a657966d430a49 (HEAD -> master)
+Author: mrq <>
+Date:   Tue Jul 3 13:59:09 2018 +0800
+
+    commit3
+
+commit 76effbe44661cd695ba8703d87b7a1495777c93f
+Author: mrq <>
+Date:   Tue Jul 3 13:58:55 2018 +0800
+
+    要删除的commit2
+
+commit e27d1c0a780719556f3e0bf114723a58a7b17792
+Author: mrq <>
+Date:   Tue Jul 3 13:58:33 2018 +0800
+
+    commit1
+
+~~~~
+
+比如我们想删除的 commit 注释为 __"要删除的commit2"__， 即 commit id 为 __76effbe4__ ，
+
+
+那么我们使用 rebase 命令切到其之前的 commit，即 __e27d1c0a__ 。
+
+
+~~~~{ruby}
+git rebase -i e27d1c0a
+~~~~
+终端会出现 vi 编辑界面：
+
+~~~~{ruby}
+pick 76effbe 要删除的commit2
+pick d4a0a00 commit3
+
+# Rebase e27d1c0..d4a0a00 onto e27d1c0 (2 commands)
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+# d, drop = remove commit
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+~                                                                               
+~              
+~~~~
+
+将要删除的 commit 那一行之前的 __pick__ 改为 __drop__，
+
+然后退出编辑保存。
+
+出现以下提示则表明保存成功：
+~~~~{ruby}
+Successfully rebased and updated refs/heads/master.
+~~~~
+
+再 git log 或者查看提交历史，发现 "要删除的commit2"已经消失，相关更改也已经被删除。
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+<p>终端项目目录下</p>
+
+<pre class=" language-ruby"><code class=" language-ruby">git log
+</code></pre>log 如下
+<pre class=" language-ruby"><code class=" language-ruby">commit d4a0a00dade1f51b186ecb9927a657966d430a49 <span class="token punctuation">(</span><span class="token constant">HEAD</span> <span class="token operator">-</span><span class="token operator">&gt;</span> master<span class="token punctuation">)</span>
+<span class="token constant">Author</span><span class="token punctuation">:</span> mrq <span class="token operator">&lt;</span><span class="token operator">&gt;</span>
+<span class="token constant">Date</span><span class="token punctuation">:</span>   <span class="token constant">Tue</span> <span class="token constant">Jul</span> <span class="token number">3</span> <span class="token number">13</span><span class="token punctuation">:</span><span class="token number">59</span><span class="token punctuation">:</span><span class="token number">09</span> <span class="token number">2018</span> <span class="token operator">+</span><span class="token number">0800</span>
+
+    commit3
+
+commit 76effbe44661cd695ba8703d87b7a1495777c93f
+<span class="token constant">Author</span><span class="token punctuation">:</span> mrq <span class="token operator">&lt;</span><span class="token operator">&gt;</span>
+<span class="token constant">Date</span><span class="token punctuation">:</span>   <span class="token constant">Tue</span> <span class="token constant">Jul</span> <span class="token number">3</span> <span class="token number">13</span><span class="token punctuation">:</span><span class="token number">58</span><span class="token punctuation">:</span><span class="token number">55</span> <span class="token number">2018</span> <span class="token operator">+</span><span class="token number">0800</span>
+
+    要删除的commit2
+
+commit e27d1c0a780719556f3e0bf114723a58a7b17792
+<span class="token constant">Author</span><span class="token punctuation">:</span> mrq <span class="token operator">&lt;</span><span class="token operator">&gt;</span>
+<span class="token constant">Date</span><span class="token punctuation">:</span>   <span class="token constant">Tue</span> <span class="token constant">Jul</span> <span class="token number">3</span> <span class="token number">13</span><span class="token punctuation">:</span><span class="token number">58</span><span class="token punctuation">:</span><span class="token number">33</span> <span class="token number">2018</span> <span class="token operator">+</span><span class="token number">0800</span>
+
+    commit1
+
+</code></pre>
+
+<p>比如我们想删除的 commit 注释为 <strong>"要删除的commit2"</strong>， 即 commit id 为 <strong>76effbe4</strong> ，</p>
+
+<p>那么我们使用 rebase 命令切到其之前的 commit，即 <strong>e27d1c0a</strong> 。</p>
+
+<pre class=" language-ruby"><code class=" language-ruby">git rebase <span class="token operator">-</span>i e27d1c0a
+</code></pre>终端会出现 vi 编辑界面：
+
+<pre class=" language-ruby"><code class=" language-ruby">pick 76effbe 要删除的commit2
+pick d4a0a00 commit3
+
+<span class="token comment" spellcheck="true"># Rebase e27d1c0..d4a0a00 onto e27d1c0 (2 commands)
+</span><span class="token comment" spellcheck="true">#
+</span><span class="token comment" spellcheck="true"># Commands:
+</span><span class="token comment" spellcheck="true"># p, pick = use commit
+</span><span class="token comment" spellcheck="true"># r, reword = use commit, but edit the commit message
+</span><span class="token comment" spellcheck="true"># e, edit = use commit, but stop for amending
+</span><span class="token comment" spellcheck="true"># s, squash = use commit, but meld into previous commit
+</span><span class="token comment" spellcheck="true"># f, fixup = like "squash", but discard this commit's log message
+</span><span class="token comment" spellcheck="true"># x, exec = run command (the rest of the line) using shell
+</span><span class="token comment" spellcheck="true"># d, drop = remove commit
+</span><span class="token comment" spellcheck="true">#
+</span><span class="token comment" spellcheck="true"># These lines can be re-ordered; they are executed from top to bottom.
+</span><span class="token comment" spellcheck="true">#
+</span><span class="token comment" spellcheck="true"># If you remove a line here THAT COMMIT WILL BE LOST.
+</span><span class="token comment" spellcheck="true">#
+</span><span class="token comment" spellcheck="true"># However, if you remove everything, the rebase will be aborted.
+</span><span class="token comment" spellcheck="true">#
+</span><span class="token comment" spellcheck="true"># Note that empty commits are commented out
+</span><span class="token operator">~</span>                                                                               
+<span class="token operator">~</span>              
+</code></pre>
+
+<p>将要删除的 commit 那一行之前的 <strong>pick</strong> 改为 <strong>drop</strong>，</p>
+
+<p>然后退出编辑保存。</p>
+
+<p>出现以下提示则表明保存成功：</p>
+
+<pre class=" language-ruby"><code class=" language-ruby"><span class="token constant">Successfully</span> rebased <span class="token keyword">and</span> updated refs<span class="token operator">/</span>heads<span class="token operator">/</span>master<span class="token punctuation">.</span>
+</code></pre>
+
+<p>再 git log 或者查看提交历史，发现 "要删除的commit2"已经消失，相关更改也已经被删除。</p>
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2014 by isnowfy, Designed by isnowfy</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "git_rebase.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+</body>
+</html>

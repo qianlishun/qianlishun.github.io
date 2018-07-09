@@ -29,27 +29,26 @@
 
 最近出了小米平板4，搞了一台，系统版本是 Android8.1，
 
-装了 APP 试了下，发现了点问题。
+装 APP 试了下，发现了点问题，
 
-通过 WiFi 连接智能硬件后，APP 无法与之建立连接。
+通过 WiFi 连接智能硬件后，APP 无法与之建立连接，
 
-debug 发现 
+debug 发现 ：
 
-SSID 返回  "unknown ssid"，BSSID也无法正常获取。
+* SSID 返回  "unknown ssid"，BSSID也无法正常获取。
 
-
-然后联想到之前做 WiFiManger 模块时，
+然后联想到之前做 WifiManger 模块时，
 
 发现有几款 Android 设备不开启GPS的时候， 
 
-wifi.scan()返回为 null，周边 WiFi 搜索不到。
+WifiManager.scan()返回为 null，周边 WiFi 搜索不到。
 
 于是开启 GPS，依然不行，接着去开启 APP 的定位权限，
 
 OK了，SSID，BSSID 都能拿到，WiFi 连接成功了。
 
 
-什么原因呢？Android8.0 并没有这个问题，
+什么原因呢？ Android8.0 并没有这个问题，
 
 猜测是 Android8.1 有所更新导致的。
 
@@ -92,7 +91,7 @@ APP 依然可以通过 WifiInfo 的相关信息，比如 SSID/BSSID，
 
 去获得用户位置信息，这显然不合理，是个 bug，
 
-因此做了这个更新，在用户没有允许 APP 获取定位的情况下，
+因此做了以上更新，在用户没有允许 APP 获取位置的情况下，
 
 * WiFiInfo 的 SSID 将会是 “unknown ssid”
 * WiFiInfo 的 BSSID 是 “02:00:00:00:00:00”
@@ -106,25 +105,27 @@ APP 依然可以通过 WifiInfo 的相关信息，比如 SSID/BSSID，
 
 <p>最近出了小米平板4，搞了一台，系统版本是 Android8.1，</p>
 
-<p>装了 APP 试了下，发现了点问题。</p>
+<p>装 APP 试了下，发现了点问题，</p>
 
-<p>通过 WiFi 连接智能硬件后，APP 无法与之建立连接。</p>
+<p>通过 WiFi 连接智能硬件后，APP 无法与之建立连接，</p>
 
-<p>debug 发现 </p>
+<p>debug 发现 ：</p>
 
-<p>SSID 返回  "unknown ssid"，BSSID也无法正常获取。</p>
+<ul>
+<li>SSID 返回  "unknown ssid"，BSSID也无法正常获取。</li>
+</ul>
 
-<p>然后联想到之前做 WiFiManger 模块时，</p>
+<p>然后联想到之前做 WifiManger 模块时，</p>
 
 <p>发现有几款 Android 设备不开启GPS的时候， </p>
 
-<p>wifi.scan()返回为 null，周边 WiFi 搜索不到。</p>
+<p>WifiManager.scan()返回为 null，周边 WiFi 搜索不到。</p>
 
 <p>于是开启 GPS，依然不行，接着去开启 APP 的定位权限，</p>
 
 <p>OK了，SSID，BSSID 都能拿到，WiFi 连接成功了。</p>
 
-<p>什么原因呢？Android8.0 并没有这个问题，</p>
+<p>什么原因呢？ Android8.0 并没有这个问题，</p>
 
 <p>猜测是 Android8.1 有所更新导致的。</p>
 
@@ -163,7 +164,7 @@ tests<span class="token operator">/</span>wifitests<span class="token operator">
 
 <p>去获得用户位置信息，这显然不合理，是个 bug，</p>
 
-<p>因此做了这个更新，在用户没有允许 APP 获取定位的情况下，</p>
+<p>因此做了以上更新，在用户没有允许 APP 获取位置的情况下，</p>
 
 <ul>
 <li>WiFiInfo 的 SSID 将会是 “unknown ssid”</li>

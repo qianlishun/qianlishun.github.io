@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>Simple</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+关于 Android 系统 ，之前最多测试过8.0的设备，
+
+最近出了小米平板4，搞了一台，系统版本是 Android8.1，
+
+装 APP 试了下，发现了点问题，
+
+通过 WiFi 连接智能硬件后，APP 无法与之建立连接，
+
+debug 发现 ：
+
+* SSID 返回  "unknown ssid"，BSSID也无法正常获取。
+
+然后联想到之前做 WifiManger 模块时，
+
+发现有几款 Android 设备不开启GPS的时候， 
+
+WifiManager.scan()返回为 null，周边 WiFi 搜索不到。
+
+于是开启 GPS，依然不行，接着去开启 APP 的定位权限，
+
+Try again，SSID，BSSID 都能拿到，WiFi 连接成功了。
+
+
+什么原因呢？ Android8.0 并没有这个问题，
+
+猜测是 Android8.1 有所更新导致的。
+
+去 googlesource 搜索发现，WiFi 模块确实有相关更新：
+
+~~~~{ruby}
+commit	8978e2582b00882d04765f3970b05e7f2888a2e4	[log] [tgz]
+author	Michael Plass <mplass@google.com>	Fri Jul 21 12:19:10 2017 -0700
+committer	Michael Plass <mplass@google.com>	Thu Jul 27 14:01:59 2017 -0700
+tree	092e7dcadc42c0e4228ff7a7cb27c8dc9dad4769
+parent	0f2d9e8da0a64cb397aaac94cf1f66b077761ea6 [diff]
+Require location permission to access wifi SSID, BSSID
+
+~~~~
+~~~~{ruby}
+BSSID/SSID can be used to deduce location, so require the same
+location permissions for access to these WifiInfo fields
+requested using WifiManager.getConnectionInfo() as for
+WifiManager.getScanResults().
+
+If the application does not have a location permission,
+the returned object will have a BSSID of 02:00:00:00:00:00
+and <unknown ssid>.
+
+~~~~
+
+~~~~{ruby}
+Bug: 36770596
+Test: New unit tests
+Change-Id: Iab5ae21719206260f4993631ee78714019a925fa
+service/java/com/android/server/wifi/WifiStateMachine.java[diff]
+tests/wifitests/src/com/android/server/wifi/WifiStateMachineTest.java[diff]
+~~~~
+
+Google 认为之前关于位置/定位权限，
+
+在用户不开启 APP 定位权限的情况下，
+
+APP 依然可以通过 WifiInfo 的相关信息，比如 SSID/BSSID，
+
+去获得用户位置信息，这显然不合理，是个 bug，
+
+因此做了以上更新，在用户没有允许 APP 获取位置的情况下，
+
+* WiFiInfo 的 SSID 将会是 “unknown ssid”
+* WiFiInfo 的 BSSID 是 “02:00:00:00:00:00”
+
+
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+<p>关于 Android 系统 ，之前最多测试过8.0的设备，</p>
+
+<p>最近出了小米平板4，搞了一台，系统版本是 Android8.1，</p>
+
+<p>装 APP 试了下，发现了点问题，</p>
+
+<p>通过 WiFi 连接智能硬件后，APP 无法与之建立连接，</p>
+
+<p>debug 发现 ：</p>
+
+<ul>
+<li>SSID 返回  "unknown ssid"，BSSID也无法正常获取。</li>
+</ul>
+
+<p>然后联想到之前做 WifiManger 模块时，</p>
+
+<p>发现有几款 Android 设备不开启GPS的时候， </p>
+
+<p>WifiManager.scan()返回为 null，周边 WiFi 搜索不到。</p>
+
+<p>于是开启 GPS，依然不行，接着去开启 APP 的定位权限，</p>
+
+<p>Try again，SSID，BSSID 都能拿到，WiFi 连接成功了。</p>
+
+<p>什么原因呢？ Android8.0 并没有这个问题，</p>
+
+<p>猜测是 Android8.1 有所更新导致的。</p>
+
+<p>去 googlesource 搜索发现，WiFi 模块确实有相关更新：</p>
+
+<pre class=" language-ruby"><code class=" language-ruby">commit    8978e2582b00882d04765f3970b05e7f2888a2e4    <span class="token punctuation">[</span>log<span class="token punctuation">]</span> <span class="token punctuation">[</span>tgz<span class="token punctuation">]</span>
+author    <span class="token constant">Michael</span> <span class="token constant">Plass</span> <span class="token operator">&lt;</span>mplass<span class="token variable">@google</span><span class="token punctuation">.</span>com<span class="token operator">&gt;</span> <span class="token constant">Fri</span> <span class="token constant">Jul</span> <span class="token number">21</span> <span class="token number">12</span><span class="token punctuation">:</span><span class="token number">19</span><span class="token punctuation">:</span><span class="token number">10</span> <span class="token number">2017</span> <span class="token operator">-</span><span class="token number">0700</span>
+committer    <span class="token constant">Michael</span> <span class="token constant">Plass</span> <span class="token operator">&lt;</span>mplass<span class="token variable">@google</span><span class="token punctuation">.</span>com<span class="token operator">&gt;</span> <span class="token constant">Thu</span> <span class="token constant">Jul</span> <span class="token number">27</span> <span class="token number">14</span><span class="token punctuation">:</span><span class="token number">01</span><span class="token punctuation">:</span><span class="token number">59</span> <span class="token number">2017</span> <span class="token operator">-</span><span class="token number">0700</span>
+tree    092e7dcadc42c0e4228ff7a7cb27c8dc9dad4769
+parent    0f2d9e8da0a64cb397aaac94cf1f66b077761ea6 <span class="token punctuation">[</span>diff<span class="token punctuation">]</span>
+<span class="token constant">Require</span> location permission to access wifi <span class="token constant">SSID</span><span class="token punctuation">,</span> <span class="token constant">BSSID</span>
+
+</code></pre><pre class=" language-ruby"><code class=" language-ruby"><span class="token constant">BSSID</span><span class="token operator">/</span><span class="token constant">SSID</span> can be used to deduce location<span class="token punctuation">,</span> so <span class="token keyword">require</span> the same
+location permissions <span class="token keyword">for</span> access to these <span class="token constant">WifiInfo</span> fields
+requested using <span class="token constant">WifiManager</span><span class="token punctuation">.</span><span class="token function">getConnectionInfo<span class="token punctuation">(</span></span><span class="token punctuation">)</span> as <span class="token keyword">for</span>
+<span class="token constant">WifiManager</span><span class="token punctuation">.</span><span class="token function">getScanResults<span class="token punctuation">(</span></span><span class="token punctuation">)</span><span class="token punctuation">.</span>
+
+<span class="token constant">If</span> the application does <span class="token keyword">not</span> have a location permission<span class="token punctuation">,</span>
+the returned object will have a <span class="token constant">BSSID</span> of <span class="token number">02</span><span class="token punctuation">:</span><span class="token number">00</span><span class="token punctuation">:</span><span class="token number">00</span><span class="token punctuation">:</span><span class="token number">00</span><span class="token punctuation">:</span><span class="token number">00</span><span class="token punctuation">:</span><span class="token number">00</span>
+<span class="token keyword">and</span> <span class="token operator">&lt;</span>unknown ssid<span class="token operator">&gt;</span><span class="token punctuation">.</span>
+
+</code></pre>
+
+<pre class=" language-ruby"><code class=" language-ruby"><span class="token constant">Bug</span><span class="token punctuation">:</span> <span class="token number">36770596</span>
+<span class="token constant">Test</span><span class="token punctuation">:</span> <span class="token constant">New</span> <span class="token class-name">unit</span> tests
+<span class="token constant">Change</span><span class="token operator">-</span><span class="token constant">Id</span><span class="token punctuation">:</span> <span class="token constant">Iab5ae21719206260f4993631ee78714019a925fa</span>
+service<span class="token operator">/</span>java<span class="token operator">/</span>com<span class="token operator">/</span>android<span class="token operator">/</span>server<span class="token operator">/</span>wifi<span class="token operator">/</span><span class="token constant">WifiStateMachine</span><span class="token punctuation">.</span>java<span class="token punctuation">[</span>diff<span class="token punctuation">]</span>
+tests<span class="token operator">/</span>wifitests<span class="token operator">/</span>src<span class="token operator">/</span>com<span class="token operator">/</span>android<span class="token operator">/</span>server<span class="token operator">/</span>wifi<span class="token operator">/</span><span class="token constant">WifiStateMachineTest</span><span class="token punctuation">.</span>java<span class="token punctuation">[</span>diff<span class="token punctuation">]</span>
+</code></pre>
+
+<p>Google 认为之前关于位置/定位权限，</p>
+
+<p>在用户不开启 APP 定位权限的情况下，</p>
+
+<p>APP 依然可以通过 WifiInfo 的相关信息，比如 SSID/BSSID，</p>
+
+<p>去获得用户位置信息，这显然不合理，是个 bug，</p>
+
+<p>因此做了以上更新，在用户没有允许 APP 获取位置的情况下，</p>
+
+<ul>
+<li>WiFiInfo 的 SSID 将会是 “unknown ssid”</li>
+<li>WiFiInfo 的 BSSID 是 “02:00:00:00:00:00”</li>
+</ul>
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2014 by isnowfy, Designed by isnowfy</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "android8.1_wifi.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+</body>
+</html>

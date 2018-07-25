@@ -182,6 +182,7 @@ $(document).ready(function() {
         type: "GET",
         dataType: "json",
         success: function(data) {
+		$('title').text(data.name);
             $("#title").html(data.name);
             var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
             var pagesHtml = pagesTemplate.render({"pages": data.pages});

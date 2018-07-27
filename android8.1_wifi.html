@@ -194,7 +194,7 @@ $(document).ready(function() {
                 if (path == data.posts[i].path)
                     now = i;
             var post = data.posts[now];
-		$('title').text(post.title);
+		    $('title').text(post.title);
             var tmp = post.tags.split(" ");
             var tags = [];
             for (var i = 0; i < tmp.length; ++i)

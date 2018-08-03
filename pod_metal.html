@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>qls's blog</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+##@qianlishun 
+
+I'm  build a pod thats uses the iOS Metal framework, it's succeed.
+
+Then I pod this in a project, build succeed.
+
+But it was wrong when it was running：
+
+**[MTLComputePipelineDescriptorInternal setComputeFunction:], line 363: error 'computeFunction must not be nil.'**
+
+This indicates that the metal file is not compiled, can't use the following method to get metal Function
+
+~~~~{ruby}
+ [m_Library  newFunctionWithName:@"metalMethodName"];
+~~~~
+
+If I import the metal file in my project, it's work ok.
+
+**How should I use the metal file in cocoapods?**
+
+Look forward to your reply, thanks.
+
+
+##@dnkoutso
+
+Need a sample app. Unable to diagnose this without it.
+
+##@qianlishun
+
+I found out pod did not compile the ***.metal** into **metallib**, 
+so Metal Function could not be used.
+
+Although I now use resource to import *.metallib to pods, this can solve my problem for the time being.  but, the way does not solve the source control of metal files.
+
+So, question:
+**How do I set up Pods so that it can compile Metal files?**
+
+
+ I try use Staic Library build *.a,  Staic Library did compile *.metal files into a default.metallib.
+
+
+##@dnkoutso
+Can I please ask you to upload a sample app?
+
+
+##@qianlishun
+[PodsMetalTest.zip](https://github.com/CocoaPods/CocoaPods/files/2252888/PodsMetalTest.zip)
+
+Sry,  this is a test project, I think it may not help.
+
+
+##@dnkoutso
+
+Thanks, will attempt to see if we can fix this.
+
+
+##@qianlishun
+
+@dnkoutso 
+Sorry to bother you.
+
+Hmmmm, I found the solution, pods can support the metal file, I set the wrong way.
+
+In code, use "bundle pathForResource" load metallib, and init MTLLibrary.
+
+Use pods build a **framework**, not a static lib, then podfile use **use_frameworks!**.
+
+Pod install, and have a MyLib.framework, the framework contain a default.metallib.
+
+it's worked.
+
+But if I use  **use_frameworks!**, all my static lib will be compiled into framework,
+
+ Is there a way to specify one  "use_frameworks! " ?
+
+Thank you for your help🙃
+
+
+
+
+
+
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+<h2 id="qianlishun">@qianlishun</h2>
+
+<p>I'm  build a pod thats uses the iOS Metal framework, it's succeed.</p>
+
+<p>Then I pod this in a project, build succeed.</p>
+
+<p>But it was wrong when it was running：</p>
+
+<p><strong>[MTLComputePipelineDescriptorInternal setComputeFunction:], line 363: error 'computeFunction must not be nil.'</strong></p>
+
+<p>This indicates that the metal file is not compiled, can't use the following method to get metal Function</p>
+
+<pre class=" language-ruby"><code class=" language-ruby"> <span class="token punctuation">[</span>m_Library  newFunctionWithName<span class="token punctuation">:</span>@<span class="token string">"metalMethodName"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+</code></pre>
+
+<p>If I import the metal file in my project, it's work ok.</p>
+
+<p><strong>How should I use the metal file in cocoapods?</strong></p>
+
+<p>Look forward to your reply, thanks.</p>
+
+<h2 id="dnkoutso">@dnkoutso</h2>
+
+<p>Need a sample app. Unable to diagnose this without it.</p>
+
+<h2 id="qianlishun">@qianlishun</h2>
+
+<p>I found out pod did not compile the <strong>*.metal</strong> into <strong>metallib</strong>, 
+so Metal Function could not be used.</p>
+
+<p>Although I now use resource to import *.metallib to pods, this can solve my problem for the time being.  but, the way does not solve the source control of metal files.</p>
+
+<p>So, question:
+<strong>How do I set up Pods so that it can compile Metal files?</strong></p>
+
+<p>I try use Staic Library build *.a,  Staic Library did compile *.metal files into a default.metallib.</p>
+
+<h2 id="dnkoutso">@dnkoutso</h2>
+
+<p>Can I please ask you to upload a sample app?</p>
+
+<h2 id="qianlishun">@qianlishun</h2>
+
+<p><a href="https://github.com/CocoaPods/CocoaPods/files/2252888/PodsMetalTest.zip">PodsMetalTest.zip</a></p>
+
+<p>Sry,  this is a test project, I think it may not help.</p>
+
+<h2 id="dnkoutso">@dnkoutso</h2>
+
+<p>Thanks, will attempt to see if we can fix this.</p>
+
+<h2 id="qianlishun">@qianlishun</h2>
+
+<p>@dnkoutso 
+Sorry to bother you.</p>
+
+<p>Hmmmm, I found the solution, pods can support the metal file, I set the wrong way.</p>
+
+<p>In code, use "bundle pathForResource" load metallib, and init MTLLibrary.</p>
+
+<p>Use pods build a <strong>framework</strong>, not a static lib, then podfile use <strong>use_frameworks!</strong>.</p>
+
+<p>Pod install, and have a MyLib.framework, the framework contain a default.metallib.</p>
+
+<p>it's worked.</p>
+
+<p>But if I use  <strong>use_frameworks!</strong>, all my static lib will be compiled into framework,</p>
+
+<p>Is there a way to specify one  "use_frameworks! " ?</p>
+
+<p>Thank you for your help🙃</p>
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2014 by isnowfy, Designed by isnowfy</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "pod_metal.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+		 $("title").text(post.title);
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+</body>
+</html>

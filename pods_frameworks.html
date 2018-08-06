@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>qls's blog</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+之前Pods的动静混用相当麻烦， 
+
+CocoaPods更新1.5之后可以有一个解决方案了。
+
+[https://github.com/CocoaPods/CocoaPods/issues/7213](url)
+
+
+* 1.项目里新建一个 target.
+
+* 2.编辑 podfile，对需要引入动态库的 target 使用 __use_frameworks!__
+
+
+~~~~{ruby}
+target 'Target1' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  # use_frameworks!
+  pod 'Kit'
+end
+
+target 'Target2' do
+  use_frameworks!
+  pod 'xxx'
+end
+~~~~
+
+然后pod install
+
+
+* 3.修改设置以使用动态库 xxx
+
+这个时候如果在主工程里使用动态库 xxx 的话，会报错找不到头文件.h，
+（有可能是我的这种方式不对，还有其他方法，这里的方案只针对以上这种情况）
+
+①到主工程的 build setting 里设置 Framework/Header Search Paths
+都添加以下地址
+~~~~{ruby}
+"${PODS_CONFIGURATION_BUILD_DIR}/xxx"
+~~~~
+为防止出现问题，最好在顶部添加  `$(inherited) `
+
+这里是告诉编译器去哪找头文件.h以及 framework
+
+②到主工程的 build setting 里设置 Other Link Flags
+
+添加以下地址
+~~~~{ruby}
+-framework
+"xxx"
+~~~~
+这里是告诉编译器我引用了什么framework
+
+
+
+ ③都完成后，先切换 scheme 去引用动态库的 target 编译 xxx，然后再切回主工程编译，没有报错，可以使用了!
+
+
+
+
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+<p>之前Pods的动静混用相当麻烦， </p>
+
+<p>CocoaPods更新1.5之后可以有一个解决方案了。</p>
+
+<p><a href="url">https://github.com/CocoaPods/CocoaPods/issues/7213</a></p>
+
+<ul>
+<li><p>1.项目里新建一个 target.</p></li>
+<li><p>2.编辑 podfile，对需要引入动态库的 target 使用 <strong>use_frameworks!</strong></p></li>
+</ul>
+
+<pre class=" language-ruby"><code class=" language-ruby">target <span class="token string">'Target1'</span> <span class="token keyword">do</span>
+  <span class="token comment" spellcheck="true"># Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+</span>  <span class="token comment" spellcheck="true"># use_frameworks!
+</span>  pod <span class="token string">'Kit'</span>
+<span class="token keyword">end</span>
+
+target <span class="token string">'Target2'</span> <span class="token keyword">do</span>
+  use_frameworks<span class="token operator">!</span>
+  pod <span class="token string">'xxx'</span>
+<span class="token keyword">end</span>
+</code></pre>
+
+<p>然后pod install</p>
+
+<ul>
+<li>3.修改设置以使用动态库 xxx</li>
+</ul>
+
+<p>这个时候如果在主工程里使用动态库 xxx 的话，会报错找不到头文件.h，
+（有可能是我的这种方式不对，还有其他方法，这里的方案只针对以上这种情况）</p>
+
+<p>①到主工程的 build setting 里设置 Framework/Header Search Paths
+都添加以下地址
+</p><pre class=" language-ruby"><code class=" language-ruby"><span class="token string">"${PODSCONFIGURATIONBUILD_DIR}/xxx"</span>
+</code></pre>为防止出现问题，最好在顶部添加  <code>$(inherited)</code><p></p>
+
+<p>这里是告诉编译器去哪找头文件.h以及 framework</p>
+
+<p>②到主工程的 build setting 里设置 Other Link Flags</p>
+
+<p>添加以下地址
+</p><pre class=" language-ruby"><code class=" language-ruby"><span class="token operator">-</span>framework
+<span class="token string">"xxx"</span>
+</code></pre>这里是告诉编译器我引用了什么framework<p></p>
+
+<p>③都完成后，先切换 scheme 去引用动态库的 target 编译 xxx，然后再切回主工程编译，没有报错，可以使用了!</p>
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2014 by isnowfy, Designed by isnowfy</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "pods_frameworks.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+		 $("title").text(post.title);
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+</body>
+</html>

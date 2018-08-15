@@ -71,7 +71,7 @@ var ctx = cns.getContext('2d');
 var cnsd = $('#imgdata')[0];
 var ctxd = cnsd.getContext('2d');
 
-var text = ['#', '&', '@', '%', '$', 'w', '*', '+', 'o', '?', '!', ';', '^', ',', '.', ' '];
+var text = ["❀", "¶", "#", "ღ", "ღ", "☼", "♬", "➹", "∮", "♪", "!", ";", "^", ",", ".", " "];
 var width = 1000;
 var height = 600;
 cns.width = width;
@@ -87,7 +87,6 @@ function getGray(r, g, b) {
 }
 
 function initAndDrawText(img) {
-    alert(img.width + ' ' + cns.width);
     var rem = img.width / img.height;
     cns.width = height * rem;
     cns.height = height;

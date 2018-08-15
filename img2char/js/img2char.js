@@ -98,14 +98,14 @@ function initAndDrawText(img) {
     var imgData = ctxd.getImageData(0, 0, cnsd.width, cnsd.height,10);
     var imgDataArr = imgData.data;
     var textList = [];
-    for (var h = 0; h < cns.height; h += 16) {
-        for (var w = 0; w < cns.width; w += 13) {
+    for (var h = 0; h < cns.height; h += 12) {
+        for (var w = 0; w < cns.width; w += 10) {
             var index = (w + cns.width * h) * 4;
             var r = imgDataArr[index + 0];
             var g = imgDataArr[index + 1];
             var b = imgDataArr[index + 2];
             var gray = getGray(r, g, b);
-            textList.push(img2Text(gray), w, h + 13);
+            textList.push(img2Text(gray), w, h + 10);
         }
     }
 

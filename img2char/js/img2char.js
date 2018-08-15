@@ -93,14 +93,14 @@ function initAndDrawText(img) {
     cnsd.width = cns.width;
     cnsd.height = cns.height;
     ctx.clearRect(0, 0, cns.width, cns.height);
-    ctx.maxWidth(10);
+    ctx.maxWidth(12);
     ctxd.clearRect(0, 0, cnsd.width, cnsd.height);
     ctxd.drawImage(img, 0, 0, cnsd.width, cnsd.height);
     var imgData = ctxd.getImageData(0, 0, cnsd.width, cnsd.height);
     var imgDataArr = imgData.data;
     var textList = [];
-    for (var h = 0; h < cns.height; h += 24) {
-        for (var w = 0; w < cns.width; w += 20) {
+    for (var h = 0; h < cns.height; h += 16) {
+        for (var w = 0; w < cns.width; w += 13) {
             var index = (w + cns.width * h) * 4;
             var r = imgDataArr[index + 0];
             var g = imgDataArr[index + 1];

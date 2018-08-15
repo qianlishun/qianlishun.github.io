@@ -93,10 +93,9 @@ function initAndDrawText(img) {
     cnsd.width = cns.width;
     cnsd.height = cns.height;
     ctx.clearRect(0, 0, cns.width, cns.height);
-    ctx.maxWidth(12);
     ctxd.clearRect(0, 0, cnsd.width, cnsd.height);
     ctxd.drawImage(img, 0, 0, cnsd.width, cnsd.height);
-    var imgData = ctxd.getImageData(0, 0, cnsd.width, cnsd.height);
+    var imgData = ctxd.getImageData(0, 0, cnsd.width, cnsd.height,10);
     var imgDataArr = imgData.data;
     var textList = [];
     for (var h = 0; h < cns.height; h += 16) {
@@ -106,7 +105,7 @@ function initAndDrawText(img) {
             var g = imgDataArr[index + 1];
             var b = imgDataArr[index + 2];
             var gray = getGray(r, g, b);
-            textList.push(img2Text(gray), w, h + 10);
+            textList.push(img2Text(gray), w, h + 13);
         }
     }
 

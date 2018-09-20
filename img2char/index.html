@@ -18,6 +18,7 @@
 	}
 	function loadImgWith(url){
 		var img = new Image();
+		img.setAttribute('crossOrigin', 'anonymous');
 		img.src = url;
 		img.onload = function(){
 			initAndDrawText(img);

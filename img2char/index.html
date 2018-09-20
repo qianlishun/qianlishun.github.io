@@ -16,6 +16,13 @@
 			initAndDrawText(img);
 		}
 	}
+	function loadImgWith(url){
+		var img = new Image();
+		img.src = url;
+		img.onload = function(){
+			initAndDrawText(img);
+		}
+	}
 	</script>
 	</div>
 		<canvas id="canvas">当前浏览器不支持canvas，请更换浏览器</canvas>

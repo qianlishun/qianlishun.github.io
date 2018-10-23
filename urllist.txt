@@ -1,0 +1,7 @@
+itqls.com/pod_metal.html
+itqls.com/android8.1_wifi.html
+itqls.com/git_rebase.html
+itqls.com/git_ssh.html
+itqls.com/runtime_method.html
+itqls.com/csv.html
+itqls.com/bugs.html

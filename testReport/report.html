@@ -273,9 +273,6 @@
         for(var n=0;n<type;n++){
             var file_img = document.getElementById('file_img'+n);
             file_img.src = imgList[n];
-            file_img.onload = function(){
-                layoutDivX(n,type);
-            } 
         }
         switch (type) {
                 case 1:

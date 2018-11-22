@@ -235,16 +235,31 @@
         select2.selectedIndex=select2.defaultIndex;
     }
 
+    function imgListLoad(imgList, callback) {
+        var timer = setInterval(function() {
+            var count = 0;
+            for(var n = 0; n < imgList.length; n++){
+                if (imgList[n].complete) {
+                    count++;
+                 }
+            }
+            if(count==imgList.length){
+                callback(imgList);
+                clearInterval(timer);
+            }
+        }, 50)
+    }
+
     var img1,img2,img3,img4;
-    var imgList;
+    var imgSrcList;
     function addReportImage(){
         // 后续使用一个数组维护加载进来的图片，做删除操作时删除数组内的图片，
         // 再做循环操作依次添加到img 标签里，同时更新图片右上角的删除图标。
-        imgList = ["./img/test1.jpg","./img/test2.jpg","./img/test3.jpg","./img/test4.jpg"];
+        imgSrcList = ["./img/test1.jpg","./img/test2.jpg","./img/test3.jpg","./img/test4.jpg"];
        
-       if(imgList.length>4) imgList = imgList.slice(imgList.length-4,imgList.length);
+        if(imgSrcList.length>4) imgSrcList = imgSrcList.slice(imgSrcList.length-4,imgSrcList.length);
         
-        var type = imgList.length;
+        var type = imgSrcList.length;
 
         img1 = document.getElementById('theImage0');
         img2 = document.getElementById('theImage1');
@@ -265,90 +280,71 @@
         imgList.splice(index,1);
         layoutSize(imgList.length);
 	}	
-	
-    function imgLoad(img, callback) {
-        var timer = setInterval(function() {
-            if (img.complete) {
-                callback(img)
-                clearInterval(timer)
-            }
-        }, 50)
-    }
 
     function layoutSize(type){
         for(var n =0 ;n< 4 ;n ++){
             $('#file_img'+n).removeAttr('src');    
         }
-        for(var n = 0; n < 4; n++){
-            if(n<type){
-                var file_img = document.getElementById('file_img'+n);
-                file_img.src = imgList[n];
-                imgLoad(file_img,function(img){
-                    var n = img.id.substr(img.id.length-1,1);
-                    layoutDivX(n,type);
-                })
-            }else{
-                layoutDivX(n,type);
-            }
+        var imgList = new Array();
+
+        for(var n=0;n<type;n++){
+            var imgDom = document.getElementById('file_img'+n);
+            imgDom.src = imgSrcList[n];
+            imgList.push(imgDom);
         }
 
         switch (type) {
-                case 1:
-                    img1.style.width = "100%";
-                    break;
-                case 2:
-                    img1.style.width = "50%";
-                    img2.style.width = "50%";
-                    break;
-                case 3:
-                    img1.style.width = "50%";
-                    img2.style.width = "50%";
-                    img3.style.width = "50%";
-                    img4.style.width = "50%";
-                    img4.hidden = false;
-                    break;
-                case 4:
-                    img1.style.width = "50%";
-                    img2.style.width = "50%";
-                    img3.style.width = "50%";
-                    img4.style.width = "50%";
-                    break;
-                default:
-                    break;
+            case 1:
+                img1.style.width = "100%";
+                break;
+            case 2:
+                img1.style.width = "50%";
+                img2.style.width = "50%";
+                break;
+            case 3:
+                img1.style.width = "50%";
+                img2.style.width = "50%";
+                img3.style.width = "50%";
+                img4.style.width = "50%";
+                img4.hidden = false;
+                break;
+            case 4:
+                img1.style.width = "50%";
+                img2.style.width = "50%";
+                img3.style.width = "50%";
+                img4.style.width = "50%";
+                break;
+            default:
+                break;
         }
-        // for(var x=0;x<type;x++){
-        //     var file_img = document.getElementById('file_img'+x);
-        //     file_img.onload = layoutDivX(x,type)
-              
-        // }
+
+        imgListLoad(imgList,function(){
+            layoutDivX(type);
+         });
     }
 
-    function layoutDivX(n,type){
-        var idStr = "file_img" + n;
-        var divImg =  document.getElementById('theImage' + n);
-        divImg.hidden = false;
-    
-        var tmpImg = $('#'+idStr);
-        var left = tmpImg.offset().left;
-        var top = tmpImg.offset().top;
-        var width = tmpImg.width();
-        var height = tmpImg.height();
+    function layoutDivX(type){
+        for(var n=0;n<4;n++){
+            var idStr = "file_img" + n;
+            var divImg =  document.getElementById('theImage' + n);
+            divImg.hidden = false;
+        
+            var tmpImg = $('#'+idStr);
+            var left = tmpImg.offset().left;
+            var top = tmpImg.offset().top;
+            var width = tmpImg.width();
+            var height = tmpImg.height();
 
-        var divX =  $('#img_zindex_div_' + n);
-        divX.show();
-        divX.css({position: "absolute", left: left + width - width/8, top: top , display: "block" , width:width/8,height:width/8});
-        if(n>=type){
-            height = $('#file_img'+(n-1)).height();
-            $('#file_img'+n).removeAttr('src');    
-            divImg.style.height = height * 0.508 *( 1 + (type>=1) )* ( n!=1 )  + 'px';
-            divX.hide();
+            var divX =  $('#img_zindex_div_' + n);
+            divX.show();
+            divX.css({position: "absolute", left: left + width - width/8, top: top , display: "block" , width:width/8,height:width/8});
+            if(n>=type){
+                height = $('#file_img'+(n-1)).height();
+                $('#file_img'+n).removeAttr('src');    
+                divImg.style.height = height * 0.508 *( 1 + (type>=1) )* ( n!=1 )  + 'px';
+                divX.hide();
+            }
         }
-        if(n==type-1){
-            layoutDiv(type);
-        }
-    }
-
-    function layoutDiv(type){
 
         var tmpImg1 = document.getElementById('file_img0')
         var tmpImg2 = document.getElementById('file_img1');

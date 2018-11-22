@@ -266,14 +266,32 @@
         layoutSize(imgList.length);
 	}	
 	
+    function imgLoad(img, callback) {
+        var timer = setInterval(function() {
+            if (img.complete) {
+                callback(img)
+                clearInterval(timer)
+            }
+        }, 50)
+    }
+
     function layoutSize(type){
-        // for(var n =0 ;n< 4 ;n ++){
-        //     $('#file_img'+n).removeAttr('src');    
-        // }
-        for(var n=0;n<type;n++){
-            var file_img = document.getElementById('file_img'+n);
-            file_img.src = imgList[n];
+        for(var n =0 ;n< 4 ;n ++){
+            $('#file_img'+n).removeAttr('src');    
         }
+        for(var n = 0; n < 4; n++){
+            if(n<type){
+                var file_img = document.getElementById('file_img'+n);
+                file_img.src = imgList[n];
+                imgLoad(file_img,function(img){
+                    var n = img.id.substr(img.id.length-1,1);
+                    layoutDivX(n,type);
+                })
+            }else{
+                layoutDivX(n,type);
+            }
+        }
+
         switch (type) {
                 case 1:
                     img1.style.width = "100%";
@@ -298,15 +316,11 @@
                 default:
                     break;
         }
-        for(var n=0;n<type;n++){
-            var file_img = document.getElementById('file_img'+n);
-            file_img.onload = function(){
-                layoutDivX(n,type);
-                if(n==type-1){
-                    layoutDiv(type);
-                }
-            } 
-        }
+        // for(var x=0;x<type;x++){
+        //     var file_img = document.getElementById('file_img'+x);
+        //     file_img.onload = layoutDivX(x,type)
+              
+        // }
     }
 
     function layoutDivX(n,type){
@@ -328,6 +342,9 @@
             $('#file_img'+n).removeAttr('src');    
             divImg.style.height = height * 0.508 *( 1 + (type>=1) )* ( n!=1 )  + 'px';
             divX.hide();
+        }
+        if(n==type-1){
+            layoutDiv(type);
         }
     }
 

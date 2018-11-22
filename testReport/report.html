@@ -137,6 +137,7 @@
     
         loadListJson (selectList);
     
+        document.getElementById("commentsDiv").hidden = true;
         // 多图显示测试  
         addReportImage();
     }
@@ -320,6 +321,7 @@
 
         imgListLoad(imgList,function(){
             layoutDivX(type);
+            document.getElementById("commentsDiv").hidden = false;
          });
     }
 
@@ -404,6 +406,7 @@
         </div>
     </div>
 <br/>
+<div id="commentsDiv">
     <div class="form-control" style="padding-top: 5px">
          <label id="label1" or="comments1" style="font-style: oblique;font-weight: bold;">Description:</label>
         <tr>
@@ -429,6 +432,9 @@
     <br/>
     <!--     -webkit-transform:translateZ(0px);-webkit-overflow-scrolling:touch;           -->
     <textarea id="comments2" rows="4"></textarea>
+
+</div>
+
     <br/>
     <img id="save"  onclick="saved(this)" class='right-bottom' src="./img/save-web.png">
     <p></p>

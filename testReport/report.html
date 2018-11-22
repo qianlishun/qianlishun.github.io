@@ -269,7 +269,7 @@
 
         img1.alt = img2.alt = img3.alt = img4.alt = "error";
         // img1.style.height = img2.style.height = img3.style.height = img4.style.height = 100+"px";
-        img1.hidden = img2.hidden = img3.hidden = img4.hidden = true;
+        // img1.hidden = img2.hidden = img3.hidden = img4.hidden = true;
         img1.style.cssFloat = img2.style.cssFloat = img3.style.cssFloat = img4.style.cssFloat = "left";    
 
         layoutSize(type);
@@ -318,9 +318,9 @@
                 break;
         }
 
-        // imgListLoad(imgList,function(){
-        //     layoutDivX(type);
-        //  });
+        imgListLoad(imgList,function(){
+            layoutDivX(type);
+         });
     }
 
     function layoutDivX(type){

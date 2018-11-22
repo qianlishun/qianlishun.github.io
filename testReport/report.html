@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>report</title>
+    <meta charset="utf-8">
+    <script src="./js/jquery-v1.8.3.min.js"></script>
+    <script src="./js/html2canvas.js"></script>
+    <script src="./js/obsList.js"></script>
+    <style>
+        body{
+            background-color:white;
+        }
+        .right-bottom{
+            width: 60px;
+            height:60px;
+            position: fixed;
+            z-index: 999;
+            right:1px;
+            bottom: 20px;
+        }
+        .form-control{
+            float: left;
+            /* padding-top: 10px; */
+            /* text-align: center; */
+        }
+        option{
+             text-align: center;
+             left: 20px;
+        }
+        select{
+            text-align: center;
+            height: 50px;
+            font-style: oblique;
+            font-weight: bold;
+            font-size: 110%;
+            width: 30%;
+            /* max-width: 30%; */
+            /* text-align-last: center; */
+        }
+        textarea{
+            -webkit-transform:translateZ(0px);
+            -webkit-overflow-scrolling:touch;
+            width:100%;
+            overflow:scroll;
+            height: 150px;
+            font-size: 150%;
+        }
+        label{
+            font-size:150%;
+        }
+        img:not([src]) {
+         opacity: 0;
+        }
+        .divX {
+            z-index:200;
+            -moz-border-radius:20px;
+            -webkit-border-radius:20px;
+            line-height:10px;
+            text-align:center;
+            font-weight:bold;
+            cursor:pointer;
+            font-size:10px;
+            display: none;
+            width: 50px;
+            height: 50px;
+        }
+        .imgX{
+            width: 100%;
+            height: 100%;
+        }
+        .file_img{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+    <script>
+
+    function saved(o){
+        for(var n = 0; n < 4; n++){
+            var divX =  $('#img_zindex_div_' + n);
+            divX.hide();
+        }
+
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        var text1 = document.getElementById("comments1");
+        var text2 = document.getElementById("comments2");
+        text1.value += " ";
+        changerow(text1);
+        changerow(text2);
+
+        var select1 = document.getElementById("select1");
+        var select2 = document.getElementById("select2");
+
+        select1.hidden = true;
+        select2.hidden = true;
+        label1.hidden = false;
+        label2.hidden = false;
+
+        o.style.display='none';
+
+        var width = $(document).width();
+        var height = $(document).height();
+        var canvas = document.createElement("canvas"); //创建一个canvas节点
+        var scale = 2; //定义任意放大倍数 支持小数
+        canvas.width = width * scale; //定义canvas 宽度 * 缩放
+        canvas.height = height * scale+35; //定义canvas高度 *缩放
+        canvas.getContext("2d").scale(scale,scale); //获取context,设置scale
+        var opts = {
+            scale:scale, // 添加的scale 参数
+            canvas:canvas, //自定义 canvas
+            logging: false, //日志开关
+            width:width, //dom 原始宽度
+            height:height //dom 原始高度
+        }
+
+        var divReport = $('#report');
+        html2canvas(divReport,opts).then(function(canvas){
+            var dataUrl = canvas.toDataURL();
+            var img = document.getElementById('testImg');
+            img.src = dataUrl;
+        });
+    }
+
+    function  changerow(o){
+        if (window.navigator.userAgent.indexOf("Firefox") > -1) {
+            o.style.height = o.scrollTop + o.scrollHeight + "px";
+        }
+        else{ 
+            if (o.scrollTop > 0) o.style.height = o.scrollTop + o.scrollHeight + "px";
+        }
+    }
+
+    function onLoad(){
+        select1.hidden = true;
+        select2.hidden = true;
+    
+        loadListJson (selectList);
+    
+        // 多图显示测试  
+        addReportImage();
+    }
+
+    var sWidth;
+
+    function loadListJson(list){
+        sWidth = $(document).width() * 0.90 * 0.30 - 30
+        select1.style.width =  select2.style.width = sWidth + 70 + 'px';
+        // alert(window.devicePixelRatio);
+
+        var describeList = list.describes;
+        var tipsList = list.tips;
+
+        var label1 = document.getElementById("label1");
+        var label2 = document.getElementById("label2");
+
+        if(describeList && describeList.length){
+            initSelect1(describeList);
+            select1.hidden = false;
+            label1.hidden = true;
+        }
+        if(describeList && tipsList.length){
+            initSelect2(tipsList);
+            select2.hidden = false;
+            label2.hidden = true;
+        }
+    }
+
+    function initSelect1(desList) {
+        //第一个下拉列表
+        // var desListJson = describeList;
+        var select1 = document.getElementById("select1");
+        //生成新的下拉选项
+        for ( var i = 0; i < desList.length; i++) {
+            //alert(i);
+            var newoption = document.createElement('option');
+            var contentStr = desList[i].content.replace('&ldquo;','“');
+            var contentStr = contentStr.replace('&rdquo;','”');
+
+            newoption.value = contentStr;
+            newoption.title = contentStr;
+
+            $("#labelText").css({
+                "font-family": "Microsoft YaHei"
+            }).html(contentStr);
+            var strLength = contentStr.length;
+            var width = $("#labelText").width();
+            if(width>sWidth){
+                contentStr = contentStr.substring(0,sWidth/width*strLength) + '...';
+            }
+            newoption.text = contentStr;
+
+            select1.options.add(newoption);
+        }
+    }
+
+    function initSelect2(tipsList) {
+        //第一个下拉列表
+        // var typeListJson = typeList;
+        var select2 = document.getElementById("select2");
+        //生成新的下拉选项
+        for ( var i = 0; i < tipsList.length; i++) {
+            //alert(i);
+            var newoption = document.createElement('option');
+            var contentStr = tipsList[i].content.replace('&ldquo;','“');
+            var contentStr = contentStr.replace('&rdquo;','”');
+            newoption.value = contentStr;
+            newoption.title = contentStr;
+
+            $("#labelText").css({
+                    "font-family": "Microsoft YaHei"
+            }).html(contentStr);
+            var strLength = contentStr.length;
+            var width = $("#labelText").width();
+            if(width>sWidth){
+                contentStr = contentStr.substring(0,sWidth/width*strLength) + '...';
+            }
+             newoption.text = contentStr;
+
+            select2.options.add(newoption);
+        }
+    }
+
+    function selet1Change(selvalue){
+        var textarea = document.getElementById("comments1");
+        textarea.value = selvalue+"。";
+        var select1 = document.getElementById("select1");
+        select1.selectedIndex=select1.defaultIndex;
+    }
+
+    function selet2Change(selvalue){
+        var textarea = document.getElementById("comments2");
+        textarea.value = selvalue+"。";
+        var select2 = document.getElementById("select2");
+        select2.selectedIndex=select2.defaultIndex;
+    }
+
+    var img1,img2,img3,img4;
+    var imgList;
+    function addReportImage(){
+        // 后续使用一个数组维护加载进来的图片，做删除操作时删除数组内的图片，
+        // 再做循环操作依次添加到img 标签里，同时更新图片右上角的删除图标。
+        imgList = ["./img/test1.jpg","./img/test2.jpg","./img/test3.jpg","./img/test4.jpg"];
+       
+       if(imgList.length>4) imgList = imgList.slice(imgList.length-4,imgList.length);
+        
+        var type = imgList.length;
+
+        img1 = document.getElementById('theImage0');
+        img2 = document.getElementById('theImage1');
+        img3 = document.getElementById('theImage2');
+        img4 = document.getElementById('theImage3');
+        // var imgDiv = document.getElementById('imgMark');
+
+        img1.alt = img2.alt = img3.alt = img4.alt = "error";
+        // img1.style.height = img2.style.height = img3.style.height = img4.style.height = 100+"px";
+        img1.hidden = img2.hidden = img3.hidden = img4.hidden = true;
+        img1.style.cssFloat = img2.style.cssFloat = img3.style.cssFloat = img4.style.cssFloat = "left";    
+
+        layoutSize(type);
+    }
+    
+	function del(index) {
+        // alert("删除"+index);
+        imgList.splice(index,1);
+        layoutSize(imgList.length);
+	}	
+	
+    function layoutSize(type){
+        // for(var n =0 ;n< 4 ;n ++){
+        //     $('#file_img'+n).removeAttr('src');    
+        // }
+        for(var n=0;n<type;n++){
+            document.getElementById('file_img'+n).src = imgList[n];
+        }
+        switch (type) {
+                case 1:
+                    img1.style.width = "100%";
+                    break;
+                case 2:
+                    img1.style.width = "50%";
+                    img2.style.width = "50%";
+                    break;
+                case 3:
+                    img1.style.width = "50%";
+                    img2.style.width = "50%";
+                    img3.style.width = "50%";
+                    img4.style.width = "50%";
+                    img4.hidden = false;
+                    break;
+                case 4:
+                    img1.style.width = "50%";
+                    img2.style.width = "50%";
+                    img3.style.width = "50%";
+                    img4.style.width = "50%";
+                    break;
+                default:
+                    break;
+        }
+        document.getElementById('file_img'+(type-1)).onload = function(){
+            layoutDivX(type);
+        }
+    }
+
+    function layoutDivX(type){
+        for(var n=0;n<4;n++){
+            var idStr = "file_img" + n;
+            var divImg =  document.getElementById('theImage' + n);
+            divImg.hidden = false;
+        
+            var tmpImg = $('#'+idStr);
+            var left = tmpImg.offset().left;
+            var top = tmpImg.offset().top;
+            var width = tmpImg.width();
+            var height = tmpImg.height();
+
+            var divX =  $('#img_zindex_div_' + n);
+            divX.show();
+            divX.css({position: "absolute", left: left + width - width/8, top: top , display: "block" , width:width/8,height:width/8});
+            if(n>=type){
+                height = $('#file_img'+(n-1)).height();
+                $('#file_img'+n).removeAttr('src');    
+                divImg.style.height = height * 0.508 *( 1 + (type>=1) )* ( n!=1 )  + 'px';
+                divX.hide();
+            }
+        }
+
+        var tmpImg1 = document.getElementById('file_img0')
+        var tmpImg2 = document.getElementById('file_img1');
+        var tmpImg3 = document.getElementById('file_img2');
+        var tmpImg4 = document.getElementById('file_img3');
+
+        var divX1 = $('#img_zindex_div_0');
+        var divX2 = $('#img_zindex_div_1');
+        var divX3 = $('#img_zindex_div_2');
+        var divX4 = $('#img_zindex_div_3');
+
+        if(tmpImg1.src.length<5 && tmpImg2.src.length<5){
+            img1.hidden = img2.hidden = true;
+        }
+
+        if(tmpImg3.src.length<5 && tmpImg4.src.length<5){
+            img3.hidden = img4.hidden = true;
+        }
+        
+        for(var n =0 ;n< 4 ;n ++){
+            $('#file_img'+n).removeAttr('src');        
+            var tImg = document.getElementById('file_img'+n);
+            if(n<imgList.length){
+                tImg.src = imgList[n];
+            }
+            if(tImg.src.length<5)
+                $('#img_zindex_div_'+n).hide();
+        }
+    }
+    </script>
+</head>
+
+<body onload="onLoad()">
+<div id="report" style="padding-left: 5%;width:90%;background-color: white;" >
+    <div id="imgMark" style="padding-top:5px;">
+        <div id="theImage0" >
+            <div style="position: relative;">
+                    <img class="file_img" id="file_img0"/>
+            </div>
+            <div class="divX" id="img_zindex_div_0" onclick="del(0)">
+                    <img class="imgX" src="./img/img_del.png"  />
+            </div>
+        </div>
+        <div id="theImage1">
+                <div style="position: relative;">
+                        <img class="file_img"  id="file_img1"  />
+                </div>
+                <div class="divX" id="img_zindex_div_1" onclick="del(1)">
+                        <img class="imgX" src="./img/img_del.png" />
+                </div>
+        </div>
+        <div id="theImage2">
+                <div style="position: relative;">
+                        <img class="file_img" id="file_img2"  />
+                </div>
+                <div class="divX" id="img_zindex_div_2" onclick="del(2)">
+                        <img class="imgX" src="./img/img_del.png" />
+                </div>
+        </div>
+        <div id="theImage3">
+                <div style="position: relative;">
+                        <img class="file_img" id="file_img3" />
+                </div>
+                <div class="divX" id="img_zindex_div_3" onclick="del(3)">
+                        <img class="imgX" src="./img/img_del.png" width="20" height="20" />
+                </div>
+        </div>
+    </div>
+<br/>
+    <div class="form-control" style="padding-top: 5px">
+         <label id="label1" or="comments1" style="font-style: oblique;font-weight: bold;">Description:</label>
+        <tr>
+            <td height="0" colspan="5" noWrap >
+                <select name="select1" id="select1"   onchange="selet1Change(this.value)">
+                    <option value="">Describe</option>
+                </select>
+            </td>
+        </tr>
+    </div>
+    <!--     -webkit-transform:translateZ(0px);-webkit-overflow-scrolling:touch;           -->
+    <textarea id="comments1" rows="4"></textarea>
+    <div class="form-control">
+         <label id="label2" for="comments2" style="font-style: oblique;font-weight: bold;">Prompt:</label>
+        <tr>
+            <td height="0" colspan="5" noWrap>
+                <select name="select2" id="select2"  onchange="selet2Change(this.value)">
+                    <option value="">Type</option>
+                </select>
+            </td>
+        </tr>
+    </div>
+    <br/>
+    <!--     -webkit-transform:translateZ(0px);-webkit-overflow-scrolling:touch;           -->
+    <textarea id="comments2" rows="4"></textarea>
+    <br/>
+    <img id="save"  onclick="saved(this)" class='right-bottom' src="./img/save-web.png">
+    <p></p>
+    <div id='labelText' style='color:black;line-height:1.2;white-space:nowrap;top:0px;left:0px;position:fixed;display:block;visibility:hidden;'>
+
+    </div>
+
+    <img id="testImg" alt="">
+</body>
+
+</html>

@@ -271,7 +271,11 @@
         //     $('#file_img'+n).removeAttr('src');    
         // }
         for(var n=0;n<type;n++){
-            document.getElementById('file_img'+n).src = imgList[n];
+            var file_img = document.getElementById('file_img'+n);
+            file_img.src = imgList[n];
+            file_img.onload = function(){
+                layoutDivX(n,type);
+            } 
         }
         switch (type) {
                 case 1:
@@ -298,32 +302,33 @@
                     break;
         }
         document.getElementById('file_img'+(type-1)).onload = function(){
-            layoutDivX(type);
+            layoutDiv(type);
         }
     }
 
-    function layoutDivX(type){
-        for(var n=0;n<4;n++){
-            var idStr = "file_img" + n;
-            var divImg =  document.getElementById('theImage' + n);
-            divImg.hidden = false;
-        
-            var tmpImg = $('#'+idStr);
-            var left = tmpImg.offset().left;
-            var top = tmpImg.offset().top;
-            var width = tmpImg.width();
-            var height = tmpImg.height();
+    function layoutDivX(n,type){
+        var idStr = "file_img" + n;
+        var divImg =  document.getElementById('theImage' + n);
+        divImg.hidden = false;
+    
+        var tmpImg = $('#'+idStr);
+        var left = tmpImg.offset().left;
+        var top = tmpImg.offset().top;
+        var width = tmpImg.width();
+        var height = tmpImg.height();
 
-            var divX =  $('#img_zindex_div_' + n);
-            divX.show();
-            divX.css({position: "absolute", left: left + width - width/8, top: top , display: "block" , width:width/8,height:width/8});
-            if(n>=type){
-                height = $('#file_img'+(n-1)).height();
-                $('#file_img'+n).removeAttr('src');    
-                divImg.style.height = height * 0.508 *( 1 + (type>=1) )* ( n!=1 )  + 'px';
-                divX.hide();
-            }
+        var divX =  $('#img_zindex_div_' + n);
+        divX.show();
+        divX.css({position: "absolute", left: left + width - width/8, top: top , display: "block" , width:width/8,height:width/8});
+        if(n>=type){
+            height = $('#file_img'+(n-1)).height();
+            $('#file_img'+n).removeAttr('src');    
+            divImg.style.height = height * 0.508 *( 1 + (type>=1) )* ( n!=1 )  + 'px';
+            divX.hide();
         }
+    }
+
+    function layoutDiv(type){
 
         var tmpImg1 = document.getElementById('file_img0')
         var tmpImg2 = document.getElementById('file_img1');
@@ -341,16 +346,6 @@
 
         if(tmpImg3.src.length<5 && tmpImg4.src.length<5){
             img3.hidden = img4.hidden = true;
-        }
-        
-        for(var n =0 ;n< 4 ;n ++){
-            $('#file_img'+n).removeAttr('src');        
-            var tImg = document.getElementById('file_img'+n);
-            if(n<imgList.length){
-                tImg.src = imgList[n];
-            }
-            if(tImg.src.length<5)
-                $('#img_zindex_div_'+n).hide();
         }
     }
     </script>

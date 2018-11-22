@@ -301,8 +301,14 @@
                 default:
                     break;
         }
-        document.getElementById('file_img'+(type-1)).onload = function(){
-            layoutDiv(type);
+        for(var n=0;n<type;n++){
+            var file_img = document.getElementById('file_img'+n);
+            file_img.onload = function(){
+                layoutDivX(n,type);
+                if(n==type-1){
+                    layoutDiv(type);
+                }
+            } 
         }
     }
 

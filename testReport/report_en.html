@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <script src="./js/jquery-v1.8.3.min.js"></script>
     <script src="./js/html2canvas.js"></script>
+    <script src="./js/jsonComm.js"></script>
     <script src="./js/obsList.js"></script>
     <style>
         body{
@@ -76,10 +77,18 @@
 
     <script>
 
+    function loadMTForJSWithJson(jsonStr){
+        jsonComm.loadJSONCallFunc(jsonStr);
+    }
+
     function saved(o){
         for(var n = 0; n < 4; n++){
             var divX =  $('#img_zindex_div_' + n);
             divX.hide();
+            var imgDom = document.getElementById('file_img'+n); 
+            if(imgDom.title == 'null'){
+                imgDom.removeAttribute('src'); 
+            }
         }
 
         document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -117,10 +126,21 @@
         var divReport = $('#report');
         html2canvas(divReport,opts).then(function(canvas){
             var dataUrl = canvas.toDataURL();
-            var img = document.getElementById('testImg');
+            var img = document.getElementById('theImage');
             img.src = dataUrl;
+            var funcName = "saveReport";
+            var param = new Array(dataUrl,text1.value,text2.value);
+
+            // var jsonStr = jsonComm.makeJSONWith(funcName,param);
+            // loadJSForMTWithJson(jsonStr);// APP回调函数：调起 APP 内部的方法，传递参数为图片的 base64编码
         });
     }
+
+    // APP 内部调用此方法，并传入图片的 base64编码。
+    function loadRawImage(basedata) {
+        var img = document.getElementById('theImage');
+        img.src = "data:image/png;base64," + basedata;
+    };
 
     function  changerow(o){
         if (window.navigator.userAgent.indexOf("Firefox") > -1) {
@@ -132,18 +152,28 @@
     }
 
     function onLoad(){
+        // var text = document.getElementById("comments");
+        // autoTextarea(text);
+        // var list = "";
+        // loadListJson (list);
         select1.hidden = true;
         select2.hidden = true;
-    
+
+        // var funcName = "loadListJson";
+        // var jsonObj = new Object();
+        // jsonObj.json = selectListStr;
+        // var param = new Array(jsonObj);
+
         loadListJson (selectList);
-    
-        document.getElementById("commentsDiv").hidden = true;
+        // var jsonStr = jsonComm.makeJSONWith(funcName,param);
+        // loadJSForMTWithJson(jsonStr);// APP回调函数：调起 APP 内部的方法，传递参数为图片的 base64编码
+
         // 多图显示测试  
         addReportImage();
     }
 
     var sWidth;
-    
+
     function loadListJson(list){
         sWidth = $(document).width() * 0.90 * 0.30 - 30
         select1.style.width =  select2.style.width = sWidth + 70 + 'px';
@@ -256,9 +286,9 @@
     function addReportImage(){
         // 后续使用一个数组维护加载进来的图片，做删除操作时删除数组内的图片，
         // 再做循环操作依次添加到img 标签里，同时更新图片右上角的删除图标。
-        imgSrcList = ["./img/test1.jpg","./img/test2.jpg","./img/test3.jpg","./img/test4.jpg"];
-       
-        if(imgSrcList.length>4) imgSrcList = imgSrcList.slice(imgSrcList.length-4,imgSrcList.length);
+        imgSrcList = [];
+       //"test1.jpg","test2.jpg","test3.jpg","test4.jpg"
+       if(imgSrcList.length>4) imgSrcList = imgSrcList.slice(imgSrcList.length-4,imgSrcList.length);
         
         var type = imgSrcList.length;
 
@@ -266,63 +296,72 @@
         img2 = document.getElementById('theImage1');
         img3 = document.getElementById('theImage2');
         img4 = document.getElementById('theImage3');
+        // var imgDiv = document.getElementById('imgMark');
 
         img1.alt = img2.alt = img3.alt = img4.alt = "error";
         // img1.style.height = img2.style.height = img3.style.height = img4.style.height = 100+"px";
-        // img1.hidden = img2.hidden = img3.hidden = img4.hidden = true;
+        img1.hidden = img2.hidden = img3.hidden = img4.hidden = true;
         img1.style.cssFloat = img2.style.cssFloat = img3.style.cssFloat = img4.style.cssFloat = "left";    
+
+        img1.style.width =  $(document).width() * 0.442 + 'px';
+        img2.style.width = img1.style.width;
+        img3.style.width = img1.style.width;
+        img4.style.width = img1.style.width;
+        img1.style.height = $(document).width() * 0.325 + 'px';
+        img2.style.height = $(document).width() * 0.325 + 'px';
+        img3.style.height = $(document).width() * 0.325 + 'px';
+        img4.style.height = $(document).width() * 0.325 + 'px';
 
         layoutSize(type);
     }
     
 	function del(index) {
         // alert("删除"+index);
+        var imgDom = document.getElementById('file_img'+index); 
+        imgDom.title = 'null';
+        imgDom.src = 'add_image.png';
+
         imgSrcList.splice(index,1);
         layoutSize(imgSrcList.length);
 	}	
 
+    function  changeImage(index){
+        var imgDom = document.getElementById('file_img'+index); 
+        if(imgDom.title == 'null'){
+            imgDom.title = 'true';
+            imgDom.src = './img/test'+(index+1)+'.jpg';
+        }else{
+            
+        }
+        // alert('changeImage ' + imgDom.id);
+        layoutSize(4);
+    }
+
     function layoutSize(type){
         for(var n =0 ;n< 4 ;n ++){
-            $('#file_img'+n).removeAttr('src');    
+            // $('#file_img'+n).removeAttr('src'); 
+            var imgDom = document.getElementById('file_img'+n); 
+            if(imgDom.title == 'null'){
+                imgDom.style.width = '70%';
+                imgDom.style.paddingLeft = '15%';
+            }else {
+                imgDom.style.width = '100%';
+                imgDom.style.paddingLeft = '0%';
+            }
         }
+        
         var imgList = new Array();
-
-        for(var n=0;n<type;n++){
-            var imgDom = document.getElementById('file_img'+n);
-            imgDom.src = imgSrcList[n];
-            imgList.push(imgDom);
-        }
-
-        switch (type) {
-            case 1:
-                img1.style.width = "100%";
-                break;
-            case 2:
-                img1.style.width = "50%";
-                img2.style.width = "50%";
-                break;
-            case 3:
-                img1.style.width = "50%";
-                img2.style.width = "50%";
-                img3.style.width = "50%";
-                img4.style.width = "50%";
-                img4.hidden = false;
-                break;
-            case 4:
-                img1.style.width = "50%";
-                img2.style.width = "50%";
-                img3.style.width = "50%";
-                img4.style.width = "50%";
-                break;
-            default:
-                break;
-        }
-
+        // for(var n=0;n<type;n++){
+        //     var imgDom = document.getElementById('file_img'+n);
+        //     imgList.push(imgDom);
+        //     var url = imgSrcList[n];
+        //     imgDom.src = url;
+        // }
         imgListLoad(imgList,function(){
             layoutDivX(type);
-            document.getElementById("commentsDiv").hidden = false;
-         });
-    }
+        });
+
+    }    
 
     function layoutDivX(type){
         for(var n=0;n<4;n++){
@@ -330,40 +369,22 @@
             var divImg =  document.getElementById('theImage' + n);
             divImg.hidden = false;
         
-            var tmpImg = $('#'+idStr);
-            var left = tmpImg.offset().left;
-            var top = tmpImg.offset().top;
-            var width = tmpImg.width();
-            var height = tmpImg.height();
+            var imgDom = document.getElementById('file_img'+n); 
+            var left = imgDom.x;
+            var top = imgDom.y;
+            var width = imgDom.width;
+            var height = imgDom.height;
 
             var divX =  $('#img_zindex_div_' + n);
-            divX.show();
             divX.css({position: "absolute", left: left + width - width/8, top: top , display: "block" , width:width/8,height:width/8});
-            if(n>=type){
-                height = $('#file_img'+(n-1)).height();
-                $('#file_img'+n).removeAttr('src');    
-                divImg.style.height = height * 0.508 *( 1 + (type>=1) )* ( n!=1 )  + 'px';
+ 
+            if(imgDom.title == 'null'){
                 divX.hide();
+            }else{
+                divX.show();
             }
         }
 
-        var tmpImg1 = document.getElementById('file_img0')
-        var tmpImg2 = document.getElementById('file_img1');
-        var tmpImg3 = document.getElementById('file_img2');
-        var tmpImg4 = document.getElementById('file_img3');
-
-        var divX1 = $('#img_zindex_div_0');
-        var divX2 = $('#img_zindex_div_1');
-        var divX3 = $('#img_zindex_div_2');
-        var divX4 = $('#img_zindex_div_3');
-
-        if(tmpImg1.src.length<5 && tmpImg2.src.length<5){
-            img1.hidden = img2.hidden = true;
-        }
-
-        if(tmpImg3.src.length<5 && tmpImg4.src.length<5){
-            img3.hidden = img4.hidden = true;
-        }
     }
     </script>
 </head>
@@ -373,7 +394,7 @@
     <div id="imgMark" style="padding-top:5px;">
         <div id="theImage0" >
             <div style="position: relative;">
-                    <img class="file_img" id="file_img0"/>
+                    <img class="file_img" id="file_img0" title="null" src="./img/add_image.png" onclick="changeImage(0)"/>
             </div>
             <div class="divX" id="img_zindex_div_0" onclick="del(0)">
                     <img class="imgX" src="./img/img_del.png"  />
@@ -381,7 +402,7 @@
         </div>
         <div id="theImage1">
                 <div style="position: relative;">
-                        <img class="file_img"  id="file_img1"  />
+                        <img class="file_img"  id="file_img1"  title="null" src="./img/add_image.png" onclick="changeImage(1)"/>
                 </div>
                 <div class="divX" id="img_zindex_div_1" onclick="del(1)">
                         <img class="imgX" src="./img/img_del.png" />
@@ -389,7 +410,7 @@
         </div>
         <div id="theImage2">
                 <div style="position: relative;">
-                        <img class="file_img" id="file_img2"  />
+                        <img class="file_img" id="file_img2" title="null" src="./img/add_image.png" onclick="changeImage(2)" />
                 </div>
                 <div class="divX" id="img_zindex_div_2" onclick="del(2)">
                         <img class="imgX" src="./img/img_del.png" />
@@ -397,7 +418,7 @@
         </div>
         <div id="theImage3">
                 <div style="position: relative;">
-                        <img class="file_img" id="file_img3" />
+                        <img class="file_img" id="file_img3" title="null" src="./img/add_image.png" onclick="changeImage(3)" />
                 </div>
                 <div class="divX" id="img_zindex_div_3" onclick="del(3)">
                         <img class="imgX" src="./img/img_del.png" width="20" height="20" />
@@ -405,10 +426,9 @@
         </div>
     </div>
 <br/>
-<div id="commentsDiv">
     <div class="form-control" style="padding-top: 5px">
          <label id="label1" or="comments1" style="font-style: oblique;font-weight: bold;">Description:</label>
-        <tr>
+        <tc√r>
             <td height="0" colspan="5" noWrap >
                 <select name="select1" id="select1"   onchange="selet1Change(this.value)">
                     <option value="">Describe</option>
@@ -416,6 +436,7 @@
             </td>
         </tr>
     </div>
+    
     <!--     -webkit-transform:translateZ(0px);-webkit-overflow-scrolling:touch;           -->
     <textarea id="comments1" rows="4"></textarea>
     <div class="form-control">
@@ -428,20 +449,18 @@
             </td>
         </tr>
     </div>
+
     <br/>
+
     <!--     -webkit-transform:translateZ(0px);-webkit-overflow-scrolling:touch;           -->
     <textarea id="comments2" rows="4"></textarea>
-
-</div>
-
     <br/>
     <img id="save"  onclick="saved(this)" class='right-bottom' src="./img/save-web.png">
     <p></p>
     <div id='labelText' style='color:black;line-height:1.2;white-space:nowrap;top:0px;left:0px;position:fixed;display:block;visibility:hidden;'>
 
     </div>
-
-    <img id="testImg" alt="">
+    <img id="theImage">
 </body>
 
 </html>

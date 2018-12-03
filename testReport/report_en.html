@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <script src="./js/jquery-v1.8.3.min.js"></script>
     <script src="./js/html2canvas.js"></script>
-    <script src="./js/jsonComm.js"></script>
     <script src="./js/obsList.js"></script>
     <style>
         body{
@@ -319,7 +318,7 @@
         // alert("删除"+index);
         var imgDom = document.getElementById('file_img'+index); 
         imgDom.title = 'null';
-        imgDom.src = 'add_image.png';
+        imgDom.src = './img/add_image.png';
 
         imgSrcList.splice(index,1);
         layoutSize(imgSrcList.length);

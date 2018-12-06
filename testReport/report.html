@@ -8,6 +8,8 @@
     <script src="./js/obsList.js"></script>
     <style>
         body{
+            width: 500pt; 
+            height: 1100pt;
             background-color:white;
         }
         .right-bottom{
@@ -15,7 +17,7 @@
             height:60px;
             position: fixed;
             z-index: 999;
-            right:1px;
+            left:440pt;
             bottom: 20px;
         }
         .form-control{
@@ -75,6 +77,10 @@
     </style>
 
     <script>
+    
+    function loadMTForJSWithJson(jsonStr){
+        jsonComm.loadJSONCallFunc(jsonStr);
+    }
 
     function saved(o){
         for(var n = 0; n < 4; n++){
@@ -137,15 +143,13 @@
     
         loadListJson (selectList);
     
-        document.getElementById("commentsDiv").hidden = true;
-        // 多图显示测试  
-        addReportImage();
+        // document.getElementById("commentsDiv").hidden = true;
     }
 
     var sWidth;
     
     function loadListJson(list){
-        sWidth = $(document).width() * 0.90 * 0.30 - 30
+        sWidth = $(document.body).width() * 0.90 * 0.30 - 30
         select1.style.width =  select2.style.width = sWidth + 70 + 'px';
         // alert(window.devicePixelRatio);
 
@@ -251,14 +255,27 @@
         }, 50)
     }
 
+    function addBtnClick(){
+        var imgSrc = './img/test' + (imgSrcList.length + 1) + '.jpg';
+        addReportImage(imgSrc);
+    }
+
     var img1,img2,img3,img4;
-    var imgSrcList;
-    function addReportImage(){
+    var imgSrcList = [];
+    function addReportImage(basedata){
         // 后续使用一个数组维护加载进来的图片，做删除操作时删除数组内的图片，
         // 再做循环操作依次添加到img 标签里，同时更新图片右上角的删除图标。
-        imgSrcList = ["./img/test1.jpg","./img/test2.jpg","./img/test3.jpg","./img/test4.jpg"];
+        if(imgSrcList.length<4){
+            imgSrcList.push(basedata);
+        }else{
+            alert('full');
+            // // 返回数据已满
+            // var jsonStr = jsonComm.makeJSONWith('addReportImageCallback','imagelist is full');
+            // loadJSForMTWithJson(jsonStr);// APP回调函数：调起 APP 内部的方法，传递参数为图片的 base64编码
+            // return;
+        }
        
-        if(imgSrcList.length>4) imgSrcList = imgSrcList.slice(imgSrcList.length-4,imgSrcList.length);
+        // if(imgSrcList.length>4) imgSrcList = imgSrcList.slice(imgSrcList.length-4,imgSrcList.length);
         
         var type = imgSrcList.length;
 
@@ -329,20 +346,21 @@
             var idStr = "file_img" + n;
             var divImg =  document.getElementById('theImage' + n);
             divImg.hidden = false;
-        
-            var tmpImg = $('#'+idStr);
-            var left = tmpImg.offset().left;
-            var top = tmpImg.offset().top;
-            var width = tmpImg.width();
-            var height = tmpImg.height();
+    
+            var imgDom = document.getElementById('file_img'+n); 
+            var left = imgDom.x;
+            var top = imgDom.y;
+            var width = imgDom.width;
+            var height = imgDom.height;
 
             var divX =  $('#img_zindex_div_' + n);
             divX.show();
             divX.css({position: "absolute", left: left + width - width/8, top: top , display: "block" , width:width/8,height:width/8});
-            if(n>=type){
-                height = $('#file_img'+(n-1)).height();
-                $('#file_img'+n).removeAttr('src');    
-                divImg.style.height = height * 0.508 *( 1 + (type>=1) )* ( n!=1 )  + 'px';
+            if(n>=2 && type>=3){
+                height = document.getElementById('file_img'+(n-1)).height; 
+                divImg.style.height = height  + 'px';
+            }
+            if(n>=type){  
                 divX.hide();
             }
         }
@@ -352,15 +370,53 @@
         var tmpImg3 = document.getElementById('file_img2');
         var tmpImg4 = document.getElementById('file_img3');
 
-        var divX1 = $('#img_zindex_div_0');
-        var divX2 = $('#img_zindex_div_1');
-        var divX3 = $('#img_zindex_div_2');
-        var divX4 = $('#img_zindex_div_3');
+        var divX1 = document.getElementById('img_zindex_div_0');
+        var divX2 = document.getElementById('img_zindex_div_1');
+        var divX3 = document.getElementById('img_zindex_div_2');
+        var divX4 = document.getElementById('img_zindex_div_3');
 
-        if(tmpImg1.src.length<5 && tmpImg2.src.length<5){
-            img1.hidden = img2.hidden = true;
+        var divReport = $('#report');
+        var h = document.getElementById('file_img'+2).height; 
+        var w = divReport.width();
+        switch (type) {
+            case 1:
+                divX1.style.right = w + 'px';
+                divX1.style.top = 0 + 'px' ;
+                break;
+            case 2:
+                divX1.style.right = w*0.5 + 'px';
+                divX1.style.top = 0 + 'px';
+                divX2.style.right = w + 'px';
+                divX2.style.top = 0 + 'px';
+                break;
+            case 3:
+                divX1.style.right = w*0.5 + 'px';
+                divX1.style.top = 0 + 'px';
+                divX2.style.right = w + 'px';
+                divX2.style.top = 0 + 'px';
+                divX3.style.right = w*0.5 + 'px';
+                divX3.style.top = h + 'px';
+                break;
+            case 4:
+                divX1.style.right = w*0.5 + 'px';
+                divX1.style.top = 0 + 'px';
+                divX2.style.right = w + 'px';
+                divX2.style.top = 0 + 'px';
+                divX3.style.right = w*0.5 + 'px';
+                divX3.style.top = h + 'px';
+                divX4.style.right = w + 'px';
+                divX4.style.top = h + 'px';
+                break;
+            default:
+                break;
         }
 
+        if(tmpImg1.src.length<5){
+            img1.hidden = true;
+        }
+        if(tmpImg2.src.length<5){
+           img2.hidden = true;
+        }
         if(tmpImg3.src.length<5 && tmpImg4.src.length<5){
             img3.hidden = img4.hidden = true;
         }
@@ -437,6 +493,9 @@
     <br/>
     <img id="save"  onclick="saved(this)" class='right-bottom' src="./img/save-web.png">
     <p></p>
+
+    <img id="save"  onclick="addBtnClick()" class='right-bottom' src="./img/img_del.png">
+
     <div id='labelText' style='color:black;line-height:1.2;white-space:nowrap;top:0px;left:0px;position:fixed;display:block;visibility:hidden;'>
 
     </div>

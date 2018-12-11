@@ -3,33 +3,40 @@
 <head>
     <title>report</title>
     <meta charset="utf-8">
-    <script src="./js/jquery-v1.8.3.min.js"></script>
-    <script src="./js/html2canvas.js"></script>
-    <script src="./js/obsList.js"></script>
+    <script language="javascript" src="jquery-v1.8.3.min.js"></script>
+    <script language="javascript" src="jsonComm.js"></script>
+    <script language="javascript" src="autoTextarea.js"></script>
+    <script language="javascript" src="html2canvas.js"></script>
+    <script language="javascript" src="obsList.js"></script>
     <style>
-        body{
-            width: 500pt; 
+        
+        body {
+            width: 794pt;
             height: 1100pt;
-            background-color:white;
+            background-color: white;
         }
-        .right-bottom{
+
+        .right-bottom {
             width: 60px;
-            height:60px;
+            height: 60px;
             position: fixed;
             z-index: 999;
-            left:440pt;
+            right: 1px;
             bottom: 20px;
         }
-        .form-control{
+
+        .form-control {
             float: left;
             /* padding-top: 10px; */
             /* text-align: center; */
         }
-        option{
-             text-align: center;
-             left: 20px;
+
+        option {
+            text-align: center;
+            left: 20px;
         }
-        select{
+
+        select {
             text-align: center;
             height: 50px;
             font-style: oblique;
@@ -39,52 +46,68 @@
             /* max-width: 30%; */
             /* text-align-last: center; */
         }
-        textarea{
-            -webkit-transform:translateZ(0px);
-            -webkit-overflow-scrolling:touch;
-            width:100%;
-            overflow:scroll;
+
+        textarea {
+            -webkit-transform: translateZ(0px);
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            overflow: scroll;
             height: 150px;
             font-size: 150%;
         }
-        label{
-            font-size:150%;
+
+        label {
+            font-size: 150%;
         }
+
         img:not([src]) {
-         opacity: 0;
+            opacity: 0;
         }
-        .divX {
-            z-index:200;
-            -moz-border-radius:20px;
-            -webkit-border-radius:20px;
-            line-height:10px;
-            text-align:center;
-            font-weight:bold;
-            cursor:pointer;
-            font-size:10px;
+        .imgX {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 15%;
             display: none;
-            width: 50px;
-            height: 50px;
         }
-        .imgX{
-            width: 100%;
-            height: 100%;
-        }
-        .file_img{
+        .file_img {
             width: 100%;
             height: 100%;
         }
     </style>
 
     <script>
-    
-    function loadMTForJSWithJson(jsonStr){
-        jsonComm.loadJSONCallFunc(jsonStr);
+     function messageBox(message) {
+            alert(message);
+        }
+
+        (function (window) {
+            var searcher = {
+                showmsg: function (msg) {
+                    alert(msg);
+                }
+            };
+            window.searcher = searcher;
+        })(window);
+        function showmsg(msg) {
+            searcher.showmsg(msg);
+        }
+
+   function loadMTForJSWithJson(jsonStr) {
+        try {
+            jsonComm.loadJSONCallFunc(jsonStr);
+        } catch (error) {
+            alert(error);
+        }
     }
 
-    function saved(o){
-        for(var n = 0; n < 4; n++){
-            var divX =  $('#img_zindex_div_' + n);
+    function loadRawImage(basedata) {
+        addReportImage(basedata);
+    };
+
+    function saved(o) {
+        for (var n = 0; n < 4; n++) {
+            var divX = $('#imgX_' + n);
             divX.hide();
         }
 
@@ -92,6 +115,7 @@
         var text1 = document.getElementById("comments1");
         var text2 = document.getElementById("comments2");
         text1.value += " ";
+        text2.value += " ";
         changerow(text1);
         changerow(text2);
 
@@ -103,30 +127,43 @@
         label1.hidden = false;
         label2.hidden = false;
 
-        o.style.display='none';
+        o.style.display = 'none';
+
+        text2.value += ' save canvas ';
 
         var width = $(document).width();
         var height = $(document).height();
         var canvas = document.createElement("canvas"); //创建一个canvas节点
         var scale = 2; //定义任意放大倍数 支持小数
         canvas.width = width * scale; //定义canvas 宽度 * 缩放
-        canvas.height = height * scale+35; //定义canvas高度 *缩放
-        canvas.getContext("2d").scale(scale,scale); //获取context,设置scale
+        canvas.height = height * scale + 35; //定义canvas高度 *缩放
+        canvas.getContext("2d").scale(scale, scale); //获取context,设置scale
         var opts = {
-            scale:scale, // 添加的scale 参数
-            canvas:canvas, //自定义 canvas
+            scale: scale, // 添加的scale 参数
+            canvas: canvas, //自定义 canvas
             logging: false, //日志开关
-            width:width, //dom 原始宽度
-            height:height //dom 原始高度
+            width: width, //dom 原始宽度
+            height: height //dom 原始高度
         }
+        //var divReport = $('#report');
+        html2canvas(document.body, opts).then(function (canvas) {
+            jsObj.loadJSForMTWithJson("233");// APP回调函数：调起 APP 内部的方法，传递参数为图片的 base64编码
 
-        var divReport = $('#report');
-        html2canvas(divReport,opts).then(function(canvas){
+            text2.value += '  html2canvas   ';
+
             var dataUrl = canvas.toDataURL();
-            var img = document.getElementById('testImg');
-            img.src = dataUrl;
+                //var img = document.getElementById('theImage');
+                //img.src = dataUrl;
+
+            var funcName = "saveReport";
+            var param = new Array(dataUrl);
+
+            var jsonStr = jsonComm.makeJSONWith(funcName, param);
+            text2.value += jsonStr;
+            jsObj.loadJSForMTWithJson(jsonStr);// APP回调函数：调起 APP 内部的方法，传递参数为图片的 base64编码
+
         });
-    }
+     }
 
     function  changerow(o){
         if (window.navigator.userAgent.indexOf("Firefox") > -1) {
@@ -149,7 +186,7 @@
     var sWidth;
     
     function loadListJson(list){
-        sWidth = $(document.body).width() * 0.90 * 0.30 - 30
+        sWidth = $(document).width() * 0.90 * 0.30 - 30
         select1.style.width =  select2.style.width = sWidth + 70 + 'px';
         // alert(window.devicePixelRatio);
 
@@ -241,42 +278,41 @@
     }
 
     function imgListLoad(imgList, callback) {
-        var timer = setInterval(function() {
-            var count = 0;
-            for(var n = 0; n < imgList.length; n++){
-                if (imgList[n].complete) {
-                    count++;
-                 }
-            }
-            if(count==imgList.length){
-                callback(imgList);
-                clearInterval(timer);
-            }
-        }, 50)
-    }
+            var timer = setInterval(function () {
+                var count = 0;
+                for (var n = 0; n < imgList.length; n++) {
+                    if (imgList[n].complete) {
+                        count++;
+                    }
+                }
+                if (count == imgList.length) {
+                    callback(imgList);
+                    clearInterval(timer);
+                }
+            }, 50)
+        }
 
     function addBtnClick(){
-        var imgSrc = './img/test' + (imgSrcList.length + 1) + '.jpg';
-        addReportImage(imgSrc);
-    }
+            var imgSrc = './test' + (imgSrcList.length + 1) + '.jpg';
+            addReportImage(imgSrc);
+        }
 
-    var img1,img2,img3,img4;
+    var img1, img2, img3, img4;
     var imgSrcList = [];
-    function addReportImage(basedata){
+    function addReportImage(basedata) {
         // 后续使用一个数组维护加载进来的图片，做删除操作时删除数组内的图片，
         // 再做循环操作依次添加到img 标签里，同时更新图片右上角的删除图标。
-        if(imgSrcList.length<4){
+        if (imgSrcList.length < 4) {
             imgSrcList.push(basedata);
-        }else{
-            alert('full');
-            // // 返回数据已满
-            // var jsonStr = jsonComm.makeJSONWith('addReportImageCallback','imagelist is full');
-            // loadJSForMTWithJson(jsonStr);// APP回调函数：调起 APP 内部的方法，传递参数为图片的 base64编码
-            // return;
+        } else {
+            // 返回数据已满
+            var funcName = "addReportImageCallback";
+            var param = new Array('imagelist is full');
+            var jsonStr = jsonComm.makeJSONWith(funcName, param);
+            jsObj.loadJSForMTWithJson(jsonStr);// APP回调函数：调起 APP 内部的方法;
+            return;
         }
-       
-        // if(imgSrcList.length>4) imgSrcList = imgSrcList.slice(imgSrcList.length-4,imgSrcList.length);
-        
+
         var type = imgSrcList.length;
 
         img1 = document.getElementById('theImage0');
@@ -285,22 +321,20 @@
         img4 = document.getElementById('theImage3');
 
         img1.alt = img2.alt = img3.alt = img4.alt = "error";
-        // img1.style.height = img2.style.height = img3.style.height = img4.style.height = 100+"px";
-        // img1.hidden = img2.hidden = img3.hidden = img4.hidden = true;
-        img1.style.cssFloat = img2.style.cssFloat = img3.style.cssFloat = img4.style.cssFloat = "left";    
+        img1.style.cssFloat = img2.style.cssFloat = img3.style.cssFloat = img4.style.cssFloat = "left";
 
         layoutSize(type);
     }
-    
-	function del(index) {
-        // alert("删除"+index);
-        imgSrcList.splice(index,1);
-        layoutSize(imgSrcList.length);
-	}	
 
-    function layoutSize(type){
-        for(var n =0 ;n< 4 ;n ++){
-            $('#file_img'+n).removeAttr('src');    
+    function del(index) {
+        // alert("删除"+index);
+        imgSrcList.splice(index, 1);
+        layoutSize(imgSrcList.length);
+    }
+
+    function layoutSize(type) {
+        for (var n = 0; n < 4; n++) {
+            $('#file_img' + n).removeAttr('src');
         }
         var imgList = new Array();
 
@@ -338,33 +372,32 @@
             default:
                 break;
         }
-
-        imgListLoad(imgList,function(){
+        imgListLoad(imgList, function () {
             layoutDivX(type);
             document.getElementById("commentsDiv").hidden = false;
-         });
+        });
     }
 
-    function layoutDivX(type){
-        for(var n=0;n<4;n++){
+    function layoutDivX(type) {
+        for (var n = 0; n < 4; n++) {
             var idStr = "file_img" + n;
-            var divImg =  document.getElementById('theImage' + n);
+            var divImg = document.getElementById('theImage' + n);
             divImg.hidden = false;
-    
-            var imgDom = document.getElementById('file_img'+n); 
+
+            var imgDom = document.getElementById('file_img' + n);
             var left = imgDom.x;
             var top = imgDom.y;
             var width = imgDom.width;
             var height = imgDom.height;
 
-            var divX =  $('#img_zindex_div_' + n);
+            var divX = $('#imgX_' + n);
             divX.show();
-            divX.css({position: "absolute", left: left + width - width/8, top: top , display: "block" , width:width/8,height:width/8});
-            if(n>=2 && type>=3){
-                height = document.getElementById('file_img'+(n-1)).height; 
-                divImg.style.height = height  + 'px';
+            // divX.css({ position: "absolute", left: "100%", top: top, display: "block", width: width / 8, height: width / 8 });
+            if (n >= 2 && type >= 3) {
+                height = document.getElementById('file_img' + (n - 1)).height;
+                divImg.style.height = height + 'px';
             }
-            if(n>=type){  
+            if (n >= type) {
                 divX.hide();
             }
         }
@@ -374,101 +407,93 @@
         var tmpImg3 = document.getElementById('file_img2');
         var tmpImg4 = document.getElementById('file_img3');
 
-        var divX1 = document.getElementById('img_zindex_div_0');
-        var divX2 = document.getElementById('img_zindex_div_1');
-        var divX3 = document.getElementById('img_zindex_div_2');
-        var divX4 = document.getElementById('img_zindex_div_3');
-
-        if(tmpImg1.src.length<5){
+        if (tmpImg1.src.length < 5) {
             img1.hidden = true;
         }
-        if(tmpImg2.src.length<5){
-           img2.hidden = true;
+        if (tmpImg2.src.length < 5) {
+            img2.hidden = true;
         }
-        if(tmpImg3.src.length<5 && tmpImg4.src.length<5){
+        if (tmpImg3.src.length < 5 && tmpImg4.src.length < 5) {
             img3.hidden = img4.hidden = true;
+        }        
+     }
+        
+    function getAddFocus(id){//针对添加操作中的简介和备注，textarea获得焦点清空输入框
+            jsObj.GetFocus();
         }
-    }
+
+    function lostAddFocus(id){//针对添加操作中的简介和备注，textarea失去焦点且内容为空时，显示提示信息
+            var funcName = "lostAddFocus";
+            var param = " ";
+            var jsonStr = jsonComm.makeJSONWith(funcName, param);
+            jsObj.loadJSForMTWithJson(jsonStr);
+     }
     </script>
 </head>
-
 <body onload="onLoad()">
-<div id="report" style="padding-left: 5%;width:90%;background-color: white;" >
-    <div id="imgMark" style="padding-top:5px;">
-        <div id="theImage0" >
-            <div style="position: relative;">
-                    <img class="file_img" id="file_img0"/>
+    <div id="report" style="padding-left: 5%;width:90%;background-color: white;">
+        <div id="imgMark" style="padding-top:5px;">
+            <div id="theImage0">
+                <div style="position: relative;">
+                    <img class="file_img" id="file_img0" />
+                    <img class="imgX"  id="imgX_0" onclick="del(0)" src="./img_del.png" />
+                </div>
             </div>
-            <div class="divX" id="img_zindex_div_0" onclick="del(0)">
-                    <img class="imgX" src="./img/img_del.png"  />
+            <div id="theImage1">
+                <div style="position: relative;">
+                    <img class="file_img" id="file_img1" />
+                    <img class="imgX"  id="imgX_1" onclick="del(1)" src="./img_del.png" />
+                </div>
+       
+            </div>
+            <div id="theImage2">
+                <div style="position: relative;">
+                    <img class="file_img" id="file_img2" />
+                    <img class="imgX"  id="imgX_2" onclick="del(2)" src="./img_del.png" />
+                </div>
+            </div>
+            <div id="theImage3">
+                <div style="position: relative;">
+                    <img class="file_img" id="file_img3" />
+                    <img class="imgX"  id="imgX_3" onclick="del(3)" src="./img_del.png" />
+                </div>
             </div>
         </div>
-        <div id="theImage1">
-                <div style="position: relative;">
-                        <img class="file_img"  id="file_img1"  />
-                </div>
-                <div class="divX" id="img_zindex_div_1" onclick="del(1)">
-                        <img class="imgX" src="./img/img_del.png" />
-                </div>
+        <br />
+        <div id="commentsDiv">
+            <div class="form-control" style="padding-top: 5px">
+                <label id="label1" or="comments1" style="font-style: oblique;font-weight: bold;">Description:</label>
+                <tr>
+                    <td height="0" colspan="5" noWrap>
+                        <select name="select1" id="select1" onchange="selet1Change(this.value)">
+                            <option value="">Describe</option>
+                        </select>
+                    </td>
+                </tr>
+            </div>
+            <!--     -webkit-transform:translateZ(0px);-webkit-overflow-scrolling:touch;           -->
+            <textarea id="comments1" rows="4"></textarea>
+            <div class="form-control">
+                <label id="label2" for="comments2" style="font-style: oblique;font-weight: bold;">Prompt:</label>
+                <tr>
+                    <td height="0" colspan="5" noWrap>
+                        <select name="select2" id="select2" onchange="selet2Change(this.value)">
+                            <option value="">Type</option>
+                        </select>
+                    </td>
+                </tr>
+            </div>
+            <br />
+            <!--     -webkit-transform:translateZ(0px);-webkit-overflow-scrolling:touch;           -->
+            <textarea id="comments2" rows="4"></textarea>
         </div>
-        <div id="theImage2">
-                <div style="position: relative;">
-                        <img class="file_img" id="file_img2"  />
-                </div>
-                <div class="divX" id="img_zindex_div_2" onclick="del(2)">
-                        <img class="imgX" src="./img/img_del.png" />
-                </div>
+        <br />
+        <img id="save" onclick="saved(this)" class='right-bottom' src="./save-web.png">
+        <p></p>
+        <img id="add"  onclick="addBtnClick()" class="right-bottom" style="bottom: 100px" src="./img_del.png">
+
+        <div id='labelText' style='color:black;line-height:1.2;white-space:nowrap;top:0px;left:0px;position:fixed;display:block;visibility:hidden;'>
         </div>
-        <div id="theImage3">
-                <div style="position: relative;">
-                        <img class="file_img" id="file_img3" />
-                </div>
-                <div class="divX" id="img_zindex_div_3" onclick="del(3)">
-                        <img class="imgX" src="./img/img_del.png" width="20" height="20" />
-                </div>
-        </div>
-    </div>
-<br/>
-<div id="commentsDiv">
-    <div class="form-control" style="padding-top: 5px">
-         <label id="label1" or="comments1" style="font-style: oblique;font-weight: bold;">Description:</label>
-        <tr>
-            <td height="0" colspan="5" noWrap >
-                <select name="select1" id="select1"   onchange="selet1Change(this.value)">
-                    <option value="">Describe</option>
-                </select>
-            </td>
-        </tr>
-    </div>
-    <!--     -webkit-transform:translateZ(0px);-webkit-overflow-scrolling:touch;           -->
-    <textarea id="comments1" rows="4"></textarea>
-    <div class="form-control">
-         <label id="label2" for="comments2" style="font-style: oblique;font-weight: bold;">Prompt:</label>
-        <tr>
-            <td height="0" colspan="5" noWrap>
-                <select name="select2" id="select2"  onchange="selet2Change(this.value)">
-                    <option value="">Type</option>
-                </select>
-            </td>
-        </tr>
-    </div>
-    <br/>
-    <!--     -webkit-transform:translateZ(0px);-webkit-overflow-scrolling:touch;           -->
-    <textarea id="comments2" rows="4"></textarea>
-
-</div>
-
-    <br/>
-    <img id="save"  onclick="saved(this)" class='right-bottom' src="./img/save-web.png">
-    <p></p>
-
-    <img id="add"  onclick="addBtnClick()" class='right-bottom' src="./img/img_del.png">
-
-    <div id='labelText' style='color:black;line-height:1.2;white-space:nowrap;top:0px;left:0px;position:fixed;display:block;visibility:hidden;'>
-
-    </div>
-
-    <img id="testImg" alt="">
+        <img id="testImg" alt="">
 </body>
-
 </html>

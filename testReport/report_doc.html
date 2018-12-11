@@ -1,0 +1,631 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Content-Style-Type" content="text/css" />
+        <meta name="generator" content="Aspose.Words for .NET 15.1.0.0" />
+        <script src="./js/jquery-v1.8.3.min.js"></script>
+        <script src="./js/html2canvas.js"></script>
+        <script src="./js/obsList.js"></script>
+        <title>report</title>
+        <style>
+            body{ 
+                width: 794pt; 
+                height: 1100pt;
+            } 
+           /* .report{
+                width: 100%;
+                height: 140%;
+           } */
+           option{
+             text-align: center;
+             left: 20px;
+            }
+            select{
+                text-align: center;
+                height: 50px;
+                font-style: oblique;
+                font-weight: bold;
+                font-size: 110%;
+                width: 30%;
+                /* max-width: 30%; */
+                /* text-align-last: center; */
+            }
+            img:not([src]) {
+                opacity: 0;
+            }
+            textarea{
+                -webkit-transform: translateZ(0px);
+                -webkit-overflow-scrolling: touch;
+                width: 100%;
+                font-size: 12pt;
+                overflow: scroll;
+            }
+            #comments1{
+                height: 150pt;
+                word-break:break-all;
+                overflow:hidden;
+                border-style:solid;
+                border-width:0.5px;  
+                padding: 5px;
+                font-size: 110%;
+            }
+            #comments2{
+                height: 120pt;
+                word-break:break-all;
+                overflow:hidden;
+                border-style:solid;
+                border-width:0.5px; 
+                padding: 5px; 
+                font-size: 110%;
+            }
+            span.spanTxt{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+                /* font-family:;  */
+                font-size:20pt;
+            }
+        </style>
+        
+        <script>
+            function saved(o){
+                for(var n = 0; n < 4; n++){
+                    var divX =  $('#img_zindex_div_' + n);
+                    divX.hide();
+                }
+
+                document.body.scrollTop = document.documentElement.scrollTop = 0;
+                var text1 = document.getElementById("comments1");
+                var text2 = document.getElementById("comments2");
+                text1.style.borderStyle = 'none';
+                text2.style.borderStyle = 'none';
+
+                var select1 = document.getElementById("select1");
+                var select2 = document.getElementById("select2");
+
+                select1.hidden = true;
+                select2.hidden = true;
+                label1.hidden = false;
+                label2.hidden = false;
+
+                o.style.display='none';
+
+                var width = $(document).width();
+                var height = $(document).height();
+                var canvas = document.createElement("canvas"); //创建一个canvas节点
+                var scale = 2; //定义任意放大倍数 支持小数
+                canvas.width = width * scale; //定义canvas 宽度 * 缩放
+                canvas.height = height * scale+35; //定义canvas高度 *缩放
+                canvas.getContext("2d").scale(scale,scale); //获取context,设置scale
+                var opts = {
+                    scale:scale, // 添加的scale 参数
+                    canvas:canvas, //自定义 canvas
+                    logging: false, //日志开关
+                    width:width, //dom 原始宽度
+                    height:height //dom 原始高度
+                }
+
+                html2canvas(document.body,opts).then(function(canvas){
+                    var dataUrl = canvas.toDataURL();
+                    var img = document.getElementById('testImg');
+                    img.src = dataUrl;
+                });
+         }
+
+        function  changerow(o){
+            if (window.navigator.userAgent.indexOf("Firefox") > -1) {
+                o.style.height = o.scrollTop + o.scrollHeight + "px";
+            }
+            else{ 
+                if (o.scrollTop > 0) o.style.height = o.scrollTop + o.scrollHeight + "px";
+            }
+        }
+
+        function onLoad(){
+            select1.hidden = true;
+            select2.hidden = true;
+        
+            loadListJson (selectList);
+
+            // 多图显示测试  
+            // addReportImage();
+        }
+
+        var sWidth;
+        
+        function loadListJson(list){
+            sWidth = $(document).width() * 0.90 * 0.30 - 30
+            select1.style.width =  select2.style.width = sWidth + 70 + 'px';
+            // alert(window.devicePixelRatio);
+
+            var describeList = list.describes;
+            var tipsList = list.tips;
+
+            var label1 = document.getElementById("label1");
+            var label2 = document.getElementById("label2");
+
+            if(describeList && describeList.length){
+                initSelect1(describeList);
+                select1.hidden = false;
+                label1.hidden = true;
+            }
+            if(describeList && tipsList.length){
+                initSelect2(tipsList);
+                select2.hidden = false;
+                label2.hidden = true;
+            }
+        }
+
+        function initSelect1(desList) {
+            //第一个下拉列表
+            // var desListJson = describeList;
+            var select1 = document.getElementById("select1");
+            //生成新的下拉选项
+            for ( var i = 0; i < desList.length; i++) {
+                //alert(i);
+                var newoption = document.createElement('option');
+                var contentStr = desList[i].content.replace('&ldquo;','“');
+                var contentStr = contentStr.replace('&rdquo;','”');
+
+                newoption.value = contentStr;
+                newoption.title = contentStr;
+
+                $("#labelText").css({
+                    "font-family": "Microsoft YaHei"
+                }).html(contentStr);
+                var strLength = contentStr.length;
+                var width = $("#labelText").width();
+                if(width>sWidth){
+                    contentStr = contentStr.substring(0,sWidth/width*strLength) + '...';
+                }
+                newoption.text = contentStr;
+
+                select1.options.add(newoption);
+            }
+        }
+
+        function initSelect2(tipsList) {
+            //第一个下拉列表
+            // var typeListJson = typeList;
+            var select2 = document.getElementById("select2");
+            //生成新的下拉选项
+            for ( var i = 0; i < tipsList.length; i++) {
+                //alert(i);
+                var newoption = document.createElement('option');
+                var contentStr = tipsList[i].content.replace('&ldquo;','“');
+                var contentStr = contentStr.replace('&rdquo;','”');
+                newoption.value = contentStr;
+                newoption.title = contentStr;
+
+                $("#labelText").css({
+                        "font-family": "Microsoft YaHei"
+                }).html(contentStr);
+                var strLength = contentStr.length;
+                var width = $("#labelText").width();
+                if(width>sWidth){
+                    contentStr = contentStr.substring(0,sWidth/width*strLength) + '...';
+                }
+                newoption.text = contentStr;
+
+                select2.options.add(newoption);
+            }
+        }
+
+        function selet1Change(selvalue){
+            var div = document.getElementById("comments1");
+            div.innerHTML += '<div>'+selvalue+"。</div>";
+            var select1 = document.getElementById("select1");
+            select1.selectedIndex=select1.defaultIndex;
+            commentOnChange(1);
+        }
+
+        function selet2Change(selvalue){
+            var div = document.getElementById("comments2");
+            div.innerHTML += '<div>'+selvalue+"。</div>";
+            var select2 = document.getElementById("select2");
+            select2.selectedIndex=select2.defaultIndex;
+            commentOnChange(2);
+        }
+
+        var comments1ChildNodesCount = 0;
+        var comments2ChildNodesCount = 0;
+
+        function commentOnChange(index){
+            var div = document.getElementById("comments"+index);
+            if(div.innerText.length==1){
+                div.innerHTML = '<div>'+div.innerText+'</div>';
+                po_Last_Div(div);
+                return;
+            }
+            div.style.borderStyle = 'none';
+
+            var maxBottom = div.offsetTop+div.offsetHeight;
+            var childNodes = div.getElementsByTagName('div');
+            if(childNodes.length==0) return;
+            var lastNode = childNodes[childNodes.length-1];
+            var bottom = lastNode.offsetTop+lastNode.offsetHeight;
+
+             if(bottom>maxBottom){
+                    if(lastNode.innerHTML.length>0 && lastNode.innerHTML!='<br>'){
+                       var arr = checkDivIsNull(childNodes);
+                       if(arr.length>0){
+                            div.removeChild(arr[0]);
+                       }else{
+                            childNodes[childNodes.length-2].innerText += div.removeChild(lastNode).innerText;
+                       }
+                    }else{
+                        div.removeChild(lastNode);
+                    }
+             }else{
+                if(index==1 && childNodes.length>comments1ChildNodesCount){
+                    comments1ChildNodesCount = childNodes.length;
+                }else if(index==2 && childNodes.length>comments2ChildNodesCount){
+                    comments2ChildNodesCount = childNodes.length;
+                }
+             }
+        }
+
+        function checkDivIsNull(divNodes){
+            var nodes = [];
+            for(var index=0;index<divNodes.length;index++){
+                var node = divNodes[index];
+                if((node.innerHTML.length==0 || node.innerHTML=='<br>')){
+                    nodes.push(node);
+                }
+            }
+            return nodes;
+        }
+
+        function po_Last_Div(obj) {
+            if (window.getSelection) {//ie11 10 9 ff safari
+                obj.focus(); //解决ff不获取焦点无法定位问题
+                var range = window.getSelection();//创建range
+                range.selectAllChildren(obj);//range 选择obj下所有子内容
+                range.collapseToEnd();//光标移至最后
+            }
+            else if (document.selection) {//ie10 9 8 7 6 5
+                var range = document.selection.createRange();//创建选择对象
+                //var range = document.body.createTextRange();
+                range.moveToElementText(obj);//range定位到obj
+                range.collapse(false);//光标移至最后
+                range.select();
+            }
+        }
+        function imgListLoad(imgList, callback) {
+            var timer = setInterval(function() {
+                var count = 0;
+                for(var n = 0; n < imgList.length; n++){
+                    if (imgList[n].complete) {
+                        count++;
+                    }
+                }
+                if(count==imgList.length){
+                    callback(imgList);
+                    clearInterval(timer);
+                }
+            }, 50)
+        }
+
+        var img1,img2,img3,img4;
+        var imgSrcList;
+        function addReportImage(){
+            // 后续使用一个数组维护加载进来的图片，做删除操作时删除数组内的图片，
+            // 再做循环操作依次添加到img 标签里，同时更新图片右上角的删除图标。
+            imgSrcList = ["./img/test1.jpg","./img/test2.jpg","./img/test3.jpg","./img/test4.jpg"];
+        
+            if(imgSrcList.length>4) imgSrcList = imgSrcList.slice(imgSrcList.length-4,imgSrcList.length);
+            
+            var type = imgSrcList.length;
+
+            img1 = document.getElementById('theImage0');
+            img2 = document.getElementById('theImage1');
+            img3 = document.getElementById('theImage2');
+            img4 = document.getElementById('theImage3');
+
+            img1.alt = img2.alt = img3.alt = img4.alt = "error";
+            // img1.style.height = img2.style.height = img3.style.height = img4.style.height = 100+"px";
+            // img1.hidden = img2.hidden = img3.hidden = img4.hidden = true;
+            img1.style.cssFloat = img2.style.cssFloat = img3.style.cssFloat = img4.style.cssFloat = "left";    
+
+            layoutSize(type);
+        }
+        
+        function del(index) {
+            // alert("删除"+index);
+            imgSrcList.splice(index,1);
+            layoutSize(imgSrcList.length);
+        }	
+
+        function layoutSize(type){
+            for(var n =0 ;n< 4 ;n ++){
+                $('#file_img'+n).removeAttr('src');    
+            }
+            var imgList = new Array();
+
+            for(var n=0;n<type;n++){
+                var imgDom = document.getElementById('file_img'+n);
+                imgDom.src = imgSrcList[n];
+                imgList.push(imgDom);
+            }
+
+            switch (type) {
+                case 1:
+                    img1.style.width = "100%";
+                    break;
+                case 2:
+                    img1.style.width = "50%";
+                    img2.style.width = "50%";
+                    break;
+                case 3:
+                    img1.style.width = "50%";
+                    img2.style.width = "50%";
+                    img3.style.width = "50%";
+                    img4.style.width = "50%";
+                    img4.hidden = false;
+                    break;
+                case 4:
+                    img1.style.width = "50%";
+                    img2.style.width = "50%";
+                    img3.style.width = "50%";
+                    img4.style.width = "50%";
+                    break;
+                default:
+                    break;
+            }
+
+            imgListLoad(imgList,function(){
+                layoutDivX(type);
+            });
+        }
+
+        function layoutDivX(type){
+            for(var n=0;n<4;n++){
+                var idStr = "file_img" + n;
+                var divImg =  document.getElementById('theImage' + n);
+                divImg.hidden = false;
+        
+                var imgDom = document.getElementById('file_img'+n); 
+                var left = imgDom.x;
+                var top = imgDom.y;
+                var width = imgDom.width;
+                var height = imgDom.height;
+
+
+                var divX =  $('#img_zindex_div_' + n);
+                divX.show();
+                divX.css({position: "absolute", left: left + width - width/8, top: top , display: "block" , width:width/8,height:width/8});
+                if(n>=type){
+                    height = $('#file_img'+(n-1)).height();
+                    $('#file_img'+n).removeAttr('src');    
+                    divImg.style.height = height * 0.508 *( 1 + (type>=1) )* ( n!=1 )  + 'px';
+                    divX.hide();
+                }
+            }
+
+            var tmpImg1 = document.getElementById('file_img0')
+            var tmpImg2 = document.getElementById('file_img1');
+            var tmpImg3 = document.getElementById('file_img2');
+            var tmpImg4 = document.getElementById('file_img3');
+
+            var divX1 = $('#img_zindex_div_0');
+            var divX2 = $('#img_zindex_div_1');
+            var divX3 = $('#img_zindex_div_2');
+            var divX4 = $('#img_zindex_div_3');
+
+            if(tmpImg1.src.length<5 && tmpImg2.src.length<5){
+                img1.hidden = img2.hidden = true;
+            }
+
+            if(tmpImg3.src.length<5 && tmpImg4.src.length<5){
+                img3.hidden = img4.hidden = true;
+            }
+        }
+
+        </script>
+    </head>
+    <body onload="onLoad()">
+        <div id="report" style="width: 100%;padding-top: 0px;">
+            <img src="./img/logo.png" style="left: 8%;width: 10%;position: absolute;">
+            <p style="margin:0pt; orphans:0; text-align:center; widows:0">
+                <span id="titleName" style="font-family:宋体; font-size:28pt;">xxxxxxx医院/公司</span>
+            </p>
+            <br>
+            <p style="margin:0pt; orphans:0; text-align:center; widows:0">
+                <span style="font-family:宋体; font-size:22pt; font-weight:bold">超声医学影像报告单</span>
+            </p>
+            <div style="text-align:center;">
+                <table cellspacing="0" cellpadding="0" style="border-collapse:collapse; float:left; margin-left: 7%;margin-right: 7%; width: 86%;" >
+                   
+                    <tr style="height:50pt">
+                        <td style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width: 15%;">
+                            <p style=" line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                               <span class="spanTxt">姓名：</span>
+                            </p>
+                        </td>
+                        <td colspan="4" style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle;width: 20%">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                                <span class="spanTxt" id="patient_name" >南宫无敌</span>
+                            </p>
+                        </td>
+
+                        <td style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle;width: 20% ">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:center; widows:0">
+                                <span class="spanTxt" >性别：</span>
+                            </p>
+                        </td>
+
+                        <td  style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width: 15%">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                                <span class="spanTxt" id="patient_gender" >男</span>
+                            </p>
+                        </td>
+
+                        <td style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle;width: 15%">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                                <span class="spanTxt" >年龄：</span>
+                            </p>
+                        </td>
+
+                        <td colspan="2" style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width: 10%">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                                <span class="spanTxt" id="patient_age" >25</span>
+                            </p>
+                        </td>
+                        
+                        <td  colspan="10" style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle;width: 5% ">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                                <span class="spanTxt" >岁</span>
+                            </p>
+                        </td>
+
+                    </tr>
+                    <tr>
+         
+                        <td colspan="1">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                                <span class="spanTxt" >检查号：</span>
+                            </p>
+                        </td>
+                        
+                        <td colspan="10">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:left; widows:0">
+                                <span class="spanTxt" id="patient_NO" >20181204001</span>
+                            </p>
+                        </td>
+                    </tr>
+                
+                    <tr style="height:540.0pt">
+                            <td colspan="20" style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:top; width:461.9pt">
+                                <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                                    <div>
+                        
+                                    </div>
+                                </p>
+    
+                            </td>
+                        </tr>
+    
+                    <tr style="height:180.0pt">
+                        <td colspan="20" style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:top; width:461.9pt">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                                <span class="spanTxt" id="label1" >超声所见：</span>
+                                    <select name="select1" id="select1"   onchange="selet1Change(this.value)">
+                                            <option value="">Describe</option>
+                                    </select>
+                            </p>
+                            <!-- <textarea id="comments1" rows="8" style="width:100%"></textarea> -->
+                            <div id="comments1" contenteditable="true"  oninput="commentOnChange(1)" >
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="20" style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:top; width:461.9pt">
+                        </td>
+                    </tr>
+
+                    <tr style="height:140.0pt">
+                        <td colspan="20" style="padding-left:0.55pt; padding-right:0.55pt; vertical-align:top; width:461.9pt">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                                <span class="spanTxt" id="label2" >超声诊断：</span>
+                                <select name="select2" id="select2"  onchange="selet2Change(this.value)">
+                                        <option value="">Type</option>
+                                    </select>
+                            </p>
+                            <!-- <textarea id="comments2" rows="6" style="width:100%"></textarea> -->
+                            <div id="comments2" contenteditable="true"  oninput="commentOnChange(2)" >
+                            </div>
+                         </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="20" style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:top; width:461.9pt">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" style="padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width:20%">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:right; widows:0">
+                                <span class="spanTxt" >申请医师：</span>
+                            </p>
+                        </td>
+
+                        <td colspan="3" style="padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width:30%">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                                <span class="spanTxt" id="report_reviewDoc" >dasdasdasda</span>
+                            </p>
+                        </td>
+
+                        <td style="padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width:10%">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:right; widows:0">
+                                <span class="spanTxt" >诊断医师：</span>
+                            </p>
+                        </td>
+
+                        <td colspan="3" style="padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width:25%">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:left; widows:0">
+                                <span class="spanTxt" id="report_DiagDoc" >dasdasdasa</span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><p></p></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="border-bottom-color:#000000; border-bottom-style:solid; border-bottom-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width:50%">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
+                                <span class="spanTxt" >&#xa0;</span>
+                            </p>
+                        </td>
+
+                        <td colspan="1" style="border-bottom-color:#000000; border-bottom-style:solid; border-bottom-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width:25%">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:right; widows:0">
+                                <span class="spanTxt" >检查时间：</span>
+                            </p>
+                        </td>
+                        
+                        <td colspan="14" style="border-bottom-color:#000000; border-bottom-style:solid; border-bottom-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width:25%">
+                            <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:left; widows:0">
+                                <span class="spanTxt" id="report_time" >2018-12-04 15:41:29</span>
+                            </p>
+                        </td>
+
+                    </tr>
+                    
+                    <tr style="height:0pt">
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                        <td style="width:16pt; border:none"></td>
+                    </tr>
+                
+                </table>
+            </div>
+            <p style="margin:0pt; orphans:0; widows:0">
+                    <span style="font-family:宋体; font-size:12pt">&#xa0;</span>
+                </p>
+            <p style="font-size:10.5pt; line-height:130%; margin:0pt; orphans:0; widows:0; text-align: center;">
+                    <span style="font-family:宋体; font-size:12pt">只作临床参考，不作证明材料</span>
+             </p>
+        </div>
+  
+        <div id='labelText' style='color:black;line-height:1.2;white-space:nowrap;bottom:0px;left:0px;position:fixed;display:block;visibility:hidden;'>
+        </div>
+
+        <img id="testImg">
+     </body>
+        
+</html>

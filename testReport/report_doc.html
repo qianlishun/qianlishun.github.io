@@ -6,19 +6,24 @@
         <script src="./js/jquery-v1.8.3.min.js"></script>
         <script src="./js/html2canvas.js"></script>
         <script src="./js/obsList.js"></script>
+        <script src="./js/jsonComm.js"></script>
         <title>report</title>
         <style>
             body{ 
                 width: 794pt; 
                 height: 1100pt;
             } 
-           /* .report{
-                width: 100%;
-                height: 140%;
-           } */
-           option{
-             text-align: center;
-             left: 20px;
+            .right-bottom {
+                width: 60px;
+                height: 60px;
+                position: fixed;
+                z-index: 999;
+                right: 1px;
+                bottom: 20px;
+             }
+            option{
+                text-align: center;
+                left: 20px;
             }
             select{
                 text-align: center;
@@ -33,13 +38,29 @@
             img:not([src]) {
                 opacity: 0;
             }
-            textarea{
+            label {
+                font-size: 150%;
+            }
+            .imgX {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                width: 15%;
+                display: none;
+            }
+            .file_img {
+                width: 100%;
+            }
+            #imgMark{
+                padding-top: 25px;
+            }
+            /* textarea{
                 -webkit-transform: translateZ(0px);
                 -webkit-overflow-scrolling: touch;
                 width: 100%;
                 font-size: 12pt;
                 overflow: scroll;
-            }
+            } */
             #comments1{
                 height: 150pt;
                 word-break:break-all;
@@ -65,11 +86,43 @@
         </style>
         
         <script>
+
+            function loadMTForJSWithJson(jsonStr) {
+                try {
+                    jsonComm.loadJSONCallFunc(jsonStr);
+                } catch (error) {
+                    alert(error);
+                }
+            }
+
+            function updateReportInfo(reportInfo){
+                if(reportInfo.logo.length>100){
+                    document.getElementById('logo').src = "data:image/png;base64," + reportInfo.logo;
+                }else{
+                    document.getElementById('logo').src = reportInfo.logo;
+                }
+
+                document.getElementById('organization').innerText = reportInfo.organization;
+                document.getElementById('patient_name').innerText = reportInfo.patient.name;
+                document.getElementById('patient_gender').innerText = reportInfo.patient.gender;
+                document.getElementById('patient_age').innerText = reportInfo.patient.age;
+                document.getElementById('patient_NO').innerText = reportInfo.id;
+                document.getElementById('report_applyDoc').innerText = reportInfo.applyDoc;
+                document.getElementById('report_diagDoc').innerText = reportInfo.diagDoc;
+                document.getElementById('report_date').innerText = reportInfo.date;
+            }
+
+            function loadRawImage(basedata) {
+                addReportImage(basedata);
+            };
+
+
             function saved(o){
                 for(var n = 0; n < 4; n++){
-                    var divX =  $('#img_zindex_div_' + n);
+                    var divX =  $('#imgX_' + n);
                     divX.hide();
                 }
+                $('#add').hide();
 
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
                 var text1 = document.getElementById("comments1");
@@ -86,6 +139,8 @@
                 label2.hidden = false;
 
                 o.style.display='none';
+
+                return;
 
                 var width = $(document).width();
                 var height = $(document).height();
@@ -126,6 +181,18 @@
 
             // 多图显示测试  
             // addReportImage();
+
+            var reportInfo = new ReportInfo();
+            reportInfo.logo = './img/logo.png';
+            reportInfo.organization = '莆田系第二人民医院';
+            reportInfo.patient.name = '东方不败';
+            reportInfo.patient.gender = '男';
+            reportInfo.patient.age = '33';
+            reportInfo.id = '2018121117001';
+            reportInfo.applyDoc = '张三';
+            reportInfo.diagDoc = '李四';
+            reportInfo.date = '2018-12-11 17:12:34';
+            updateReportInfo(reportInfo);
         }
 
         var sWidth;
@@ -288,6 +355,7 @@
                 range.select();
             }
         }
+
         function imgListLoad(imgList, callback) {
             var timer = setInterval(function() {
                 var count = 0;
@@ -303,15 +371,27 @@
             }, 50)
         }
 
-        var img1,img2,img3,img4;
-        var imgSrcList;
-        function addReportImage(){
+        function addBtnClick(){
+            var imgSrc = './img/test' + (imgSrcList.length + 1) + '.jpg';
+            addReportImage(imgSrc);
+        }
+
+        var img1, img2, img3, img4;
+        var imgSrcList = [];
+        function addReportImage(basedata) {
             // 后续使用一个数组维护加载进来的图片，做删除操作时删除数组内的图片，
             // 再做循环操作依次添加到img 标签里，同时更新图片右上角的删除图标。
-            imgSrcList = ["./img/test1.jpg","./img/test2.jpg","./img/test3.jpg","./img/test4.jpg"];
-        
-            if(imgSrcList.length>4) imgSrcList = imgSrcList.slice(imgSrcList.length-4,imgSrcList.length);
-            
+            if (imgSrcList.length < 4) {
+                imgSrcList.push(basedata);
+            } else {
+                // 返回数据已满
+                var funcName = "addReportImageCallback";
+                var param = new Array('imagelist is full');
+                var jsonStr = jsonComm.makeJSONWith(funcName, param);
+                jsObj.loadJSForMTWithJson(jsonStr);// APP回调函数：调起 APP 内部的方法;
+                return;
+            }
+
             var type = imgSrcList.length;
 
             img1 = document.getElementById('theImage0');
@@ -320,30 +400,45 @@
             img4 = document.getElementById('theImage3');
 
             img1.alt = img2.alt = img3.alt = img4.alt = "error";
-            // img1.style.height = img2.style.height = img3.style.height = img4.style.height = 100+"px";
-            // img1.hidden = img2.hidden = img3.hidden = img4.hidden = true;
-            img1.style.cssFloat = img2.style.cssFloat = img3.style.cssFloat = img4.style.cssFloat = "left";    
+            img1.style.cssFloat = img2.style.cssFloat = img3.style.cssFloat = img4.style.cssFloat = "left";
 
             layoutSize(type);
         }
-        
+
         function del(index) {
             // alert("删除"+index);
-            imgSrcList.splice(index,1);
+            imgSrcList.splice(index, 1);
             layoutSize(imgSrcList.length);
-        }	
+        }
+        
+        var imagesHeight = 540;
+        var imagesHeight2 = 320;
+        var comments1Height = 150;
+        var comments2Height = 120;
 
-        function layoutSize(type){
-            for(var n =0 ;n< 4 ;n ++){
-                $('#file_img'+n).removeAttr('src');    
+        function layoutSize(type) {
+            for (var n = 0; n < 4; n++) {
+                $('#file_img' + n).removeAttr('src');
             }
             var imgList = new Array();
 
             for(var n=0;n<type;n++){
                 var imgDom = document.getElementById('file_img'+n);
-                imgDom.src = imgSrcList[n];
+                if(imgSrcList[n].length>100){
+                    imgDom.src = "data:image/png;base64," + imgSrcList[n];
+                }else{
+                    imgDom.src =  imgSrcList[n];
+                }
                 imgList.push(imgDom);
             }
+            var imagesDom =  document.getElementById('images');
+            var comments1 =  document.getElementById("comments1");
+            var comments2 =  document.getElementById("comments2");
+            var imgMark = document.getElementById('imgMark');
+            imagesDom.style.height = imagesHeight + 'pt';
+            comments1.style.height = comments1Height + 'pt';
+            comments2.style.height = comments2Height + 'pt';
+            imgMark.style.paddingTop = 25 +'px';
 
             switch (type) {
                 case 1:
@@ -352,6 +447,10 @@
                 case 2:
                     img1.style.width = "50%";
                     img2.style.width = "50%";
+                    imagesDom.style.height = imagesHeight2 + 'pt';
+                    imgMark.style.paddingTop = 50+'px';
+                    comments1.style.height = comments1Height + 120 + 'pt';
+                    comments2.style.height = comments2Height + 80 + 'pt';
                     break;
                 case 3:
                     img1.style.width = "50%";
@@ -369,32 +468,32 @@
                 default:
                     break;
             }
-
-            imgListLoad(imgList,function(){
+            imgListLoad(imgList, function () {
                 layoutDivX(type);
+                // document.getElementById("commentsDiv").hidden = false;
             });
         }
 
-        function layoutDivX(type){
-            for(var n=0;n<4;n++){
+        function layoutDivX(type) {
+            for (var n = 0; n < 4; n++) {
                 var idStr = "file_img" + n;
-                var divImg =  document.getElementById('theImage' + n);
+                var divImg = document.getElementById('theImage' + n);
                 divImg.hidden = false;
-        
-                var imgDom = document.getElementById('file_img'+n); 
+
+                var imgDom = document.getElementById('file_img' + n);
                 var left = imgDom.x;
                 var top = imgDom.y;
                 var width = imgDom.width;
                 var height = imgDom.height;
 
-
-                var divX =  $('#img_zindex_div_' + n);
+                var divX = $('#imgX_' + n);
                 divX.show();
-                divX.css({position: "absolute", left: left + width - width/8, top: top , display: "block" , width:width/8,height:width/8});
-                if(n>=type){
-                    height = $('#file_img'+(n-1)).height();
-                    $('#file_img'+n).removeAttr('src');    
-                    divImg.style.height = height * 0.508 *( 1 + (type>=1) )* ( n!=1 )  + 'px';
+                // divX.css({ position: "absolute", left: "100%", top: top, display: "block", width: width / 8, height: width / 8 });
+                if (n >= 2 && type >= 3) {
+                    height = document.getElementById('file_img' + (n - 1)).height;
+                    divImg.style.height = height + 'px';
+                }
+                if (n >= type) {
                     divX.hide();
                 }
             }
@@ -404,16 +503,13 @@
             var tmpImg3 = document.getElementById('file_img2');
             var tmpImg4 = document.getElementById('file_img3');
 
-            var divX1 = $('#img_zindex_div_0');
-            var divX2 = $('#img_zindex_div_1');
-            var divX3 = $('#img_zindex_div_2');
-            var divX4 = $('#img_zindex_div_3');
-
-            if(tmpImg1.src.length<5 && tmpImg2.src.length<5){
-                img1.hidden = img2.hidden = true;
+            if (tmpImg1.src.length < 5) {
+                img1.hidden = true;
             }
-
-            if(tmpImg3.src.length<5 && tmpImg4.src.length<5){
+            if (tmpImg2.src.length < 5) {
+                img2.hidden = true;
+            }
+            if (tmpImg3.src.length < 5 && tmpImg4.src.length < 5) {
                 img3.hidden = img4.hidden = true;
             }
         }
@@ -422,9 +518,9 @@
     </head>
     <body onload="onLoad()">
         <div id="report" style="width: 100%;padding-top: 0px;">
-            <img src="./img/logo.png" style="left: 8%;width: 10%;position: absolute;">
+            <img id="logo" src="./img/logo.png" style="left: 80pt;width:80pt;position: absolute;">
             <p style="margin:0pt; orphans:0; text-align:center; widows:0">
-                <span id="titleName" style="font-family:宋体; font-size:28pt;">xxxxxxx医院/公司</span>
+                <span id="organization" style="font-family:宋体; font-size:28pt;">xxxxxxx医院/公司</span>
             </p>
             <br>
             <p style="margin:0pt; orphans:0; text-align:center; widows:0">
@@ -491,12 +587,36 @@
                         </td>
                     </tr>
                 
-                    <tr style="height:540.0pt">
+                    <tr id="images" style="height:540.0pt">
                             <td colspan="20" style="border-top-color:#000000; border-top-style:solid; border-top-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:top; width:461.9pt">
                                 <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
-                                    <div>
-                        
-                                    </div>
+                                    <!--  image -->
+                                    <div id="imgMark" >
+                                            <div id="theImage0">
+                                                <div style="position: relative;">
+                                                    <img class="file_img" id="file_img0" />
+                                                    <img class="imgX"  id="imgX_0" onclick="del(0)" src="./img/img_del.png" />
+                                                </div>
+                                            </div>
+                                            <div id="theImage1">
+                                                <div style="position: relative;">
+                                                    <img class="file_img" id="file_img1" />
+                                                    <img class="imgX"  id="imgX_1" onclick="del(1)" src="./img/img_del.png" />
+                                                </div>
+                                            </div>
+                                            <div id="theImage2">
+                                                <div style="position: relative;">
+                                                    <img class="file_img" id="file_img2" />
+                                                    <img class="imgX"  id="imgX_2" onclick="del(2)" src="./img/img_del.png" />
+                                                </div>
+                                            </div>
+                                            <div id="theImage3">
+                                                <div style="position: relative;">
+                                                    <img class="file_img" id="file_img3" />
+                                                    <img class="imgX"  id="imgX_3" onclick="del(3)" src="./img/img_del.png" />
+                                                </div>
+                                            </div>
+                                        </div>
                                 </p>
     
                             </td>
@@ -507,7 +627,7 @@
                             <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
                                 <span class="spanTxt" id="label1" >超声所见：</span>
                                     <select name="select1" id="select1"   onchange="selet1Change(this.value)">
-                                            <option value="">Describe</option>
+                                            <option value="">超声所见：</option>
                                     </select>
                             </p>
                             <!-- <textarea id="comments1" rows="8" style="width:100%"></textarea> -->
@@ -524,9 +644,9 @@
                     <tr style="height:140.0pt">
                         <td colspan="20" style="padding-left:0.55pt; padding-right:0.55pt; vertical-align:top; width:461.9pt">
                             <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
-                                <span class="spanTxt" id="label2" >超声诊断：</span>
+                                <span class="spanTxt" id="label2" >诊断意见：</span>
                                 <select name="select2" id="select2"  onchange="selet2Change(this.value)">
-                                        <option value="">Type</option>
+                                        <option value="">诊断意见：</option>
                                     </select>
                             </p>
                             <!-- <textarea id="comments2" rows="6" style="width:100%"></textarea> -->
@@ -549,7 +669,7 @@
 
                         <td colspan="3" style="padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width:30%">
                             <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:justify; widows:0">
-                                <span class="spanTxt" id="report_reviewDoc" >dasdasdasda</span>
+                                <span class="spanTxt" id="report_applyDoc" >dasdasdasda</span>
                             </p>
                         </td>
 
@@ -561,7 +681,7 @@
 
                         <td colspan="3" style="padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width:25%">
                             <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:left; widows:0">
-                                <span class="spanTxt" id="report_DiagDoc" >dasdasdasa</span>
+                                <span class="spanTxt" id="report_diagDoc" >dasdasdasa</span>
                             </p>
                         </td>
                     </tr>
@@ -583,7 +703,7 @@
                         
                         <td colspan="14" style="border-bottom-color:#000000; border-bottom-style:solid; border-bottom-width:0.75pt; padding-left:0.55pt; padding-right:0.55pt; vertical-align:middle; width:25%">
                             <p style="font-size:12pt; line-height:200%; margin:0pt; orphans:0; text-align:left; widows:0">
-                                <span class="spanTxt" id="report_time" >2018-12-04 15:41:29</span>
+                                <span class="spanTxt" id="report_date" >2018-12-04 15:41:29</span>
                             </p>
                         </td>
 
@@ -624,6 +744,9 @@
   
         <div id='labelText' style='color:black;line-height:1.2;white-space:nowrap;bottom:0px;left:0px;position:fixed;display:block;visibility:hidden;'>
         </div>
+        <img id="save" onclick="saved(this)" class='right-bottom' src="./img/save-web.png">
+        <p></p>
+        <img id="add"  onclick="addBtnClick()" class="right-bottom" style="bottom: 100px" src="./img/img_del.png">
 
         <img id="testImg">
      </body>

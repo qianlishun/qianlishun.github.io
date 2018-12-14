@@ -192,6 +192,9 @@
             reportInfo.applyDoc = '张三';
             reportInfo.diagDoc = '李四';
             reportInfo.date = '2018-12-11 17:12:34';
+            
+           alert(JSON.stringify(reportInfo)) ;
+
             updateReportInfo(reportInfo);
         }
 
@@ -301,7 +304,7 @@
                 po_Last_Div(div);
                 return;
             }
-            div.style.borderStyle = 'none';
+            // div.style.borderStyle = 'none';
 
             var maxBottom = div.offsetTop+div.offsetHeight;
             var childNodes = div.getElementsByTagName('div');

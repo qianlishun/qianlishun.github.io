@@ -11,6 +11,9 @@ function ReportInfo(){
     this.applyDoc = '申请医师';
     this.diagDoc = '诊断医师';
     this.date = '诊断时间';
+    this.obs = '所见';
+    this.tips = '提示';
+    this.indexList = [];
 }
 
 function Patient(){

@@ -1,34 +1,15 @@
-!function(e, t, a) {
-    function r() {
-        for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
-        requestAnimationFrame(r)
-    }
-    var idx=0;
-
-    function n() {
-        var t = "function" == typeof e.onclick && e.onclick;
-        e.onclick = function(e) {
-            t && t(),
-            o(e)
-        }
-    }
-    function o(e) {
-        var color = c();
-        var l = new Array("Love","关关","Love","娟儿","Love","GAJ");var $i = $("<span/>").text(l[idx]);idx = (idx + 1) % l.length;var x = e.pageX,y = e.pageY;$i.css({"z-index": 100000000,"top": y - 20,"left": x,"position": "absolute","font-weight": "bold","color": color});$("body").append($i);$i.animate({"top": y - 180,"opacity": 0},1500,function() {$i.remove();});
-
-        var a = t.createElement("div");
-        a.className = "heart",
-        s.push({
+!function(e, t, a) {function r() { for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999"); requestAnimationFrame(r) }
+var idx=0;
+function n() { var t = "function" == typeof e.onclick && e.onclick; e.onclick = function(e) { t && t(), o(e)}}
+function o(e) { var color = c();var l = new Array("Love","关关","Love","娟儿","Love","GAJ");var $i = $("<span/>").text(l[idx]);idx = (idx + 1) % l.length;var x = e.pageX,y = e.pageY;$i.css({"z-index": 100000000,"top": y - 20,"left": x,"position": "absolute","font-weight": "bold","color": color});$("body").append($i);$i.animate({"top": y - 180,"opacity": 0},1500,function() {$i.remove();});var a = t.createElement("div");
+ a.className = "heart",  s.push({
             el: a,
             x: e.clientX - 5,
             y: e.clientY - 5,
             scale: 1,
             alpha: 1,
             color: color
-        }),
-        
-        t.body.appendChild(a)
-    }
+ }),t.body.appendChild(a)}
     function i(e) {
         var a = t.createElement("style");
         a.type = "text/css";

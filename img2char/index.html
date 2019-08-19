@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>img 2 char</title>
+	<title>关关雎鸠</title>
 	<link rel="stylesheet" type="text/css" href="css/img2char.css">
 	<script type="text/javascript" src="js/jquery-3.1.1.min.js">
 	</script>
@@ -10,11 +10,13 @@
 <body onload="loadImg()"> 
 	<script>
 	function loadImg(){
-		var img = new Image();
-		img.src = './521.jpg';
-		img.onload = function(){
-			initAndDrawText(img);
-		}
+		// var img = new Image();
+		// img.src = './521.jpg';
+		// img.onload = function(){
+		// 	initAndDrawText(img);
+		// }
+
+		DrawText();
 	}
 	function loadImgWith(url){
 		var img = new Image();
@@ -30,6 +32,7 @@
 		<canvas id="imgdata"></canvas>
 	</div>
 	<script type="text/javascript" src="js/img2char.js"></script>
+	<script type="text/javascript" src="./521.js"></script>
 
 </body>
 </html>

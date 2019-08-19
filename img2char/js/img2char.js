@@ -42,6 +42,7 @@ function initAndDrawText(img) {
         }
     }
 
+
     var index = 0;
     var timer = setInterval(function() {
         for(i=0;i<10;i++){
@@ -53,4 +54,43 @@ function initAndDrawText(img) {
         }
     }, 1);
 
+    exportRaw('test.txt', JSON.stringify(textList))
 }
+
+
+function DrawText() {
+        
+    var rem = imgW / imgH;
+    cns.width = height * rem;
+    cns.height = height;
+
+    ctx.clearRect(0, 0, cns.width, cns.height);
+
+    var index = 0;
+    var timer = setInterval(function() {
+        for(i=0;i<10;i++){
+            ctx.fillText(textList[index*3],textList[index*3+1],textList[index*3+2]);
+            index++;
+        }
+        if (index > textList.length/3) {
+            clearInterval(timer);
+        }
+    }, 1);
+    
+}
+
+
+function fakeClick(obj) {
+    var ev = document.createEvent("MouseEvents");
+    ev.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    obj.dispatchEvent(ev);
+  }
+  
+  function exportRaw(name, data) {
+    var urlObject = window.URL || window.webkitURL || window;
+    var export_blob = new Blob([data]);
+    var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
+    save_link.href = urlObject.createObjectURL(export_blob);
+    save_link.download = name;
+    fakeClick(save_link);
+  }

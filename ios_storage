@@ -25,14 +25,16 @@
 	</div>
 <div id="md" style="display: none;">
 <!-- markdown -->
-~~~~
- NSDictionary *dict = [[NSFileManager defaultManager]attributesOfFileSystemForPath:NSHomeDirectory() error:nil];
+~~~~{ruby}
+NSDictionary *dict = [[NSFileManager defaultManager]attributesOfFileSystemForPath:NSHomeDirectory() error:nil];
     
-//    return [[dict objectForKey:NSFileSystemFreeSize]doubleValue]/ (powf(1024, 3));
+float free =  [[dict objectForKey:NSFileSystemFreeSize]doubleValue]/1000.0/1000.0/1000.0);
 ~~~~
 
-之前用的是以上方法，网上搜到的也大部分都是，但是已经无效了
+之前用的是以上方法，网上搜到的也大部分都是，但是获取的不准确。
 
+经测试用以下方法和系统内的存储空间大小基本一致
+~~~~{ruby}
 + (float)getDeviceFreeSpace{
 
     if (@available(iOS 11.0, *)) {
@@ -51,39 +53,40 @@
         return freespace/1000.0/1000.0/1000.0;
     }
 }
+~~~~
  
 <!-- markdown end -->
 </div>
 <div class="entry" id="main">
 <!-- content -->
-<pre><code> NSDictionary *dict = [[NSFileManager defaultManager]attributesOfFileSystemForPath:NSHomeDirectory() error:nil];
+<pre class=" language-ruby"><code class=" language-ruby"><span class="token constant">NSDictionary</span> <span class="token operator">*</span>dict <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token constant">NSFileManager</span> defaultManager<span class="token punctuation">]</span>attributesOfFileSystemForPath<span class="token symbol">:NSHomeDirectory</span><span class="token punctuation">(</span><span class="token punctuation">)</span> error<span class="token symbol">:nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
-//    return [[dict objectForKey:NSFileSystemFreeSize]doubleValue]/ (powf(1024, 3));
+float free <span class="token operator">=</span>  <span class="token punctuation">[</span><span class="token punctuation">[</span>dict objectForKey<span class="token symbol">:NSFileSystemFreeSize</span><span class="token punctuation">]</span>doubleValue<span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">1000.0</span><span class="token operator">/</span><span class="token number">1000.0</span><span class="token operator">/</span><span class="token number">1000.0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 
-<p>之前用的是以上方法，网上搜到的也大部分都是，但是已经无效了</p>
+<p>之前用的是以上方法，网上搜到的也大部分都是，但是获取的不准确。</p>
 
-<ul>
-<li><p>(float)getDeviceFreeSpace{</p>
+<p>经测试用以下方法和系统内的存储空间大小基本一致</p>
 
-<p>if (@available(iOS 11.0, *)) {
-    NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:NSTemporaryDirectory()];
-    NSDictionary *results = [fileURL resourceValuesForKeys:@[NSURLVolumeAvailableCapacityForImportantUsageKey] error:nil];</p>
+<pre class=" language-ruby"><code class=" language-ruby"><span class="token operator">+</span> <span class="token punctuation">(</span>float<span class="token punctuation">)</span>getDeviceFreeSpace<span class="token punctuation">{</span>
 
-<pre><code>return [results[NSURLVolumeAvailableCapacityForImportantUsageKey] floatValue]/1000.0/1000.0/1000.0;
-</code></pre>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">@available</span><span class="token punctuation">(</span>iOS <span class="token number">11.0</span><span class="token punctuation">,</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token constant">NSURL</span> <span class="token operator">*</span>fileURL <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token constant">NSURL</span> alloc<span class="token punctuation">]</span> initFileURLWithPath<span class="token symbol">:NSTemporaryDirectory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token constant">NSDictionary</span> <span class="token operator">*</span>results <span class="token operator">=</span> <span class="token punctuation">[</span>fileURL resourceValuesForKeys<span class="token punctuation">:</span>@<span class="token punctuation">[</span><span class="token constant">NSURLVolumeAvailableCapacityForImportantUsageKey</span><span class="token punctuation">]</span> error<span class="token symbol">:nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
-<p>} else {
-    struct statfs buf;
-    long long freespace;
-    freespace = 0;
-    if(statfs("/private/var", &amp;buf) &gt;= 0){
-       freespace = (long long)buf.f<em>bsize * buf.f</em>bfree;
-    }
-    return freespace/1000.0/1000.0/1000.0;
-}
-}</p></li>
-</ul>
+        <span class="token keyword">return</span> <span class="token punctuation">[</span>results<span class="token punctuation">[</span><span class="token constant">NSURLVolumeAvailableCapacityForImportantUsageKey</span><span class="token punctuation">]</span> floatValue<span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">1000.0</span><span class="token operator">/</span><span class="token number">1000.0</span><span class="token operator">/</span><span class="token number">1000.0</span><span class="token punctuation">;</span>
+
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        struct statfs buf<span class="token punctuation">;</span>
+        long long freespace<span class="token punctuation">;</span>
+        freespace <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">statfs<span class="token punctuation">(</span></span><span class="token string">"/private/var"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span> <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+           freespace <span class="token operator">=</span> <span class="token punctuation">(</span>long long<span class="token punctuation">)</span>buf<span class="token punctuation">.</span>f_bsize <span class="token operator">*</span> buf<span class="token punctuation">.</span>f_bfree<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> freespace<span class="token operator">/</span><span class="token number">1000.0</span><span class="token operator">/</span><span class="token number">1000.0</span><span class="token operator">/</span><span class="token number">1000.0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> 
 <!-- content end -->
 </div>
 <br>

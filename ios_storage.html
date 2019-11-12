@@ -33,7 +33,7 @@ float free =  [[dict objectForKey:NSFileSystemFreeSize]doubleValue]/1000.0/1000.
 
 之前用的是以上方法，网上搜到的也大部分都是，但是获取的不准确。
 
-经测试用以下方法和系统内的存储空间大小基本一致
+经测试，以下方法计算结果和系统内的存储空间大小基本一致
 ~~~~{ruby}
 + (float)getDeviceFreeSpace{
 

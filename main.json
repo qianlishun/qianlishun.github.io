@@ -1,15 +1,15 @@
 {
-    "name":"我所有的，恰好大都无意义",
+    "name":"Void",
     "number_of_posts_per_page":7,
     "disqus_shortname":"",
 
     "posts":[
+
         {
             "title":"iOS 存储空间计算方法更新",
             "date":"2019-11-12",
             "tags":"iOS存储空间 剩余空间 storage",
             "path":"ios_storage.html",
-            "num":9991,
             "type":"post",
             "active":false
         },
@@ -17,18 +17,17 @@
         {
             "title":"Pods 同时使用动态库和静态库",
             "date":"2018-08-06",
-            "tags":"",
+            "tags":"pod",
             "path":"pods_frameworks.html",
-            "num":9992,
-            "type":"post","active":false
+            "type":"post",
+            "active":false
          },
 
         {
             "title":"Why Metal can't work in pod ？(solved)",
             "date":"2018-08-03",
-            "tags":"",
+            "tags":"metal pod",
             "path":"pod_metal.html",
-            "num":9993,
             "type":"post",
             "active":false
         },
@@ -38,7 +37,6 @@
             "date":"2018-07-09",
             "tags":"Android8.1 wifi location permission",
             "path":"android8.1_wifi.html",
-            "num":9994,
             "type":"post",
             "active":false
         },
@@ -48,7 +46,6 @@
             "date":"2018-07-03",
             "tags":"删除中间某次commit git rebase",
             "path":"git_rebase.html",
-            "num":9995,
             "type":"post",
             "active":false
         },
@@ -58,7 +55,6 @@
             "date":"2018-06-22",
             "tags":"git bitbucket ssh",
             "path":"git_ssh.html",
-            "num":9996,
             "type":"post",
             "active":false
         },
@@ -68,7 +64,6 @@
             "date":"2018-04-09",
             "tags":"runtime getTypeEncoding",
             "path":"runtime_method.html",
-            "num":9997,
             "type":"post",
             "active":false
         },
@@ -78,7 +73,6 @@
             "date":"2017-11-09",
             "tags":"csv",
             "path":"csv.html",
-            "num":9998,
             "type":"post",
             "active":false
         },
@@ -88,8 +82,17 @@
             "date":"2015-11-11",
             "tags":"bug ios xcode",
             "path":"bugs.html",
-            "num":9999,"type":"post",
+            "type":"post",
             "active":false
         }
-    ]
+    ],
+
+    "pages": [
+        {
+        "title": "about",
+        "path": "/about.html",
+        "date": "2013-01-01",
+        "tags": ""
+        }
+     ]
 }

@@ -45,8 +45,8 @@
 		var ocas = document.createElement("canvas");
 		var octx = ocas.getContext("2d");
 		var ctx = canvas.getContext("2d");
-		ocas.width = canvas.width = document.body.clientWidth;
-		ocas.height = canvas.height = document.body.clientHeight;
+		ocas.width = canvas.width = window.screen.width;
+		ocas.height = canvas.height = window.screen.height;
 		
 		var bigbooms = [];
 	

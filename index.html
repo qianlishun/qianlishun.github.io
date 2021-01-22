@@ -25,9 +25,9 @@
         </ul>
     </div>
     <div class="wrap-header">
-        <h3>
+        <h1>
         <a href="/" id="title"></a>
-        </h3>
+        </h1>
     </div>
     <div class="innermain" id="main">
     </div>
@@ -94,7 +94,7 @@
     </ul>
 </script>
 <script id="headerContent" type="text/mustache">
-    <h3>{{title}}</h3>
+    <h1>{{title}}</h1>
     <div class="tag">
     {{date}}
     {{#tags}}
@@ -284,9 +284,8 @@ function xJumpPage(ahref) {
             var parts = response.split("---" );
             var post_title = parts[1].match(/\'(.*)\'/)[1];
             var content = parts[2];
-
-            $("#main").html('<div class="entry" id="markdown"></div>');
-            $("#markdown").html(marked(content,{renderer:rendererMD}));
+            $("#main").attr("class","entry");
+            $("#main").html(marked(content,{renderer:rendererMD}));
            
             $.ajax({
                 url: "main.json",

@@ -1,6 +1,6 @@
 {
     "name":"Void",
-    "number_of_posts_per_page":7,
+    "number_ofposts_per_page":7,
     "disqus_shortname":"",
 
     "posts":[
@@ -9,7 +9,7 @@
             "title":"2021-01-13",
             "date":"2021-01-13",
             "tags":"2021 2021-01",
-            "path":"_posts/2021-01-13_2021-01-13.md",
+            "path":"posts/2021-01-13_2021-01-13.md",
             "type":"post",
             "active":false
         },
@@ -18,7 +18,7 @@
             "title":"iOS 存储空间计算方法更新",
             "date":"2019-11-12",
             "tags":"iOS存储空间 剩余空间 storage",
-            "path":"_posts/ios_storage.html",
+            "path":"posts/ios_storage.html",
             "type":"post",
             "active":false
         },
@@ -27,7 +27,7 @@
             "title":"Pods 同时使用动态库和静态库",
             "date":"2018-08-06",
             "tags":"pod",
-            "path":"_posts/pods_frameworks.html",
+            "path":"posts/pods_frameworks.html",
             "type":"post",
             "active":false
          },
@@ -36,7 +36,7 @@
             "title":"Why Metal can't work in pod ？(solved)",
             "date":"2018-08-03",
             "tags":"metal pod",
-            "path":"_posts/pod_metal.html",
+            "path":"posts/pod_metal.html",
             "type":"post",
             "active":false
         },
@@ -45,7 +45,7 @@
             "title":"Android 8.1 WiFi相关，位置权限的问题",
             "date":"2018-07-09",
             "tags":"Android8.1 wifi location permission",
-            "path":"_posts/android8.1_wifi.html",
+            "path":"posts/android8.1_wifi.html",
             "type":"post",
             "active":false
         },
@@ -54,7 +54,7 @@
             "title":"Git 删除中间某次 commit",
             "date":"2018-07-03",
             "tags":"删除中间某次commit git rebase",
-            "path":"_posts/git_rebase.html",
+            "path":"posts/git_rebase.html",
             "type":"post",
             "active":false
         },
@@ -63,7 +63,7 @@
             "title":"Git 仓库 HTTPS 转换 SSH",
             "date":"2018-06-22",
             "tags":"git bitbucket ssh",
-            "path":"_posts/git_ssh.html",
+            "path":"posts/git_ssh.html",
             "type":"post",
             "active":false
         },
@@ -72,7 +72,7 @@
             "title":"判断方法是否含有 block 参数 & method_getTypeEncoding",
             "date":"2018-04-09",
             "tags":"runtime getTypeEncoding",
-            "path":"_posts/runtime_method.html",
+            "path":"posts/runtime_method.html",
             "type":"post",
             "active":false
         },
@@ -81,7 +81,7 @@
             "title":"CSV",
             "date":"2017-11-09",
             "tags":"csv",
-            "path":"_posts/csv.html",
+            "path":"posts/csv.html",
             "type":"post",
             "active":false
         },
@@ -90,7 +90,7 @@
             "title":"不只是Bug集",
             "date":"2015-11-11",
             "tags":"bug ios xcode",
-            "path":"_posts/bugs.html",
+            "path":"posts/bugs.html",
             "type":"post",
             "active":false
         }

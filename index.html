@@ -280,7 +280,7 @@ function xJumpPage(ahref) {
         location.href = '#/'+ ahref;
         
         var url = ahref.replace('.md','');
-        $.get(ahref, function(response, status, xhr){
+        $.get(url, function(response, status, xhr){
 
             var parts = response.split("---" );
             var post_title = parts[1].match(/\'(.*)\'/)[1];

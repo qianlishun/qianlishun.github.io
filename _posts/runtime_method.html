@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="Keywords" content="blog"/>
     <meta name="Description" content="blog"/>
-    <title>qls's blog</title>
+    <title>Void</title>
     <link rel="shortcut icon" href="/static/favicon.png"/>
     <link rel="stylesheet" type="text/css" href="/main.css" />
 </head>
@@ -160,7 +160,7 @@ e.g
 
 	</div>
 </div>
-<script src="main.js"></script>
+<script src="../main.js"></script>
 <script id="content" type="text/mustache">
     <h1>{{title}}</h1>
     <div class="tag">
@@ -189,7 +189,7 @@ $(document).ready(function() {
             var pagesHtml = pagesTemplate.render({"pages": data.pages});
             $("#pages").append(pagesHtml);
             //path
-            var path = "runtime_method.html";
+            var path = "_posts/runtime_method.html";
             //path end
             var now = 0;
             for (var i = 0; i < data.posts.length; ++i)

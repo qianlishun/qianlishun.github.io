@@ -36,6 +36,7 @@
     </div>
 </div>
 <script src="main.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/marked/1.2.7/marked.min.js"></script>
 <script id="itemTemplate" type="text/mustache">
     {{#posts}}
     <div class="item">
@@ -91,6 +92,15 @@
         </li>
         {{/tags}}
     </ul>
+</script>
+<script id="headerContent" type="text/mustache">
+    <h3>{{title}}</h3>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
 </script>
 <script>
 $(document).ready(function() {
@@ -203,6 +213,11 @@ $(document).ready(function() {
                     var tmpTemplate = Hogan.compile($("#archiveTemplate").html());
                     var tmpHtml = tmpTemplate.render({"group": group});
                     $("#main").html(tmpHtml);
+
+                    $('a').click(function(){
+                        var ahref=$(this).attr('href');
+                        return xJumpPage(ahref);
+                    });
                 },
                 archive: function() {
                     var group = [];
@@ -220,15 +235,101 @@ $(document).ready(function() {
                     var tmpTemplate = Hogan.compile($("#archiveTemplate").html());
                     var tmpHtml = tmpTemplate.render({"group": group});
                     $("#main").html(tmpHtml);
+
+                    $('a').click(function(){
+                        var ahref=$(this).attr('href');
+                        return xJumpPage(ahref);
+                    });  
                 }
             });
             new App();
+
+            $('a').click(function(){
+                var ahref=$(this).attr('href');
+                return xJumpPage(ahref);
+            });  
+
         },
         error: function(e) {
             console.log("init error");
         }
-    });    
-});
+    }); 
+}); 
+
+
+var rendererMD = new marked.Renderer();
+    marked.setOptions({
+      renderer: rendererMD,
+      gfm: true,
+      tables: true,
+      breaks: false,
+      pedantic: false,
+      sanitize: false,
+      smartLists: true,
+      smartypants: false
+    });
+    var markdownString = '```js\n console.log("hello"); \n```';
+    marked.setOptions({
+        highlight: function (code) {
+        return hljs.highlightAuto(code).value;
+      }
+ });
+
+function xJumpPage(ahref) { 
+    if(ahref.endsWith('.md')){
+        location.href = '#/'+ ahref;
+        $.get(ahref, function(response, status, xhr){
+
+            var parts = response.split("---" );
+
+            var post_title = parts[1].match(/\'(.*)\'/)[1];
+
+            var content = parts[2];
+
+            $("#main").html('<div class="entry" id="markdown"></div>');
+            $("#markdown").html(marked(content,{renderer:rendererMD}));
+           
+            $.ajax({
+                url: "main.json",
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    $("#title").html(data.name);
+                    var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+                    var pagesHtml = pagesTemplate.render({"pages": data.pages});
+                    $("#pages").append(pagesHtml);
+                    //path
+                    var path = ahref;
+                    //path end
+                    var now = 0;
+                    for (var i = 0; i < data.posts.length; ++i)
+                        if (path == data.posts[i].path)
+                            now = i;
+                    var post = data.posts[now];
+                    $('title').text(post.title);
+                    var tmp = post.tags.split(" ");
+                    var tags = [];
+                    for (var i = 0; i < tmp.length; ++i)
+                        if (tmp[i].length > 0)
+                            tags.push({"name": tmp[i]});
+                    var contentTemplate = Hogan.compile($("#headerContent").html());
+                    if(post.title == post.date) post.date = "";
+                    var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+                    $("#main").prepend(contentHtml);
+
+                }
+            });
+        });
+        return false;    
+    }
+}
+
+window.onload = function() {
+    var path = location.href.split('/#/')[1];
+    if(path != null)
+        xJumpPage(path);
+}
+
 </script>
 </body>
 </html>

@@ -7,16 +7,6 @@
 		body{margin:0;padding:0;overflow: hidden;}
 		.city{width:100%;position:fixed;bottom: 0px;z-index: 100;}
 		.city img{width: 100%;}
-		* {
-			margin:0;
-			padding:0;
-		}
-		html,body{
-			height:100%;
-		}
-		.box{
-			height:100%;
-		}
 	</style>
 	<title></title>
 </head>
@@ -41,16 +31,20 @@
 </div>
  <script src="../main.js"></script>
 	<script>
+
 		var canvas = document.getElementById("cas");
 		var ocas = document.createElement("canvas");
 		var octx = ocas.getContext("2d");
 		var ctx = canvas.getContext("2d");
-		ocas.width = canvas.width = window.screen.width;
-		ocas.height = canvas.height = window.screen.height;
-		
+						
+
 		var bigbooms = [];
 	
 		window.onload = function(){
+			document.body.style.width = window.screen.width;
+			document.body.style.height =  window.screen.height;	
+			ocas.width = canvas.width = window.screen.width;
+			ocas.height = canvas.height = window.screen.height;	
 			initAnimate();
 		}
 

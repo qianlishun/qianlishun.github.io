@@ -10,8 +10,8 @@
 	</style>
 	<title></title>
 </head>
-<body onselectstart = "return false" style="background-color:rgba(0,5,24,1);>
-<div class="box" style="overflow:hidden;">
+<body onselectstart = "return false" style="background-color:rgba(0,5,24,1)">
+<div class="main" id="main" style="overflow:hidden;">
 
 	<canvas id='cas' style="background-color:rgba(0,5,24,1);"></canvas>
 	<div class="city"><img src="img/city.png" alt="" /></div>
@@ -42,7 +42,10 @@
 	
 		window.onload = function(){
 			document.body.style.width = window.screen.width;
-			document.body.style.height =  window.screen.height;	
+			document.body.style.height =  window.screen.height;
+			document.getElementById('main').style.width = window.screen.width;
+			document.getElementById('main').style.height = window.screen.height;
+
 			ocas.width = canvas.width = window.screen.width;
 			ocas.height = canvas.height = window.screen.height;	
 			initAnimate();

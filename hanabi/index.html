@@ -377,9 +377,6 @@
 								    
 
     (function() {
-	 $().ready(function(){
-		document.getElementById('bgmusic').play();							    
-	});
         function log(info) {
             console.log(info);
             // alert(info);
@@ -428,7 +425,7 @@
 
         // 由于 iOS Safari 限制不允许 audio autoplay, 必须用户主动交互(例如 click)后才能播放 audio,
         // 因此我们通过一个用户交互事件来主动 play 一下 audio.
-       // window.addEventListener('touchstart', forceSafariPlayAudio, false);
+        window.addEventListener('touchstart', forceSafariPlayAudio, false);
 
         audioEl.src = './music/Hanabi.mp3';
     })();

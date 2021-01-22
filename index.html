@@ -278,15 +278,25 @@ var rendererMD = new marked.Renderer();
 function xJumpPage(ahref) { 
     if(ahref.endsWith('.md')){
         location.href = '#/'+ ahref;
-        
-        $.get(ahref, function(response, status, xhr){
-
-            var parts = response.split("---" );
-            var post_title = parts[1].match(/\'(.*)\'/)[1];
-            var content = parts[2];
+        var url = ahref;
+        if(ahref.startsWith('https://')){
+            url = ahref.replace('.md','');
+        }
+        $.get(url, function(response, status, xhr){
             $("#main").attr("class","entry");
-            $("#main").html(marked(content,{renderer:rendererMD}));
-           
+            $("#main").html("");
+            if(url.endsWith('.md')){
+                var parts = response.split("---" );
+                var post_title = parts[1].match(/\'(.*)\'/)[1];
+                var content = parts[2];
+                $("#main").html(marked(content,{renderer:rendererMD}));
+            }else{
+                // </a></h1>   ***    </div>;
+                var parts = response.split("</a></h1>");
+                var content = parts[1].split("</div>")[0];
+                $("#main").html(content);
+            }
+
             $.ajax({
                 url: "main.json",
                 type: "GET",

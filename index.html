@@ -278,12 +278,12 @@ var rendererMD = new marked.Renderer();
 function xJumpPage(ahref) { 
     if(ahref.endsWith('.md')){
         location.href = '#/'+ ahref;
+        
+        var url = ahref.replace('.md','');
         $.get(ahref, function(response, status, xhr){
 
             var parts = response.split("---" );
-
             var post_title = parts[1].match(/\'(.*)\'/)[1];
-
             var content = parts[2];
 
             $("#main").html('<div class="entry" id="markdown"></div>');

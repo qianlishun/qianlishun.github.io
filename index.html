@@ -351,6 +351,10 @@ window.onload = function() {
 		});
                 
         $(document).ready(function(){
+		if(audioEl.paused == false){
+			return;
+		}
+		
             function log(info) {
                 console.log(info);
                 // alert(info);

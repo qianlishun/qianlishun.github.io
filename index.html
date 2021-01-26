@@ -280,7 +280,7 @@ function xJumpPage(ahref) {
     if(ahref.endsWith('.md')){
         location.href = '#/'+ ahref;
         var url = ahref;
-        if(location.origin.indexOf('github.io') == true){
+        if(location.origin.indexOf('github.io') != -1){
             url = ahref.replace('.md','');
         }
         $.get(url, function(response, status, xhr){

@@ -25,7 +25,8 @@
 	</div>
 </div>
 
- <audio id="bgmusic"  src="https://mp3.itingwa.com/2017-02/25/20170225095656-NzU0Nzkz.mp3" autoplay preload loop controls></audio>
+ <audio id="bgmusic"  src="https://music.163.com/song/media/outer/url?id=35031784.mp3"
+  autoplay preload loop controls style="position: fixed;bottom: -40px;height: 40px;right: 0px;"></audio>
 
  <div class="footer">
 </div>
@@ -370,11 +371,11 @@
 	 <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 	<script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
     <script>
+		 var audioEl = document.getElementById('bgmusic');
+
 		document.addEventListener('WeixinJSBridgeReady', function() {
 			document.getElementById('bgmusic').play()
 		});
-								    
-								    
 
     (function() {
         function log(info) {
@@ -382,14 +383,11 @@
             // alert(info);
         }
         function forceSafariPlayAudio() {
-	if(audioEl.paused == true){
-            	audioEl.load(); // iOS 9   还需要额外的 load 一下, 否则直接 play 无效
-            	audioEl.play(); // iOS 7/8 仅需要 play 一下
-	}
-
+			if(audioEl.paused == true){
+				audioEl.load(); // iOS 9   还需要额外的 load 一下, 否则直接 play 无效
+				audioEl.play(); // iOS 7/8 仅需要 play 一下
+			}
         }
-
-        var audioEl = document.getElementById('bgmusic');
 
         // 可以自动播放时正确的事件顺序是
         // loadstart
@@ -418,7 +416,8 @@
             log('play');
             // 当 audio 能够播放后, 移除这个事件
             window.removeEventListener('touchstart', forceSafariPlayAudio, false);
-        }, false);
+			window.removeEventListener('mousedown', forceSafariPlayAudio, false);
+		}, false);
         audioEl.addEventListener('playing', function() {
             log('playing');
         }, false);
@@ -428,7 +427,8 @@
 
         // 由于 iOS Safari 限制不允许 audio autoplay, 必须用户主动交互(例如 click)后才能播放 audio,
         // 因此我们通过一个用户交互事件来主动 play 一下 audio.
-        window.addEventListener('touchstart', forceSafariPlayAudio, false);
+		window.addEventListener('touchstart', forceSafariPlayAudio, false);
+	   	window.addEventListener('mousedown', forceSafariPlayAudio, false);
 
     })();
 	</script>

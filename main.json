@@ -15,10 +15,28 @@
         },
 
         {
+            "title":"路灯与影子",
+            "date":"2020-08-25",
+            "tags":"2020 2020-08",
+            "path":"posts/2021-01-13_路灯与影子.md",
+            "type":"post",
+            "active":false
+        },
+
+        {
             "title":"iOS 存储空间计算方法更新",
             "date":"2019-11-12",
             "tags":"iOS存储空间 剩余空间 storage",
             "path":"posts/ios_storage.html",
+            "type":"post",
+            "active":false
+        },
+
+        {
+            "title":"关于情绪，关于愤怒",
+            "date":"2019-08-18",
+            "tags":"2019 2019-08",
+            "path":"posts/2019-08-18_关于情绪，关于愤怒.md",
             "type":"post",
             "active":false
         },

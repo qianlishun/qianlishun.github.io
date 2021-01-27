@@ -13,7 +13,7 @@
     <div class="header">
         <ul id="pages">
             <li>
-                <a href="/">home</a>
+                <a href="/#/home">home</a>
             </li>
             <li>
                 <a href="/#/tags">tags</a>
@@ -104,6 +104,7 @@
     </div>
 </script>
 <script>
+    var itemHtml;
 $(document).ready(function() {
     $.ajax({
         url: "main.json",
@@ -138,7 +139,7 @@ $(document).ready(function() {
             for (var i = 1; i < num; ++i)
                 pages.push({"select": false, "num": i+1, "path": "#/page/"+(i+1)});
             var itemTemplate = Hogan.compile($("#itemTemplate").html());
-            var itemHtml = itemTemplate.render({"posts": arr[0], "pages": pages});
+            itemHtml = itemTemplate.render({"posts": arr[0], "pages": pages});
             $("#main").html(itemHtml);
             var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
             var pagesHtml = pagesTemplate.render({"pages": data.pages});
@@ -277,7 +278,17 @@ var rendererMD = new marked.Renderer();
  });
 
 function xJumpPage(ahref) { 
-    if(ahref.endsWith('.md')){
+    if(ahref.endsWith('home')){
+        if(itemHtml && itemHtml.length>0){
+            $("#main").attr("class","innermain");
+            $("#main").html("");
+            $("#main").html(itemHtml);
+        }
+        $('a').click(function(){
+            var ahref=$(this).attr('href');
+            return xJumpPage(ahref);
+        });  
+    }else if(ahref.endsWith('.md')){
         location.href = '#/'+ ahref;
         var url = ahref;
         if(location.origin.indexOf('github.io') != -1){
@@ -304,9 +315,6 @@ function xJumpPage(ahref) {
                 dataType: "json",
                 success: function(data) {
                     $("#title").html(data.name);
-                    var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
-                    var pagesHtml = pagesTemplate.render({"pages": data.pages});
-                    $("#pages").append(pagesHtml);
                     //path
                     var path = ahref;
                     //path end
@@ -351,9 +359,9 @@ window.onload = function() {
 		});
                 
         $(document).ready(function(){
-		if(audioEl.paused == false){
-			return;
-		}
+		    if(audioEl.paused == false){
+			    return;
+	    	}
 		
             function log(info) {
                 console.log(info);

@@ -383,12 +383,12 @@
             // alert(info);
         }
         function forceSafariPlayAudio() {
-		if(audioEl.paused == true){
-			setTimeout(function(){
-				audioEl.load(); // iOS 9   还需要额外的 load 一下, 否则直接 play 无效
-				audioEl.play(); // iOS 7/8 仅需要 play 一下
-			},2000);
-		}
+			if(audioEl.paused == true){
+				setTimeout(function(){
+					audioEl.load(); // iOS 9   还需要额外的 load 一下, 否则直接 play 无效
+					audioEl.play(); // iOS 7/8 仅需要 play 一下
+				},2000);
+			}
         }
 
         // 可以自动播放时正确的事件顺序是

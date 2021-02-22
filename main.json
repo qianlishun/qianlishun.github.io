@@ -141,10 +141,46 @@
         },
         
         {
+            "title":"梦几载",
+            "date":"2016-01-04",
+            "tags":"2016",
+            "path":"posts/2016-01-04_梦几载.md",
+            "type":"post",
+            "active":false
+        },
+
+        {
             "title":"不只是Bug集",
             "date":"2015-11-11",
             "tags":"bug ios xcode",
             "path":"posts/bugs.html",
+            "type":"post",
+            "active":false
+        },
+
+        {
+            "title":"比如",
+            "date":"2015-04-27",
+            "tags":"2015",
+            "path":"posts/2015-04-27_比如.md",
+            "type":"post",
+            "active":false
+        },
+
+        {
+            "title":"三月",
+            "date":"2015-03-12",
+            "tags":"2015",
+            "path":"posts/2015-03-12_三月.md",
+            "type":"post",
+            "active":false
+        },
+        
+        {
+            "title":"像少年一样去爱，像成人一样克制",
+            "date":"2014-07-22",
+            "tags":"2014",
+            "path":"posts/2014_07_22_测试.md",
             "type":"post",
             "active":false
         },

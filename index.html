@@ -169,6 +169,11 @@ $(document).ready(function() {
                         tmppages = pages.slice(-5);
                     itemHtml = itemTemplate.render({"posts": arr[page-1], "pages": tmppages});
                     $("#main").html(itemHtml);
+
+                    $('a').click(function(){
+                        var ahref=$(this).attr('href');
+                        return xJumpPage(ahref);
+                    });
                 },
                 tags: function() {
                     var ts = {};
@@ -195,6 +200,11 @@ $(document).ready(function() {
                     var tagsTemplate = Hogan.compile($("#tagsTemplate").html());
                     var tagsHtml = tagsTemplate.render({"tags": ans});
                     $("#main").html(tagsHtml);
+
+                    $('a').click(function(){
+                        var ahref=$(this).attr('href');
+                        return xJumpPage(ahref);
+                    });
                 },
                 tag: function(param) {
                     var tag = param.tag;
@@ -289,10 +299,10 @@ function xJumpPage(ahref) {
             return xJumpPage(ahref);
         });  
     }else if(ahref.endsWith('.md')){
-        location.href = '#/'+ ahref;
-        var url = ahref;
+        location.href = '#/'+ (ahref.replace('#/',''));
+        var url = (ahref.replace('#/',''));
         if(location.origin.indexOf('github.io') != -1){
-            url = ahref.replace('.md','');
+            url = url.replace('.md','');
         }
         $.get(url, function(response, status, xhr){
             $("#main").attr("class","entry");

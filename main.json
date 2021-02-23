@@ -9,7 +9,7 @@
             "title":"2021-01-30",
             "date":"2021-01-30",
             "tags":"2021",
-            "path":"posts/2021-01-30_2021-01-30.md",
+            "path":"#/posts/2021-01-30_2021-01-30.md",
             "type":"post",
             "active":false
         },
@@ -18,7 +18,7 @@
             "title":"2021-01-13",
             "date":"2021-01-13",
             "tags":"2021",
-            "path":"posts/2021-01-13_2021-01-13.md",
+            "path":"#/posts/2021-01-13_2021-01-13.md",
             "type":"post",
             "active":false
         },
@@ -27,7 +27,7 @@
             "title":"路灯与影子",
             "date":"2020-08-25",
             "tags":"2020",
-            "path":"posts/2020-08-25_路灯与影子.md",
+            "path":"#/posts/2020-08-25_路灯与影子.md",
             "type":"post",
             "active":false
         },
@@ -36,7 +36,7 @@
             "title":"我所有的，恰好大都无意义",
             "date":"2020-06-16",
             "tags":"2020",
-            "path":"posts/2020-06-16_我所有的，恰好大都无意义.md",
+            "path":"#/posts/2020-06-16_我所有的，恰好大都无意义.md",
             "type":"post",
             "active":false
         },
@@ -45,7 +45,7 @@
             "title":"2020-01-01",
             "date":"2020-01-01",
             "tags":"2020",
-            "path":"posts/2020-01-01_2020-01-01.md",
+            "path":"#/posts/2020-01-01_2020-01-01.md",
             "type":"post",
             "active":false
         },
@@ -54,7 +54,7 @@
             "title":"iOS 存储空间计算方法更新",
             "date":"2019-11-12",
             "tags":"iOS存储空间 剩余空间 storage",
-            "path":"posts/ios_storage.html",
+            "path":"#/posts/ios_storage.html",
             "type":"post",
             "active":false
         },
@@ -63,7 +63,7 @@
             "title":"关于情绪，关于愤怒",
             "date":"2019-08-18",
             "tags":"2019",
-            "path":"posts/2019-08-18_关于情绪，关于愤怒.md",
+            "path":"#/posts/2019-08-18_关于情绪，关于愤怒.md",
             "type":"post",
             "active":false
         },
@@ -72,7 +72,7 @@
             "title":"咸鱼也会偶尔焦虑",
             "date":"2019-07-12",
             "tags":"2019",
-            "path":"posts/2019-07-12_咸鱼也会偶尔焦虑.md",
+            "path":"#/posts/2019-07-12_咸鱼也会偶尔焦虑.md",
             "type":"post",
             "active":false
         },
@@ -144,7 +144,7 @@
             "title":"梦几载",
             "date":"2016-01-04",
             "tags":"2016",
-            "path":"posts/2016-01-04_梦几载.md",
+            "path":"#/posts/2016-01-04_梦几载.md",
             "type":"post",
             "active":false
         },
@@ -162,7 +162,7 @@
             "title":"比如",
             "date":"2015-04-27",
             "tags":"2015",
-            "path":"posts/2015-04-27_比如.md",
+            "path":"#/posts/2015-04-27_比如.md",
             "type":"post",
             "active":false
         },
@@ -171,7 +171,7 @@
             "title":"三月",
             "date":"2015-03-12",
             "tags":"2015",
-            "path":"posts/2015-03-12_三月.md",
+            "path":"#/posts/2015-03-12_三月.md",
             "type":"post",
             "active":false
         },
@@ -180,7 +180,7 @@
             "title":"像少年一样去爱，像成人一样克制",
             "date":"2014-07-22",
             "tags":"2014",
-            "path":"posts/2014_07_22_测试.md",
+            "path":"#/posts/2014_07_22_测试.md",
             "type":"post",
             "active":false
         },
@@ -189,7 +189,7 @@
             "title":"蛹",
             "date":"2010-05-01",
             "tags":"2010",
-            "path":"posts/2010-05-01_蛹.md",
+            "path":"#/posts/2010-05-01_蛹.md",
             "type":"post",
             "active":false
         },
@@ -198,7 +198,7 @@
             "title":"曾经的那个雨天",
             "date":"2008-07-28",
             "tags":"2008",
-            "path":"posts/2008-07-28_曾经的那个雨天.md",
+            "path":"#/posts/2008-07-28_曾经的那个雨天.md",
             "type":"post",
             "active":false
         }

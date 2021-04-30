@@ -6,14 +6,14 @@
     "posts":[
  
         {
-            "title":"Mac catalyst上的问题",
+            "title":"Metal在Mac catalyst上的问题",
             "date":"2021-04-29",
             "tags":"2021",
             "path":"#/posts/2021-04-29_Metal在Mac catalyst上的问题.md",
             "type":"post",
             "active":false
         },
-        
+
         {
             "title":"2021-01-30",
             "date":"2021-01-30",

@@ -3,15 +3,27 @@
 		<meta charset="UTF-8">
 		<meta name="description" content="fireworks">
 		<meta name="keywords" content="HTML5,canvas,JavaScript,fireworks">
-		<link rel="stylesheet" type="text/css" href="https://cantelope.org/NYE/style.css">
         <title>心比过去更加遥远</title>
+        <style>
+            html,body{
+                margin:0px;
+                width:100%;
+                height:100%;
+                overflow:hidden;
+                background:#000;
+            }
+            
+            #canvas{
+                width:100%;
+                height:100%;
+            }
+            </style>
     </head>
 	<body>
 		<canvas id="canvas"></canvas>
-        <script src="https://cantelope.org/NYE/game.js"></script>
+        <script src="./src/game.js"></script>
 
-
-        <audio id="bgmusic"  src="https://music.163.com/song/media/outer/url?id=35031784.mp3"
+        <audio id="bgmusic"  src="https://cdn.jsdelivr.net/gh/qianlishun/qianlishun.github.io@0.1/hanabi/music/Hanabi.mp3"
         autoplay preload loop controls style="position: fixed;bottom: -40px;height: 40px;right: 0px;"></audio>
       
     </body>

@@ -21,9 +21,8 @@ id<MTLTexture> textureIn = [buf_input newTextureWithDescriptor:texDesc offset:0 
 ~~~~{ruby}
 Metal resourceOptions must match backing buffer resource options
 ~~~~  
-　　
-　　根据信息推断，应该是因为 buf_input 和 texDesc 对某个option不一致。  
-OK，既然iOS的能正常运行，那就用iOS跑一下，并打印下它们俩的属性。
+
+　　根据信息推断，应该是因为 buf_input 和 texDesc 对某个option不一致，既然iOS的能正常运行，那就用iOS跑一下，并打印下它们俩的属性。
 
 ~~~~{ruby}
 texDesc
@@ -33,7 +32,7 @@ buf_input
 resourceOptions = MTLResourceCPUCacheModeDefaultCache MTLResourceStorageModeShared MTLResourceHazardTrackingModeTracked  
 ~~~~  
 
-　　然后在打印下Mac的，对比一下，哪里不一样。  
+　　然后再打印下Mac的，对比一下，哪里不一样。  
 
 ~~~~{ruby}
 texDesc

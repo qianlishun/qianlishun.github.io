@@ -105,6 +105,7 @@
 </script>
 <script>
     var itemHtml;
+    var mainJsondata;
 $(document).ready(function() {
     $.ajax({
         url: "main.json",
@@ -112,6 +113,7 @@ $(document).ready(function() {
         contentType: 'text/json,charset=utf-8',
         dataType: "json",
         success: function(data) {
+            mainJsondata = data;
             $("#title").html(data.name);
             data.posts.sort(function(a, b){
                 if (a.date > b.date)
@@ -207,29 +209,7 @@ $(document).ready(function() {
                     });
                 },
                 tag: function(param) {
-                    var tag = param.tag;
-                    tag = decodeURIComponent(tag);
-                    var group = [{"name": "#"+tag}];
-                    var posts = [];
-                    for (var i = 0; i < data.posts.length; ++i) {
-                        var tmp = data.posts[i].tags.split(" ");
-                        if (tmp.indexOf(tag) != -1)
-                            posts.push(data.posts[i]);
-                    }
-                    for (var i = 0; i < data.pages.length; ++i) {
-                        var tmp = data.pages[i].tags.split(" ");
-                        if (tmp.indexOf(tag) != -1)
-                            posts.push(data.pages[i]);
-                    }
-                    group[0].posts = posts;
-                    var tmpTemplate = Hogan.compile($("#archiveTemplate").html());
-                    var tmpHtml = tmpTemplate.render({"group": group});
-                    $("#main").html(tmpHtml);
-
-                    $('a').click(function(){
-                        var ahref=$(this).attr('href');
-                        return xJumpPage(ahref);
-                    });
+                    xTag(data,param);
                 },
                 archive: function() {
                     var group = [];
@@ -287,6 +267,32 @@ var rendererMD = new marked.Renderer();
       }
  });
 
+ function xTag(data,param) { 
+    var tag = param.tag;
+    tag = decodeURIComponent(tag);
+    var group = [{"name": "#"+tag}];
+    var posts = [];
+    for (var i = 0; i < data.posts.length; ++i) {
+        var tmp = data.posts[i].tags.split(" ");
+        if (tmp.indexOf(tag) != -1)
+            posts.push(data.posts[i]);
+    }
+    for (var i = 0; i < data.pages.length; ++i) {
+        var tmp = data.pages[i].tags.split(" ");
+        if (tmp.indexOf(tag) != -1)
+            posts.push(data.pages[i]);
+    }
+    group[0].posts = posts;
+    var tmpTemplate = Hogan.compile($("#archiveTemplate").html());
+    var tmpHtml = tmpTemplate.render({"group": group});
+    $("#main").html(tmpHtml);
+
+    $('a').click(function(){
+        var ahref=$(this).attr('href');
+        return xJumpPage(ahref);
+    });
+  }
+
 function xJumpPage(ahref) { 
     if(ahref.endsWith('home')){
         if(itemHtml && itemHtml.length>0){
@@ -298,6 +304,10 @@ function xJumpPage(ahref) {
             var ahref=$(this).attr('href');
             return xJumpPage(ahref);
         });  
+    }else if(ahref.startsWith('tag')){
+        var tag = ahref.replace('tag/','');
+        var array = {"tag":tag};
+        xTag(mainJsondata,array);
     }else if(ahref.endsWith('.md')){
         location.href = '#/'+ (ahref.replace('#/',''));
         var url = (ahref.replace('#/',''));
@@ -318,34 +328,27 @@ function xJumpPage(ahref) {
                 var content = parts[1].split("</div>")[0];
                 $("#main").html(content);
             }
+            
+            $("#title").html(mainJsondata.name);
+            //path
+            var path = ahref;
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            $('title').text(post.title);
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#headerContent").html());
+            if(post.title == post.date) post.date = "";
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
 
-            $.ajax({
-                url: "main.json",
-                type: "GET",
-                dataType: "json",
-                success: function(data) {
-                    $("#title").html(data.name);
-                    //path
-                    var path = ahref;
-                    //path end
-                    var now = 0;
-                    for (var i = 0; i < data.posts.length; ++i)
-                        if (path == data.posts[i].path)
-                            now = i;
-                    var post = data.posts[now];
-                    $('title').text(post.title);
-                    var tmp = post.tags.split(" ");
-                    var tags = [];
-                    for (var i = 0; i < tmp.length; ++i)
-                        if (tmp[i].length > 0)
-                            tags.push({"name": tmp[i]});
-                    var contentTemplate = Hogan.compile($("#headerContent").html());
-                    if(post.title == post.date) post.date = "";
-                    var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
-                    $("#main").prepend(contentHtml);
-
-                }
-            });
         });
         return false;    
     }

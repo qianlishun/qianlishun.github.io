@@ -334,10 +334,10 @@ function xJumpPage(ahref) {
             var path = ahref;
             //path end
             var now = 0;
-            for (var i = 0; i < data.posts.length; ++i)
-                if (path == data.posts[i].path)
+            for (var i = 0; i < mainJsondata.posts.length; ++i)
+                if (path == mainJsondata.posts[i].path)
                     now = i;
-            var post = data.posts[now];
+            var post = mainJsondata.posts[now];
             $('title').text(post.title);
             var tmp = post.tags.split(" ");
             var tags = [];

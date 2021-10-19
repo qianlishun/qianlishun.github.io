@@ -72,12 +72,14 @@
 				var random = Math.random()*100>2?true:false;
 				var x = getRandom(canvas.width/5 , canvas.width*4/5);
 				var y = getRandom(50 , 200);
+
+				var color = "rgba("+parseInt(getRandom(64,255))+","+parseInt(getRandom(64,255))+","+parseInt(getRandom(64,255))+" , 0.6)";
 				if(random){
-					var bigboom = new Boom(getRandom(canvas.width/3,canvas.width*2/3) ,2,"#FFF" , {x:x , y:y});
+					var bigboom = new Boom(getRandom(canvas.width/3,canvas.width*2/3) ,2, "#FFF",color , {x:x , y:y});
 					bigbooms.push(bigboom)
 				}
 				else {
-					var bigboom = new Boom(getRandom(canvas.width/3,canvas.width*2/3) ,2,"#FFF" , {x:canvas.width/2 , y:200} , document.querySelectorAll(".shape")[parseInt(getRandom(0, document.querySelectorAll(".shape").length))]);
+					var bigboom = new Boom(getRandom(canvas.width/3,canvas.width*2/3) ,2,"#FFF",color, {x:canvas.width/2 , y:200} , document.querySelectorAll(".shape")[parseInt(getRandom(0, document.querySelectorAll(".shape").length))]);
 					bigbooms.push(bigboom)
 				}
 				lastTime = newTime;
@@ -94,7 +96,7 @@
 				var that = this;
 				if(!this.dead){
 					this._move();
-					this._drawLight();
+					this._drawLight(this.c2);
 				}
 				else{
 					this.booms.foreach(function(index){
@@ -158,12 +160,13 @@
 		// 	bigbooms.push(bigboom)
 		// })
 
-		var Boom = function(x,r,c,boomArea,shape){
+		var Boom = function(x,r,c1,c2,boomArea,shape){
 			this.booms = [];
 			this.x = x;
 			this.y = (canvas.height+r);
 			this.r = r;
-			this.c = c;
+			this.c1 = c1;
+			this.c2 = c2;
 			this.shape = shape || false;
 			this.boomArea = boomArea;
 			this.theta = 0;
@@ -175,7 +178,7 @@
 				ctx.save();
 				ctx.beginPath();
 				ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
-				ctx.fillStyle = this.c;
+				ctx.fillStyle = this.c1;
 				ctx.fill();
 				ctx.restore();
 			},
@@ -195,9 +198,10 @@
 					this._paint();
 				}
 			},
-			_drawLight:function(){
+			_drawLight:function(color){
 				ctx.save();
-				ctx.fillStyle = "rgba(255,228,150,0.3)";
+				// ctx.fillStyle = "rgba(255,228,150,0.3)";
+				ctx.fillStyle = color;
 				ctx.beginPath();
 				ctx.arc(this.x , this.y , this.r+3*Math.random()+1 , 0 , 2*Math.PI);
 				ctx.fill();

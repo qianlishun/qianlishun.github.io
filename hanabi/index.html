@@ -148,7 +148,8 @@
 		canvas.onclick = function(){
 			var x = event.clientX;
 			var y = event.clientY;
-			var bigboom = new Boom(getRandom(canvas.width/3,canvas.width*2/3) ,2,"#FFF" , {x:x , y:y});
+			var color = "rgba("+parseInt(getRandom(64,255))+","+parseInt(getRandom(64,255))+","+parseInt(getRandom(64,255))+" , 0.3)";
+			var bigboom = new Boom(getRandom(canvas.width/3,canvas.width*2/3) ,2,"#FFF", color, {x:x , y:y});
 			bigbooms.push(bigboom)
 		}
 

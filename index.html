@@ -432,14 +432,19 @@
             window.addEventListener('mousedown', forceSafariPlayAudio, false);
 
         });
- 
-        window.addEventListener('popstate', function () {
-            history.pushState(null, null, document.URL);
-            var path = location.href.split('/#/')[0];
-            if(path != null){
-                location.href = path;
+        (function() {
+            var counter = 0;
+            if (window.history && window.history.pushState) {
+                window.onpopstate = function() {
+                    window.history.pushState('forward', null, '#');
+                    window.history.forward(1);
+                    var path = location.href.split('/#/')[0];
+                    location.replace(path); //刷新
+                };
             }
-        });
+            // window.history.pushState('forward', null, '#'); //在IE中必须得有这两行
+            // window.history.forward(1);
+        })();
 	</script>
 </body>
 </html>

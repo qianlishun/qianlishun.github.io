@@ -4,7 +4,15 @@
     "disqus_shortname":"",
 
     "posts":[
-    
+        {
+            "title":"被加速的这两年",
+            "date":"2022-02-08",
+            "tags":"2022",
+            "path":"#/posts/2022-02-08_被加速的这两年.md",
+            "type":"post",
+            "active":false
+        },
+        
         {
             "title":"无状态",
             "date":"2021-05-23",

@@ -26,7 +26,7 @@
     <div class="wrap-header">
         <h1>
         <a href="/#/home" id="title"></a>
-        <audio id="bgmusic" src="https://music.163.com/song/media/outer/url?id=1404622050.mp3" 
+        <audio id="bgmusic" src="https://music.163.com/song/media/outer/url?id=3947469.mp3" 
         autoplay="" preload="" loop="" controls="" style="height: 30px; float: right;"></audio>
         </h1>
     </div>
@@ -366,8 +366,13 @@
     </script>
 
     <script>
-        var audioEl = document.getElementById('bgmusic');
+        // https://music.163.com/song/media/outer/url?id=3947469.mp3
 
+        var audioEl = document.getElementById('bgmusic');
+        var bgmList = ['3947469.mp3','29848642.mp3','4128497.mp3'];
+
+        audioEl.src = 'https://music.163.com/song/media/outer/url?id=' + bgmList[getRandom(0,2)];
+       
 		document.addEventListener('WeixinJSBridgeReady', function() {
 			document.getElementById('bgmusic').play()
 		});
@@ -432,6 +437,10 @@
             window.addEventListener('mousedown', forceSafariPlayAudio, false);
 
         });
+
+        function getRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) ) + min;
+        }
         // (function() {
         //     var counter = 0;
         //     if (window.history && window.history.pushState) {

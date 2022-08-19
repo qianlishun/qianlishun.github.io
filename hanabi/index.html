@@ -252,7 +252,7 @@
 				}else{
 					color = "rgba("+parseInt(getRandom(64,255))+","+parseInt(getRandom(64,255))+","+parseInt(getRandom(64,255))+" , 0.3)";
 				}
-				var bigboom = boomXY(x,y ,2,"#FFF", color, dXY[index], 100 );
+				var bigboom = boomXY(x,y ,2,"#FFF", color, dXY[index], 50);
 				bigbooms.push(bigboom)				
 			}
 		}
@@ -333,7 +333,7 @@
 			this.c2 = c2;
 			this.shape = shape || false;
 			this.boomArea = boomArea;
-			this.fanwei = parseInt(getRandom(150, 300));
+			this.fanwei = parseInt(getRandom(50, 150));
 			this.theta = 0;
 			this.dead = false;
 			this.ba = parseInt(getRandom(80 , 200));

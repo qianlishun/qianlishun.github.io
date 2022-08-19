@@ -45,11 +45,13 @@
 			});
 
 			var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-			return result ? 'rgb(' + [
-				parseInt(result[1], 16),
-				parseInt(result[2], 16),
-				parseInt(result[3], 16)
-			].join(',') + ')' : hex;
+
+			color = {
+						a:parseInt(parseInt(result[1], 16)),
+						b:parseInt(parseInt(result[2], 16)),
+						c:parseInt(parseInt(result[3], 16))
+					}
+			return color;
 		}
 
 		var colors = ["#ffb3a7","#ffb3a7","#ed5736","#f00056","#f47983","#db5a6b","#f20c00","#c93756","#f05654","#ff2121","#8c4356","#c83c23","#9d2933","#ff4c00","#ff4e20","#f35336","#cb3a56","#ff2d51","#c91f37","#ef7a82","#ff0097","#ff3300","#c3272b","#a98175","#c32136","#b36d61","#be002f","#dc3023","#f9906f","#fff143","#fff143","#faff72","#eaff56","#ffa631","#ff8c31","#ff8936","#ffa400","#ff7500","#ffc773","#f0c239","#fa8c35","#b35c44","#a88462","#c89b40","#60281e","#b25d25","#827100","#7c4b00","#9b4400","#ae7000","#9c5333","#955539","#ca6924","#6e511e","#d3b17d","#e29c45","#896c39","#d9b611","#0aa344","#bddd22","#c9dd22","#afdd22","#789262","#a3d900","#9ed900","#0eb83a","#0eb840","#0aa344","#00bc12","#0c8918","#1bd1a5","#2add9c","#48c0a3","#3de1ad","#40de5a","#00e09e","#00e079","#c0ebd7","#e0eee8","#bbcdc5","#424c50","#00e500","#9ed048","#96ce54","#7bcfa6","#2edfa3","#7fecad","#a4e2c6","#21a675","#057748","#bce672","#44cef6","#44cef6","#177cb0","#065279","#3eede7","#70f3ff","#4b5cc4","#a1afc9","#2e4e7e","#3b2e7e","#4a4266","#426666","#425066","#574266","#8d4bbb","#815463","#815476","#4c221b","#003371","#56004f","#801dae","#4c8dae","#b0a4e3","#cca4e3","#edd1d8","#e4c6d0","#75878a","#75878a","#519a73","#a29b7c","#7397ab","#395260","#d1d9e0","#d2f0f4","#88ada6","#f3d3e7","#d4f2e7","#d2f0f4","#d3e0f3","#30dff3","#25f8cb","#f0f0f4","#ffffff","#fffbf0","#f2fdff","#d6ecf0","#f2ecde","#e0f0e9","#f3f9f1","#e9f1f6","#c2ccd0","#fcefe8","#e3f9fd","#808080","#eedeb0","#f0f0f4","#000000","#622a1d","#3d3b4f","#725e82","#392f41","#161823","#50616d","#758a99","#000000","#493131","#312520","#5d513c","#75664d","#6b6882","#665757","#41555d","#eacd76","#f2be45","#eacd76","#e9e7ef","#bacac6","#a78e44","#549688"];
@@ -80,7 +82,8 @@
 			ctx.fillStyle = "rgba(0,5,24,0.1)";
 			ctx.fillRect(0,0,canvas.width,canvas.height);
 			ctx.restore();
-
+			render();
+			area();
 
 			var newTime = new Date();
             if(newTime-lastTime>500+(window.innerHeight-767)/2){
@@ -168,13 +171,150 @@
 			bigbooms.push(bigboom)
 		}
 
-		// canvas.addEventLisener("touchstart" , function(event){
-		// 	var touch = event.targetTouches[0];
-		// 	var x = event.pageX;
-		// 	var y = event.pageY;
-		// 	var bigboom = new Boom(getRandom(canvas.width/3,canvas.width*2/3) ,2,"#FFF" , {x:x , y:y});
-		// 	bigbooms.push(bigboom)
-		// })
+		var particles = [];
+		var mouseFlag = false;
+		var mouseColor = hexToRgb(colors[2]);
+		canvas.onmousedown = function (event) { 
+			var e = event || window.event;
+			mouseFlag = true;
+			do_spawn(e, 3);
+		};
+		canvas.onmouseup = function () {
+			mouseFlag = false;
+		}
+		canvas.onmouseout = function () { 
+			mouseFlag = false;
+		}
+		canvas.onmousemove = function (event) {
+			var e = event || window.event;
+			if (mouseFlag) {
+				do_spawn(e, 2);
+			}
+		}
+
+		canvas.ontouchstart = function (e) { 
+			var hex = colors[parseInt(getRandom(0,colors.length-1))];
+			mouseColor = hexToRgb(hex);
+			mouseFlag = true;
+			do_spawn(e, 3);
+		}
+
+		canvas.ontouchend = function (e) { 
+			mouseFlag = false;
+
+			var top = 9999, left = 9999, right = 0, bottom = 0;
+			while(particles.length > 0){
+				var part = particles.pop();
+
+				if(part.y < top){
+					top = part.y;
+				}
+				if(part.y > bottom){
+					bottom = part.y;
+				}
+				if(part.x < left){
+					left = part.x;
+				}
+				if(part.x > right){
+					right = part.x;
+				}
+			}
+			var width = right-left;
+			var height = bottom-top;
+			var x = ( left + right ) / 2.0;
+			var y = ( top + bottom ) / 2.0;			
+
+			// var dXY = [{x: x, y: top},
+			// 	{x: left+width/4, y: top+height/4}, {x: right-width/4 , y: top+height/4},
+			// 	{x: left , y: y}, {x: right, y: y},
+			// 	{x:left+width/4 , y: bottom-height/4}, {x: right-width/4 , y: bottom-height/4},
+			// 		{x:x , y:bottom}];
+
+			 var dXY = [{x: left, y: top}, {x: left, y: bottom},
+			 			{x: right, y: top}, {x: right, y: bottom}];
+						 
+			for (let index = 0; index < dXY.length; index++) {
+				var dx = ( left + right ) / 2.0;
+				var dy = ( top + bottom ) / 2.0;
+				var color;
+				if(index / 2 == 0){
+					var hex = colors[parseInt(getRandom(0,colors.length-1))];
+					var rcolor = hexToRgb(hex);
+					color = "rgba("+rcolor.a+","+rcolor.b+","+rcolor.c+",1)";
+				}else{
+					color = "rgba("+parseInt(getRandom(64,255))+","+parseInt(getRandom(64,255))+","+parseInt(getRandom(64,255))+" , 0.3)";
+				}
+				var bigboom = boomXY(x,y ,2,"#FFF", color, dXY[index], 100 );
+				bigbooms.push(bigboom)				
+			}
+		}
+		canvas.ontouchmove = function (e) { 
+			if (mouseFlag) {
+				do_spawn(e, 2);
+			}
+		}
+
+		function do_spawn(e,n){
+			var x = e.clientX || e.touches[0].pageX;
+			var y = e.clientY || e.touches[0].pageY;
+			for (let index = 0; index < n; index++) {
+				spawn(x,y);
+			}
+		}
+
+		function spawn(x,y){
+			var particle = new Particle();
+			particle.init(x,y,mouseColor);
+			particles.push(particle);
+		}
+
+		function render(){
+			if(particles.length<2)
+				return;
+			for (let i = 0; i < particles.length; i++) {
+				particles[i].draw();
+				particles[i].update();
+			}
+		}
+
+		function area(){
+			
+			while(particles.length > 700){
+				particles.pop();
+			}
+			
+		}
+
+		function Particle(){}
+		Particle.prototype = {
+			init: function(x,y,color){
+				this.x = x || 0.0;
+				this.y = y || 0.0;
+				this.r = 5 * Math.random()  || 5;
+				this.color = color;
+				this.theta = Math.random()*Math.PI;
+				this.R = Math.random() + 2;
+				this.vx = Math.cos(this.theta) * this.R;
+				this.vy = Math.sin(this.theta) * this.R;
+			},
+			draw:function(){
+				ctx.save();
+				ctx.beginPath();
+				ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+				ctx.fillStyle = "rgba("+this.color.a+","+this.color.b+","+this.color.c+",1)";
+				ctx.fill();
+				ctx.restore();
+			},
+			update:function(){
+				// this.x += this.vx;
+				// this.y += this.vy;
+				// this.vx += Math.cos(this.theta) * .1;
+				// this.vy += Math.sin(this.theta) * .1;
+				// this.vx *= 0.95;
+				// this.vy *= 0.95;
+				// this.r *= 0.95;
+			}
+		};
 
 		var Boom = function(x,r,c1,c2,boomArea,shape){
 			this.booms = [];
@@ -185,9 +325,15 @@
 			this.c2 = c2;
 			this.shape = shape || false;
 			this.boomArea = boomArea;
+			this.fanwei = parseInt(getRandom(150, 300));
 			this.theta = 0;
 			this.dead = false;
 			this.ba = parseInt(getRandom(80 , 200));
+		};
+		function boomXY(x,y,r,c1,c2,boomArea,fanwei,shape){
+			var boom = new Boom(x,r,c1,c2,boomArea,shape);
+			boom.y = y; boom.fanwwei = fanwei;
+			return boom;
 		}
 		Boom.prototype = {
 			_paint:function(){
@@ -226,34 +372,18 @@
 			_boom:function(){
 				var fragNum = getRandom(30 , 200);
 				var style = getRandom(0,10)>=5? 1 : 2;
-				var colorStyle = getRandom(0,10)>=5? 1 : 2;
+				// var colorStyle = getRandom(0,10)>=5? 1 : 2;
 				var color;
 				if(style===1){
-					if(colorStyle==1){
-						color = {
-						a:parseInt(getRandom(0,255)),
-						b:parseInt(getRandom(0,255)),
-						c:parseInt(getRandom(0,255))
-						}
-					}else{
-						var hex = colors[parseInt(getRandom(0,colors.length-1))];
-						color = hexToRgb(hex);
-					}
+					var hex = colors[parseInt(getRandom(0,colors.length-1))];
+					color = hexToRgb(hex);
 				}
 
-				var fanwei = parseInt(getRandom(300, 400));
+				var fanwei = this.fanwei;
 				for(var i=0;i<fragNum;i++){
 					if(style===2){
-						if(colorStyle==1){
-							color = {
-								a:parseInt(getRandom(0,255)),
-								b:parseInt(getRandom(0,255)),
-								c:parseInt(getRandom(0,255))
-							}
-						}else{
-							var hex = colors[parseInt(getRandom(0,colors.length-1))];
-							color = hexToRgb(hex);				
-						}
+						var hex = colors[parseInt(getRandom(0,colors.length-1))];
+						color = hexToRgb(hex);	
 					}
 					var a = getRandom(-Math.PI, Math.PI);
 					var x = getRandom(0, fanwei) * Math.cos(a) + this.x;

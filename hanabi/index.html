@@ -202,6 +202,14 @@
 		canvas.ontouchend = function (e) { 
 			mouseFlag = false;
 
+	 if(particles.length<100){
+
+	 while(particles.length > 0){
+		 var part = particles.pop();
+	 } 	
+	 return;
+	}
+
 			var top = 9999, left = 9999, right = 0, bottom = 0;
 			while(particles.length > 0){
 				var part = particles.pop();

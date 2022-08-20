@@ -175,6 +175,8 @@
 		var mouseFlag = false;
 		var mouseColor = hexToRgb(colors[2]);
 		canvas.onmousedown = function (event) { 
+			var hex = colors[parseInt(getRandom(0,colors.length-1))];
+			mouseColor = hexToRgb(hex);
 			var e = event || window.event;
 			mouseFlag = true;
 			do_spawn(e, 3);

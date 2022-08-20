@@ -181,6 +181,7 @@
 		};
 		canvas.onmouseup = function () {
 			mouseFlag = false;
+			theTouchend();
 		}
 		canvas.onmouseout = function () { 
 			mouseFlag = false;
@@ -202,30 +203,34 @@
 		canvas.ontouchend = function (e) { 
 			mouseFlag = false;
 
-	 if(particles.length<100){
+			theTouchend();
+		}
 
-	 while(particles.length > 0){
-		 var part = particles.pop();
-	 } 	
-	 return;
-	}
+		function theTouchend(){
+			
+			if(particles.length<100){
+				while(particles.length > 0){
+					var part = particles.pop();
+				} 	
+				return;
+			}
 
 			var top = 9999, left = 9999, right = 0, bottom = 0;
 			while(particles.length > 0){
-				var part = particles.pop();
+			var part = particles.pop();
 
-				if(part.y < top){
-					top = part.y;
-				}
-				if(part.y > bottom){
-					bottom = part.y;
-				}
-				if(part.x < left){
-					left = part.x;
-				}
-				if(part.x > right){
-					right = part.x;
-				}
+			if(part.y < top){
+				top = part.y;
+			}
+			if(part.y > bottom){
+				bottom = part.y;
+			}
+			if(part.x < left){
+				left = part.x;
+			}
+			if(part.x > right){
+				right = part.x;
+			}
 			}
 			var width = right-left;
 			var height = bottom-top;
@@ -238,9 +243,9 @@
 			// 	{x:left+width/4 , y: bottom-height/4}, {x: right-width/4 , y: bottom-height/4},
 			// 		{x:x , y:bottom}];
 
-			 var dXY = [{x: left, y: top}, {x: left, y: bottom},
-			 			{x: right, y: top}, {x: right, y: bottom}];
-						 
+			var dXY = [{x: left, y: top}, {x: left, y: bottom},
+					{x: right, y: top}, {x: right, y: bottom}];
+					
 			for (let index = 0; index < dXY.length; index++) {
 				var dx = ( left + right ) / 2.0;
 				var dy = ( top + bottom ) / 2.0;
@@ -256,6 +261,7 @@
 				bigbooms.push(bigboom)				
 			}
 		}
+
 		canvas.ontouchmove = function (e) { 
 			if (mouseFlag) {
 				do_spawn(e, 2);
@@ -288,7 +294,7 @@
 		function area(){
 			
 			while(particles.length > 700){
-				particles.pop();
+				particles.shift();
 			}
 			
 		}
@@ -314,13 +320,13 @@
 				ctx.restore();
 			},
 			update:function(){
-				// this.x += this.vx;
-				// this.y += this.vy;
-				// this.vx += Math.cos(this.theta) * .1;
-				// this.vy += Math.sin(this.theta) * .1;
-				// this.vx *= 0.95;
-				// this.vy *= 0.95;
-				// this.r *= 0.95;
+				this.x += this.vx;
+				this.y += this.vy;
+				this.vx += Math.cos(this.theta) * .1;
+				this.vy += Math.sin(this.theta) * .1;
+				this.vx *= 0.95;
+				this.vy *= 0.95;
+				this.r *= 0.95;
 			}
 		};
 

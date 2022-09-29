@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en" >
+<head>
+<meta charset="UTF-8">
+<title>Rain Demo</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<script  src="js/script.js"></script>
+
+<div class="footer">
+<audio id="bgmusic"  src="https://music.163.com/song/media/outer/url?id=29818028.mp3"
+autoplay preload loop controls style="position: fixed;bottom: -40px;height: 40px;right: 0px;"></audio>
+</div>
+</body>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+<script>
+     var audioEl = document.getElementById('bgmusic');
+
+    document.addEventListener('WeixinJSBridgeReady', function() {
+        document.getElementById('bgmusic').play()
+    });
+
+(function() {
+    function log(info) {
+        console.log(info);
+        // alert(info);
+    }
+    function forceSafariPlayAudio() {
+        if(audioEl.paused == true){
+            setTimeout(function(){
+                audioEl.load(); // iOS 9   还需要额外的 load 一下, 否则直接 play 无效
+                audioEl.play(); // iOS 7/8 仅需要 play 一下
+            },2000);
+        }
+    }
+    audioEl.addEventListener('loadstart', function() {
+        log('loadstart');
+    }, false);
+    audioEl.addEventListener('loadeddata', function() {
+        log('loadeddata');
+    }, false);
+    audioEl.addEventListener('loadedmetadata', function() {
+        log('loadedmetadata');
+    }, false);
+    audioEl.addEventListener('canplay', function() {
+        log('canplay');
+    }, false);
+    audioEl.addEventListener('play', function() {
+        log('play');
+        // 当 audio 能够播放后, 移除这个事件
+        window.removeEventListener('touchstart', forceSafariPlayAudio, false);
+        window.removeEventListener('mousedown', forceSafariPlayAudio, false);
+    }, false);
+    audioEl.addEventListener('playing', function() {
+        log('playing');
+    }, false);
+    audioEl.addEventListener('pause', function() {
+        log('pause');
+    }, false);
+
+    // 由于 iOS Safari 限制不允许 audio autoplay, 必须用户主动交互(例如 click)后才能播放 audio,
+    // 因此我们通过一个用户交互事件来主动 play 一下 audio.
+    window.addEventListener('touchstart', forceSafariPlayAudio, false);
+       window.addEventListener('mousedown', forceSafariPlayAudio, false);
+})();
+</script>
+</html>

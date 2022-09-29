@@ -1,0 +1,127 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --thunder-duration: 10s;
+  --thunder-delay: 5s;
+}
+
+body {
+  background-image: linear-gradient(
+    to bottom,
+    #030420,
+    #000000 70%,
+    #151832 80%,
+    #101332 83%,
+    #030420
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+hr.window {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  border: unset;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+hr.window::after {
+  content: "";
+  transform: scale(1.5);
+  position: absolute;
+  background: black;
+  display: block;
+  width: 100%;
+  height: 100%;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><polygon points="0,0 120,0 120,90 0,90" fill="black"/><polygon points="135,0 255,0 255,90 135,90" fill="black"/><polygon points="0,105 120,105 120,195 0,195" fill="black"/><polygon points="135,105 255,105 255,195 135,195" fill="black"/></svg>')
+      0/100% 100%,
+    linear-gradient(#fff, #fff);
+  -webkit-mask-position: var(--x-center) var(--y-center);
+  -webkit-mask-composite: destination-out;
+  mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><polygon points="0,0 120,0 120,90 0,90" fill="black"/><polygon points="135,0 255,0 255,90 135,90" fill="black"/><polygon points="0,105 120,105 120,195 0,195" fill="black"/><polygon points="135,105 255,105 255,195 135,195" fill="black"/></svg>')
+      0/100% 100%,
+    linear-gradient(#fff, #fff);
+  mask-composite: exclude;
+  mask-position: var(--x-center) var(--y-center);
+  animation-name: thunderInner;
+  animation-duration: var(--thunder-duration);
+  animation-timing-function: linear;
+  animation-delay: var(--thunder-delay);
+  animation-iteration-count: infinite;
+}
+
+hr.thunder {
+  border: unset;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  animation-name: thunder;
+  animation-duration: var(--thunder-duration);
+  animation-timing-function: linear;
+  animation-delay: var(--thunder-delay);
+  animation-iteration-count: infinite;
+}
+
+hr:not(.thunder):not(.window) {
+  width: 50px;
+  border-color: transparent;
+  border-right-color: rgba(255, 255, 255, 0.7);
+  border-right-width: 50px;
+  position: absolute;
+  bottom: 100%;
+  transform-origin: 100% 50%;
+  animation-name: rain;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes rain {
+  from {
+    transform: rotate(105deg) translateX(0);
+  }
+  to {
+    transform: rotate(105deg) translateX(100vh);
+  }
+}
+
+@keyframes thunder {
+  0% {
+    background-color: transparent;
+  }
+  1% {
+    background-color: white;
+  }
+  2% {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  8% {
+    background-color: transparent;
+  }
+}
+
+@keyframes thunderInner {
+  0% {
+    background-color: black;
+  }
+  1% {
+    background-color: rgb(153, 153, 153);
+  }
+  2% {
+    background-color: rgb(122, 122, 122);
+  }
+  8% {
+    background-color: black;
+  }
+}

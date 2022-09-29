@@ -14,8 +14,8 @@
 <div class="main" id="main" style="overflow:hidden;">
 
 	<canvas id='cas' style="background-color:rgba(0,5,24,1);"></canvas>
-	<div class="city"><img src="https://api2.sonoptek.com/hanabi/img/city.png" alt="" /></div>
-	<img src="" alt="" id="moon" style="visibility: hidden;"/>
+	<div class="city"><img src="https://api2.sonoptek.com/resource/city.png" alt="" /></div>
+	<!-- <img src="" alt="" id="moon" style="visibility: hidden;"/> -->
 	<div style="display:none">
 		<div class="shape"></div>
 		<div class="shape"></div>
@@ -108,8 +108,6 @@
 				this.paint();
 			})
 
-			drawMoon();
-
 			bigbooms.foreach(function(index){
 				var that = this;
 				if(!this.dead){
@@ -131,29 +129,6 @@
 			raf(animate);
 		}
 
-		function drawMoon(){
-			var moon = document.getElementById("moon");
-			var centerX = canvas.width-200 , centerY = 100 , width = 10;
-			if(moon.complete){
-				//ctx.drawImage(moon , centerX , centerY , width , width )
-			}
-			else {
-				moon.onload = function(){
-					//ctx.drawImage(moon ,centerX , centerY , width , width)
-				}
-			}
-			var index = 0;
-			for(var i=0;i<10;i++){
-				ctx.save();
-				ctx.beginPath();
-				ctx.arc(centerX+width/2 , centerY+width/2 , width/2+index , 0 , 2*Math.PI);
-				ctx.fillStyle="rgba(70,70,70,0.005)";
-				index+=2;
-				ctx.fill();
-				ctx.restore();
-			}
-			
-		}
 
 		Array.prototype.foreach = function(callback){
 			for(var i=0;i<this.length;i++){

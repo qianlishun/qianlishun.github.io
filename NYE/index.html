@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="description" content="fireworks">
 		<meta name="keywords" content="HTML5,canvas,JavaScript,fireworks">
-        <title>Star</title>
+        <title>Meteor</title>
         <style>
             html,body{
                 margin:0px;
@@ -28,17 +28,7 @@
                 height: 100vh;
                 position: relative;
             }
-            .moon {
-                width: 100px;
-                height: 100px;
-                border-radius: 50%;
-                background-image: linear-gradient(40deg, rgba(249,250,190,0.8), rgba(255,253,59,0.8));
-                position: absolute;
-                top: 10%;
-                right: 20%;
-                box-shadow: 0 0 30px 0px rgba(255,253,59,0.8), 0 0 80px 0 rgba(255, 255, 255,0.9);
-                /* animation: moonflashing 3s linear infinite; */
-            }
+          
             @keyframes moonflashing {
                 0% {
                 filter: brightness(0.8);
@@ -112,8 +102,7 @@
                 display: block;
                 border: 0px solid #fff;
                 border-width: 2px 100px;
-                border-color: transparent transparent transparent
-                rgba(241, 216, 200, 0.29);
+                border-color: transparent transparent transparent rgba(241, 216, 200, 0.29);
                 transform: rotate(-45deg) translate3d(1px, 1px, 0);
                 transform-origin: 0% 0%;
             }
@@ -159,10 +148,25 @@
                 transform: scale(1) translate3d(-500px, 500px, 0);
                 }
             }
+            .meteorQ {
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                opacity: 0;
+                background: #ffffff;
+                border-radius: 50%;
+                box-shadow: 0 0 5px 5px #636262;
+            }
+            .meteorQ:after {
+                content: "";
+                display: block;
+                border: 0px solid #fff;
+                border-width: 2px 100px;
+                border-color: transparent transparent transparent  var(--border-color);
+                transform: rotate(-45deg) translate3d(1px, 1px, 0);
+                transform-origin: 0% 0%;
+            }
             </style>
-            <script>
-            
-            </script>
     </head>
 <div class="wrap">
     <!-- <div class="moon"></div> -->
@@ -180,5 +184,31 @@
     <div class="meteor meteor5"></div>
   </div>
 </body>
+<script type="text/javascript">
+    var wrap = document.getElementsByClassName("wrap")[0];
+    wrap.onclick = function(){
+        var x = event.clientX;
+        var y = event.clientY;
+        var color = "rgba("+parseInt(getRandom(64,255))+","+parseInt(getRandom(64,255))+","+parseInt(getRandom(64,255))+" , 0.3)";
+     
+        var div =  document.createElement("div");
+        div.className = "meteorQ";
+        div.style.animation = "meteorflashing 3s linear 0s";
+        div.style.background = color;
+        div.style.left = x + 'px';
+        div.style.top = y + 'px';
+        wrap.appendChild(div);
 
+        setTimeout(function(){div.remove();},4000);
+
+        var meteorQs = document.querySelectorAll('.meteorQ');
+        var last_Q = meteorQs[meteorQs.length-1];
+        last_Q.style.setProperty('--border-color', color);
+     }
+
+    function getRandom(a , b){
+        return Math.random()*(b-a)+a;
+    }
+   
+</script>
 </html>
